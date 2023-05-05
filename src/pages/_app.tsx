@@ -3,7 +3,6 @@ import '@/styles/globals.css';
 import { ChatProvider } from '@/providers/ChatProvider';
 import { UserProvider } from '@/providers/UserProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import type { AppType } from 'next/dist/shared/lib/utils';
 
@@ -18,7 +17,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             <Component {...pageProps} />
           </ChatProvider>
         </UserProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </div>
   );

@@ -1,34 +1,18 @@
 import fetch from 'node-fetch';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
-type SpotifyResponse = {
-    tracks: {
-        items: {
-            name: string;
-            preview_url: string;
-            uri: string;
-            external_urls: {
-                spotify: string;
-            } 
-            artists: {
-                name: string;
-            }[]
-            album: {
-                images: {
-                    url: string;
-                    height: number;
-                    width: number;
-                }[]
-            }
-        }[]
-    }
-}
+import { SpotifyResponse } from '@/types/Spotify';
+
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 type SongRequest = {
     query: string;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
     const body = req.body as SongRequest;
     const query = body.query;
     const allCookies = req.cookies;

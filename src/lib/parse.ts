@@ -72,7 +72,7 @@ const parseSong = async (song_list: string): Promise<SpotifyResponse[]> => {
       }
     }
 
-    return allSongs.slice(0, 6).filter((song) => song.tracks.items[0]?.name !== 'undefined' )
+    return allSongs.slice(0, 6).filter((song) => song.tracks.items[0]?.name.toLowerCase() !== 'undefined' || song.tracks.items.length === 0)
 };
   
   export { parseSong };

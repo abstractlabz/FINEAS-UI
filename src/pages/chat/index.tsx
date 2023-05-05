@@ -92,6 +92,12 @@ const Chat = () => {
         
       
             const parsedOutput = await parseSong(gptOutput.output) as SpotifyResponse[];
+
+            if (parsedOutput.length === 0) {
+                setInput('');
+                setError('No songs found. Please try again.');
+                return;
+            }
       
             console.log(parsedOutput);
       
@@ -107,7 +113,7 @@ const Chat = () => {
             setInput('');
         } catch (error) {
             console.log(error);
-            setError('An error occurred. Please try again.');
+            setError('Your session has expired. Please log in again.');
         } finally {
             setLoading(false);
         }
@@ -117,6 +123,16 @@ const Chat = () => {
         <div className="grid min-h-screen md:grid-cols-4 sm:grid-cols-1">
             <div className="col-span-1"></div>
             <div className="flex flex-col min-h-screen col-span-2 px-2 border-l border-r border-gray-200 dark:border-gray-800 sm:px-10 md:p-0">
+                {idx === 0 && (
+                    <div className="flex flex-col items-center justify-center pt-10 transition duration-500 ease-in-out transform translate-y-0">
+                        <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">
+                            Song GPT
+                        </h1>
+                        <p className="mt-4 text-gray-500 dark:text-gray-400">
+                            Generate song lyrics using GPT-4.
+                        </p>
+                    </div>
+                )}
                 <div className="flex-grow gap-2 mt-5">
                     <div className="flex flex-col col-span-1 gap-2 mb-16 overflow-y-scroll">
                        {chat.chat.map((message) => (
@@ -133,11 +149,11 @@ const Chat = () => {
                     </div>
 
                     {error && (
-                        <Alert variant="destructive" onClick={() => setError(null)} className="fixed bottom-0 right-0 w-64 px-4 py-2 mb-4 mr-4 text-white transition duration-500 ease-in-out transform translate-y-0 bg-red-500 rounded-md opacity-100 hover:scale-100 cursor-pointer">
+                        <Alert variant="destructive" onClick={() => setError(null)} className="fixed bottom-0 right-0 w-64 px-4 py-2 mb-4 mr-4 text-white transition duration-500 ease-in-out transform translate-y-0 bg-red-500 rounded-md opacity-100 cursor-pointer hover:scale-100">
                          <AlertCircle className="w-4 h-4" />
                          <AlertTitle>Error</AlertTitle>
                          <AlertDescription>
-                           Your session has expired. Please log in again.
+                            {error}
                          </AlertDescription>
                         </Alert>
                     )}

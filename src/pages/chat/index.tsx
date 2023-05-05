@@ -8,6 +8,9 @@ import { ChatContext } from '@/providers/ChatProvider';
 import { parseSong } from '@/lib/parse';
 import SpotifyCardComponent from '@/components/spotify-card';
 import ChatGPTOutputComponent from '@/components/chatgpt-output';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle, FileWarning, Terminal } from "lucide-react"
+
 // import data from '@/data/data.json';
 
 // handle when cookies expire 
@@ -41,8 +44,7 @@ const Chat = () => {
     const [input, setInput] = useState<string>('');
     const [idx, setIdx] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false); 
-
-    // const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
         if (user === null) {
@@ -67,6 +69,7 @@ const Chat = () => {
 
         try {
             setLoading(true); 
+            setError(null);
             const response = await fetch('http://localhost:3000/api/generate', {
               method: 'POST',
               headers: {
@@ -104,6 +107,7 @@ const Chat = () => {
             setInput('');
         } catch (error) {
             console.log(error);
+            setError('An error occurred. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -119,7 +123,7 @@ const Chat = () => {
                             <ChatGPTOutputComponent key={message.id} {...message} />
                         ))}
                     </div>
-                </div>
+                </div> 
                 <div className="fixed bottom-0 left-0 right-0 pb-5 rounded-t-sm w-full mx-auto md:max-w-[720px] bg-background">
                     <div className="flex justify-between flex-grow gap-5 px-5 py-2">
                         <Input placeholder='Enter your phrase' value={input} onChange={(e) => setInput(e.target.value)} required/>
@@ -127,7 +131,17 @@ const Chat = () => {
                           {loading ? 'Loading...' : 'Generate'} 
                         </Button>
                     </div>
-                </div>
+
+                    {error && (
+                        <Alert variant="destructive" onClick={() => setError(null)} className="fixed bottom-0 right-0 w-64 px-4 py-2 mb-4 mr-4 text-white transition duration-500 ease-in-out transform translate-y-0 bg-red-500 rounded-md opacity-100 hover:scale-100 cursor-pointer">
+                         <AlertCircle className="w-4 h-4" />
+                         <AlertTitle>Error</AlertTitle>
+                         <AlertDescription>
+                           Your session has expired. Please log in again.
+                         </AlertDescription>
+                        </Alert>
+                    )}
+                </div> 
             </div>
             <div className="col-span-1"></div>
         </div>

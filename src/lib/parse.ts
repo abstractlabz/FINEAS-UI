@@ -37,9 +37,15 @@ const parseSong = async (song_list: string): Promise<SpotifyResponse[]> => {
     for (const song of songs) {
       // Split the song into the song name and artist (for spotify search)
       const songName = `${song?.split("-")[0] as string} ${song?.split("-")[1] as string}`
-      
+
+      // remove anything that isnt a letter or a space
+      const regex = /[^a-zA-Z ]/g;
+
+      // Removes any non letter or space characters from the song name
+      const clean = songName.replace(regex, "");
+
       // Replaces spaces with %20 for the spotify search 
-      const fixedSong: string = songName.replace(/ /g, "%20");
+      const fixedSong: string = clean.replace(/ /g, "%20");
 
       // Makes a request to the spotify api
       try {
@@ -66,7 +72,7 @@ const parseSong = async (song_list: string): Promise<SpotifyResponse[]> => {
       }
     }
 
-    return allSongs.slice(0, 6);
+    return allSongs.slice(0, 6).filter((song) => song.tracks.items[0]?.name !== 'undefined' )
 };
   
   export { parseSong };

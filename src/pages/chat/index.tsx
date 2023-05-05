@@ -37,9 +37,10 @@ type SpotifyResponse = {
 const Chat = () => {
     const { user } = useContext(UserContext) || {};
     const { chat, setChat } = useContext(ChatContext) || {};
-// add index to state
     const router = useRouter();
     const [input, setInput] = useState<string>('');
+    const [idx, setIdx] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(false); 
 
     // const [error, setError] = useState<string | null>(null);
 
@@ -65,6 +66,7 @@ const Chat = () => {
         }
 
         try {
+            setLoading(true); 
             const response = await fetch('http://localhost:3000/api/generate', {
               method: 'POST',
               headers: {
@@ -93,14 +95,17 @@ const Chat = () => {
             const updatedChat = {
               chat: [
                 ...chat.chat,
-                { input: input, output: parsedOutput }
+                { id: idx, input: input, output: parsedOutput },
               ]
             };
+            
             setChat(updatedChat);
-      
+            setIdx(idx + 1);
             setInput('');
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -111,14 +116,16 @@ const Chat = () => {
                 <div className="flex-grow gap-2 mt-5">
                     <div className="flex flex-col col-span-1 gap-2 mb-16 overflow-y-scroll">
                        {chat.chat.map((message) => (
-                            <ChatGPTOutputComponent key={message.output.length} {...message} />
+                            <ChatGPTOutputComponent key={message.id} {...message} />
                         ))}
                     </div>
                 </div>
                 <div className="fixed bottom-0 left-0 right-0 pb-5 rounded-t-sm w-full mx-auto md:max-w-[720px] bg-background">
                     <div className="flex justify-between flex-grow gap-5 px-5 py-2">
                         <Input placeholder='Enter your phrase' value={input} onChange={(e) => setInput(e.target.value)} required/>
-                        <Button className='w-1/3' onClick={() => void handleInput()}>Generate</Button>
+                        <Button className='w-1/3' onClick={() => void handleInput()} disabled={loading}>
+                          {loading ? 'Loading...' : 'Generate'} 
+                        </Button>
                     </div>
                 </div>
             </div>

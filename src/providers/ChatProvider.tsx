@@ -25,6 +25,7 @@ type SpotifyResponse = {
 
 interface Chat {
     chat: {
+        id: number;
         input: string;
         output: SpotifyResponse[];
     }[];

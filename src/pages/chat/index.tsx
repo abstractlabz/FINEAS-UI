@@ -8,7 +8,9 @@ import { ChatContext } from '@/providers/ChatProvider';
 import { parseSong } from '@/lib/parse';
 import SpotifyCardComponent from '@/components/spotify-card';
 import ChatGPTOutputComponent from '@/components/chatgpt-output';
+// import data from '@/data/data.json';
 
+// handle when cookies expire 
 type SpotifyResponse = {
     tracks: {
         items: {
@@ -35,7 +37,7 @@ type SpotifyResponse = {
 const Chat = () => {
     const { user } = useContext(UserContext) || {};
     const { chat, setChat } = useContext(ChatContext) || {};
-
+// add index to state
     const router = useRouter();
     const [input, setInput] = useState<string>('');
 
@@ -47,22 +49,33 @@ const Chat = () => {
         }
     }, [user, router]);
 
+    useEffect(() => {
+        console.log(input);
+    }, [input]);
+
+    // useEffect(() => {
+    //     if (chat === null) {
+    //         return;
+    //     }
+    // ), [chat];
+
     const handleInput = async (): Promise<void> => {
         if (input === '') {
             return;
         }
 
         try {
-            // const response = await fetch('/api/generate', {
-            //   method: 'POST',
-            //   headers: {
-            //     'Content-Type': 'application/json',
-            //   },
-            //   body: JSON.stringify({ input: input }),
-            // });
+            const response = await fetch('http://localhost:3000/api/generate', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ input: input }),
+            });
       
-            // const gptOutput = await response.json() as { output: string };
-            // console.log(gptOutput)
+            const gptOutput = await response.json() as { output: string };
+
+            console.log(gptOutput.output);
 
             // if (gptOutput.output === "Songs not found.") {
             //     setInput('');
@@ -70,14 +83,7 @@ const Chat = () => {
             // }
 
 
-            const gptOutput = { output: `- Incandescent - OSI
-            - Heat - David Bowie
-            - Sunburn - Muse
-            - Lightbulbs - Foals
-            - Electric Light - James Bay
-            - The Light - Disturbed
-            - Neon Lights - Demi Lovato
-            - Shine a Light - Wolf Parade` }
+            // const gptOutput = { output: `"1. Hello World - Lady Antebellum\n2. Hello World - Tristan Prettyman\n3. Hello World - Belle Perez\n4. The World Is Yours - Nas\n5. A Whole New World - Peabo Bryson & Regina Belle\n6. We Are the World - USA for Africa\n7. What A Wonderful World - Louis Armstrong\n8. Man Of The World - Fleetwood Mac"` }
         
       
             const parsedOutput = await parseSong(gptOutput.output) as SpotifyResponse[];
@@ -105,7 +111,7 @@ const Chat = () => {
                 <div className="flex-grow gap-2 mt-5">
                     <div className="flex flex-col col-span-1 gap-2 mb-16 overflow-y-scroll">
                        {chat.chat.map((message) => (
-                            <ChatGPTOutputComponent key={message.input} {...message} />
+                            <ChatGPTOutputComponent key={message.output.length} {...message} />
                         ))}
                     </div>
                 </div>

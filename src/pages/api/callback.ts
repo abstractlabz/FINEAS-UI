@@ -10,7 +10,7 @@ import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const client_id = env.NEXT_PUBLIC_CLIENT_ID;
 const client_secret = env.NEXT_PUBLIC_CLIENT_SECRET;
-const redirect_uri = env.NEXT_PUBLIC_REDIRECT_URI;
+const redirect_uri = env.NODE_ENV === 'production' ? env.NEXT_PUBLIC_REDIRECT_URI : 'http://localhost:3000/api/callback';
 
 type SpotifyResponse = {
   access_token: string;

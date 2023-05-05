@@ -20,7 +20,7 @@ export const env = createEnv({
     NEXT_PUBLIC_OPENAI_API_KEY: z.string().min(32),
     NEXT_PUBLIC_CLIENT_ID: z.string().min(32),
     NEXT_PUBLIC_CLIENT_SECRET: z.string().min(32),
-    NEXT_PUBLIC_REDIRECT_URI: z.string().min(1)
+    NEXT_PUBLIC_REDIRECT_URI: z.string().min(1),
   },
 
   /**
@@ -33,6 +33,6 @@ export const env = createEnv({
     NEXT_PUBLIC_OPENAI_API_KEY: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
     NEXT_PUBLIC_CLIENT_ID: process.env.NEXT_PUBLIC_CLIENT_ID,
     NEXT_PUBLIC_CLIENT_SECRET: process.env.NEXT_PUBLIC_CLIENT_SECRET,
-    NEXT_PUBLIC_REDIRECT_URI: process.env.NEXT_PUBLIC_REDIRECT_URI
+    NEXT_PUBLIC_REDIRECT_URI: process.env.NEXT_PUBLIC_REDIRECT_URI,
   },
 });

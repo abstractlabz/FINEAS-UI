@@ -1,6 +1,6 @@
 
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState, useCallback } from 'react';
+import { useContext, useEffect, useState, useCallback, useRef } from 'react';
 
 import ChatGPTOutputComponent from '@/components/chatgpt-output';
 import ErrorAlertComponent from '@/components/error-alert';
@@ -96,7 +96,7 @@ const Chat = () => {
 
                 <div className="fixed bottom-0 left-0 right-0 pb-5 rounded-t-sm xl:border-l xl:border-r border-gray-200 dark:border-gray-800 w-full mx-auto md:max-w-[720px] bg-background">
                     <div className="flex justify-between flex-grow gap-5 px-5 py-2">
-                        <Input placeholder='Enter your phrase' value={input} onKeyDown={handleKeyDown} onChange={(e) => setInput(e.target.value)} required/>
+                        <Input placeholder='Enter your phrase' value={input} onChange={(e) => setInput(e.target.value)} required/>
                         <Button className='w-1/3' onClick={() => void handleInput()} disabled={loading}>
                           {loading ? 'Loading...' : 'Generate'} 
                         </Button>

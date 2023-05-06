@@ -17,9 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const query = body.query;
     const allCookies = req.cookies;
 
-    console.log('allCookies: ', allCookies);
-    console.log('query: ', query);
-
     if (!allCookies?.access_token) {
         return res.status(401).json({ error: 'Unauthorized' });
     } 

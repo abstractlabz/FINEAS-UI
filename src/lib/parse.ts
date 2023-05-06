@@ -13,7 +13,7 @@ const parseSong = async (song_list: string): Promise<SpotifyResponse[]> => {
     const songName = song.split("-")[0]?.trim();
     const artistName = song.split("-")[1]?.trim();
 
-    const query = `${songName} ${artistName}`.replace(/[^a-zA-Z ]/g, "").replace(/ /g, "%20");
+    const query = `${songName as string} ${artistName as string}`.replace(/[^a-zA-Z ]/g, "").replace(/ /g, "%20");
 
     try {
       const response = await fetch("/api/song/", {
@@ -43,7 +43,7 @@ const parseSong = async (song_list: string): Promise<SpotifyResponse[]> => {
     .filter((result) => result.status === "fulfilled")
     .forEach((result) => {
       if (result.status === "fulfilled") {
-        allSongs.push(result.value as SpotifyResponse);
+        allSongs.push(result.value);
       }
   });
 

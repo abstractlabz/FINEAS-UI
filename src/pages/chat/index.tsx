@@ -27,7 +27,7 @@ const Chat = () => {
         }
     }, [user, router]);
 
-    const handleInput = async (): Promise<void> => {
+    const handleInput = useCallback(async (): Promise<void> => {
         if (input === '') {
             setError('Please enter a phrase.');
             return;
@@ -44,9 +44,9 @@ const Chat = () => {
               body: JSON.stringify({ input: input }),
             });
       
-            const { output } = await response.json();
+            const { output } = await response.json() as { output: string };
       
-            const parsedOutput = await parseSong(output) as SpotifyResponse[];
+            const parsedOutput: SpotifyResponse[] = await parseSong(output);
 
             if (parsedOutput.length === 0) {
                 setInput('');
@@ -70,7 +70,7 @@ const Chat = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [input, chat, idx, setChat]);
 
     return (
         <div className="grid min-h-screen md:grid-cols-4 sm:grid-cols-1">

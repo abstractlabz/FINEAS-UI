@@ -31,8 +31,6 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   }, []);
 
-  console.log(user);
-
   return (
     <UserContext.Provider value={contextValue}>
         {children}

@@ -1,27 +1,5 @@
-import { createContext, useMemo, useEffect, useState } from 'react';
-
-type SpotifyResponse = {
-    tracks: {
-        items: {
-            name: string;
-            preview_url: string;
-            uri: string;
-            external_urls: {
-                spotify: string;
-            } 
-            artists: {
-                name: string;
-            }[]
-            album: {
-                images: {
-                    url: string;
-                    height: number;
-                    width: number;
-                }[]
-            }
-        }[]
-    }
-}
+import { createContext, useMemo, useState } from 'react';
+import type { SpotifyResponse } from '@/types/Spotify';
 
 interface Chat {
     chat: {
@@ -46,10 +24,6 @@ const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     const [chat, setChat] = useState<Chat>({ chat: [] });
 
     const contextValue = useMemo(() => ({ chat, setChat }), [chat, setChat]);
-
-    useEffect(() => {
-        console.log(chat);
-    }, [chat, setChat]);
     
     return (
         <ChatContext.Provider value={contextValue}>

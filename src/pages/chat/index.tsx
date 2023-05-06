@@ -1,6 +1,6 @@
 
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState, useCallback, useRef } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
 
 import ChatGPTOutputComponent from '@/components/chatgpt-output';
 import ErrorAlertComponent from '@/components/error-alert';
@@ -84,7 +84,7 @@ const Chat = () => {
                         Generate songs using GPT-4
                     </p>
                 </div>
-
+        
 
                 <div className="flex-grow gap-2 mt-5">
                     <div className="flex flex-col col-span-1 gap-2 mb-16 overflow-y-scroll">

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import { SpotifyResponse } from '@/types/Spotify';
+import type { SpotifyResponse } from '@/types/Spotify';
 
 import SpotifyLogo from '../../public/assets/spotify-logo.png';
 

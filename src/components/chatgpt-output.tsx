@@ -1,5 +1,5 @@
 import SpotifyCard from "@/components/spotify-card";
-import { SpotifyResponse } from "@/types/Spotify";
+import type { SpotifyResponse } from "@/types/Spotify";
 import { CornerRightDown } from "lucide-react";
 
 type OutputProps = {

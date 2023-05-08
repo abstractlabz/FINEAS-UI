@@ -6,6 +6,8 @@ import { useContext, useEffect } from 'react';
 import SignIn from '@/components/sign-in';
 import { UserContext } from '@/providers/UserProvider';
 
+import { Badge } from '@/components/ui/badge';
+
 const Home: NextPage = () => {  
   const { user } = useContext(UserContext) || {};
   const router = useRouter();
@@ -25,9 +27,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex flex-col items-center justify-center min-h-screen gap-10">
-        <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">
-          Song GPT
-        </h1>
+        <div className="flex flex-row flex-wrap items-center gap-2">
+          <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">
+            Song GPT
+          </h1>
+          <Badge variant="destructive" className="h-5">BETA</Badge>
+        </div>
         <SignIn />
       </main>
     </>

@@ -10,7 +10,8 @@ import { parseSong } from '@/lib/parse';
 import { ChatContext } from '@/providers/ChatProvider';
 import { UserContext } from '@/providers/UserProvider';
 
-import type { SpotifyResponse } from '@/types/Spotify'
+import type { SpotifyResponse } from '@/types/Spotify';
+import { Badge } from '@/components/ui/badge';
 
 const Chat = () => {
     const router = useRouter();
@@ -77,9 +78,12 @@ const Chat = () => {
             <div className="col-span-1"></div>
             <div className="flex flex-col min-h-screen col-span-2 px-2 border-l border-r border-gray-200 dark:border-gray-800 sm:px-10 md:p-0">
                 <div className="flex flex-col items-center justify-center pt-10 transition duration-500 ease-in-out transform translate-y-0">
-                    <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">
-                        Song GPT
-                    </h1>
+                    <div className="flex flex-row flex-wrap items-center gap-2">
+                        <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">
+                            Song GPT
+                        </h1>
+                        <Badge variant="destructive" className="h-5">BETA</Badge>
+                    </div>
                     <p className="mt-4 text-gray-500 dark:text-gray-400">
                         Generate songs using GPT-4
                     </p>

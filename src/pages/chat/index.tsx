@@ -1,17 +1,13 @@
 
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState, useCallback } from 'react';
-
 import ChatGPTOutputComponent from '@/components/chatgpt-output';
 import ErrorAlertComponent from '@/components/error-alert';
 import TitleComponent from '@/components/title';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { parseSong } from '@/lib/parse';
 import { ChatContext } from '@/providers/ChatProvider';
 import { UserContext } from '@/providers/UserProvider';
-
-import type { SpotifyResponse } from '@/types/Spotify';
 
 const Chat = () => {
     const router = useRouter();
@@ -37,17 +33,20 @@ const Chat = () => {
         try {
             setLoading(true); 
             setError(null);
-            const response = await fetch('/api/generate', {
+            const parsedInput: string = input;
+            const token: string = '671b31a4e4d59e1f4e344e91fb343c6988462a0afcf828bcd3f55404058819f2'
+            const response = fetch('http://localhost:6002/chat?prompt='+encodeURIComponent(parsedInput), {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ input: input }),
+                'Content-Type': 'text/plain',
+                'Authorization': `Bearer ` + token,
+              }
             });
       
-            const { output } = await response.json() as { output: string };
+            const output = (await response).text();
       
-            const parsedOutput: SpotifyResponse[] = await parseSong(output);
+            let parsedOutput: string[] = [];
+            parsedOutput.push(await output);
 
             if (parsedOutput.length === 0) {
                 setInput('');
@@ -57,7 +56,6 @@ const Chat = () => {
       
             const updatedChat = {
               chat: [
-                ...chat.chat,
                 { id: idx, input: input, output: parsedOutput },
               ]
             };
@@ -67,7 +65,7 @@ const Chat = () => {
             setInput('');
         } catch (error) {
             console.log(error);
-            setError('Your session has expired. Please log in again.');
+            setError('Here');
         } finally {
             setLoading(false);
         }
@@ -80,7 +78,7 @@ const Chat = () => {
                 <div className="flex flex-col items-center justify-center pt-10 transition duration-500 ease-in-out transform translate-y-0">
                     <TitleComponent />
                     <p className="mt-4 text-gray-500 dark:text-gray-400">
-                        Generate songs using GPT-4
+                        Discover Stock Market Alpha!
                     </p>
                 </div>
         

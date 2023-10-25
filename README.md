@@ -1,3 +1,3 @@
-# Song GPT
+# FINEAS
 
-Generates songs using GPT-4.
+UI for FINEAS.AI

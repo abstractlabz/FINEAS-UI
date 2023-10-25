@@ -1,11 +1,10 @@
 import { createContext, useMemo, useState } from 'react';
-import type { SpotifyResponse } from '@/types/Spotify';
 
 interface Chat {
     chat: {
         id: number;
         input: string;
-        output: SpotifyResponse[];
+        output: string[];
     }[];
 }
 

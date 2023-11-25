@@ -1,37 +1,45 @@
-import React from "react";
-import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Image, Button} from "@nextui-org/react";
-import { textAlign } from "@mui/system";
+import React, { useEffect, useState } from "react";
+import { Card, CardHeader, CardBody, CardFooter, Divider, Image, Button } from "@nextui-org/react";
 
-export default function App() {
+interface SummaryCardProps {
+  ticker: string;
+  currentPrice: number;
+  dailyChange: number;
+}
+
+const SummaryCard: React.FC<SummaryCardProps> = ({ ticker, currentPrice = 0, dailyChange = 0 }) => {
+
   const divStyle = {
-    textAlign: 'center'
+    textAlign: 'center',
   };
+
   return (
     <Card className="max-w-[400px]">
       <CardHeader className="flex gap-3">
         <Image
-          alt="nextui logo"
+          alt={`${ticker} logo`}
           height={40}
           radius="sm"
           src="/browser.png"
           width={40}
         />
         <div className="flex flex-col">
-          <p className="text-md">AAPL</p>
+          <p className="text-md">{ticker}</p>
         </div>
       </CardHeader>
-      <Divider/>
+      <Divider />
       <CardBody>
-          <p style={divStyle}>Current Price:   $152.75</p>
-          <p style={divStyle}>Daily Change:   +10.53</p>
+        <p style={divStyle}>Current Price: ${currentPrice}</p>
+        <p style={divStyle}>Daily Change: {dailyChange}</p>
       </CardBody>
-      <Divider/>
+      <Divider />
       <CardFooter>
+        <Button color="secondary" isLoading={false}>
+          Generate Reports
+        </Button>
       </CardFooter>
-      <Button color="secondary" isLoading={false}>
-      Generate Reports
-      </Button>
     </Card>
-
   );
-}
+};
+
+export default SummaryCard;

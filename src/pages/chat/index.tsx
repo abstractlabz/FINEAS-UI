@@ -20,7 +20,7 @@ const Chat = () => {
 
     useEffect(() => {
         if (user === null) {
-            router.push('/').catch((err) => console.log(err));
+            router.push('/chat').catch((err) => console.log(err));
         }
     }, [user, router]);
 

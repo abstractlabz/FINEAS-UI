@@ -5,6 +5,7 @@ import SummaryCard from '../../components/ui/card';
 import { Grid } from '@mui/material';
 import { Textarea } from '@nextui-org/react';
 import { restClient } from '@polygon.io/client-js';
+import Deck from '../../components/deck';
 
 interface StockData {
   ticker: string;
@@ -89,6 +90,7 @@ const Markets = () => {
       </h1>
       <br />
       <br />
+      <Deck />
       <div>
         <Textarea
           variant="underlined"

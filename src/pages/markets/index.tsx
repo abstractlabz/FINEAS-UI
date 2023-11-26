@@ -9,7 +9,7 @@ import { restClient } from '@polygon.io/client-js';
 interface StockData {
   ticker: string;
   currentprice: number;
-  dailychange: number;
+  dailychange: string | undefined | number;
 }
 
 const Markets = () => {
@@ -24,20 +24,29 @@ const Markets = () => {
       try {
         const rest = restClient("9AMw0r6sFAXDm3V42p7s0txblRgFw4w0");
 
-        const dataAAPL = await rest.stocks.previousClose('AAPL');
-        const datacard1 = dataAAPL?.results?.[0]?.c ?? 0;
+        const dataAAPL = await rest.stocks.snapshotTicker('AAPL');
+        const datacard1 = dataAAPL?.ticker?.day?.c ?? 0;
 
-        const dataTSLA = await rest.stocks.previousClose('TSLA');
-        const datacard2 = dataTSLA?.results?.[0]?.c ?? 0;
+        const dataTSLA = await rest.stocks.snapshotTicker('TSLA');
+        const datacard2 = dataTSLA?.ticker?.day?.c ?? 0;
 
-        const dataGOOG = await rest.stocks.previousClose('GOOG');
-        const datacard3 = dataGOOG?.results?.[0]?.c ?? 0;
+        const dataGOOG = await rest.stocks.snapshotTicker('GOOG');
+        const datacard3 = dataGOOG?.ticker?.day?.c ?? 0;
+
+        const dataAAPLdelta = await rest.stocks.snapshotTicker('AAPL');
+        const deltacard1 = dataAAPLdelta?.ticker?.todaysChangePerc.toFixed(2) ?? 0;
+
+        const dataTSLAdelta = await rest.stocks.snapshotTicker('TSLA');
+        const deltacard2 = dataTSLAdelta?.ticker?.todaysChangePerc.toFixed(2) ?? 0;
+
+        const dataGOOGdelta = await rest.stocks.snapshotTicker('GOOG');
+        const deltacard3 = dataGOOGdelta?.ticker?.todaysChangePerc?.toFixed(2) ?? 0;
 
         // Update the state after all API calls are complete
         setCardInfoTechData([
-          { ticker: 'AAPL', currentprice: datacard1, dailychange: 100 },
-          { ticker: 'TSLA', currentprice: datacard2, dailychange: 100 },
-          { ticker: 'GOOG', currentprice: datacard3, dailychange: 100 },
+          { ticker: 'AAPL', currentprice: datacard1, dailychange: deltacard1 },
+          { ticker: 'TSLA', currentprice: datacard2, dailychange: deltacard2 },
+          { ticker: 'GOOG', currentprice: datacard3, dailychange: deltacard3 },
         ]);
 
         setLoading(false);

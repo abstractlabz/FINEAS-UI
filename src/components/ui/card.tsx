@@ -5,9 +5,10 @@ interface SummaryCardProps {
   ticker: string;
   currentPrice: number;
   dailyChange: number;
+  onGenerateReports: () => void;
 }
 
-const SummaryCard: React.FC<SummaryCardProps> = ({ ticker, currentPrice = 0, dailyChange = 0 }) => {
+const SummaryCard: React.FC<SummaryCardProps> = ({ ticker, currentPrice = 0, dailyChange = 0, onGenerateReports  }) => {
 
   const divStyle = {
     textAlign: 'center',
@@ -34,7 +35,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ ticker, currentPrice = 0, dai
       </CardBody>
       <Divider />
       <CardFooter>
-        <Button color="secondary" isLoading={false}>
+        <Button color="secondary" isLoading={false} onClick={onGenerateReports}>
           Generate Reports
         </Button>
       </CardFooter>

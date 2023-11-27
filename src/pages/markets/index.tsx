@@ -19,6 +19,12 @@ const Markets = () => {
   const [cardInfoTechData, setCardInfoTechData] = useState<StockData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isDeckVisible, setDeckVisible] = useState(false);
+
+
+  const toggleDeck = () => {
+    setDeckVisible(!isDeckVisible);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,7 +96,6 @@ const Markets = () => {
       </h1>
       <br />
       <br />
-      <Deck />
       <div>
         <Textarea
           variant="underlined"
@@ -111,7 +116,9 @@ const Markets = () => {
                 ticker={stock.ticker}
                 currentPrice={stock.currentprice}
                 dailyChange={stock.dailychange}
+                onGenerateReports={toggleDeck}
               />
+              <Deck isVisible={isDeckVisible} onClose={toggleDeck} />
             </Grid>
           ))}
         </Grid>

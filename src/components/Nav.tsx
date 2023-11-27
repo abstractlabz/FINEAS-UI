@@ -16,7 +16,7 @@ const Nav = () => {
                 </Link>
               </NavbarItem>
               <NavbarItem isActive>
-                <Link href="/summaries" aria-current="page">
+                <Link href="/markets" aria-current="page">
                   Markets
                 </Link>
               </NavbarItem>

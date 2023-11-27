@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ChatContext } from '@/providers/ChatProvider';
 import { UserContext } from '@/providers/UserProvider';
+import Nav from '@/components/Nav';
 
 const Chat = () => {
     const router = useRouter();
@@ -72,6 +73,8 @@ const Chat = () => {
     }, [input, chat, idx, setChat]);
 
     return (
+        <>
+        <Nav/>
         <div className="grid min-h-screen md:grid-cols-4 sm:grid-cols-1">
             <div className="col-span-1"></div>
             <div className="flex flex-col min-h-screen col-span-2 px-2 border-l border-r border-gray-200 dark:border-gray-800 sm:px-10 md:p-0">
@@ -104,6 +107,7 @@ const Chat = () => {
             </div>
             <div className="col-span-1"></div>
         </div>
+        </>
     )
 }
 

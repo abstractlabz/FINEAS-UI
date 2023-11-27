@@ -1,5 +1,3 @@
-- Install polygon.io js library 
-- Setup polygon.io fetching on markets page
-- Set up type definition for card data
-- Pass in api data to card component
-- Create Navbar component
+- Generate summaries for entered tickers
+- Resolve css conflicts
+- Resolve minor bugs

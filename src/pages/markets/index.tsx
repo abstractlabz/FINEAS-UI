@@ -6,6 +6,7 @@ import { Grid } from '@mui/material';
 import { Textarea } from '@nextui-org/react';
 import { restClient } from '@polygon.io/client-js';
 import Deck from '../../components/deck';
+import Nav from '@/components/Nav';
 
 interface StockData {
   ticker: string;
@@ -20,9 +21,11 @@ const Markets = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeckVisible, setDeckVisible] = useState(false);
+  const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
 
 
-  const toggleDeck = () => {
+  const toggleDeck = (ticker: string) => {
+    setSelectedTicker(ticker);
     setDeckVisible(!isDeckVisible);
   };
 
@@ -91,9 +94,7 @@ const Markets = () => {
 
   return (
     <>
-      <h1 style={divStyle} className="text-4xl font-bold text-white">
-        Market Summaries
-      </h1>
+      <Nav/>
       <br />
       <br />
       <div>
@@ -116,9 +117,9 @@ const Markets = () => {
                 ticker={stock.ticker}
                 currentPrice={stock.currentprice}
                 dailyChange={stock.dailychange}
-                onGenerateReports={toggleDeck}
+                onGenerateReports={() => toggleDeck(stock.ticker)}
               />
-              <Deck isVisible={isDeckVisible} onClose={toggleDeck} />
+              <Deck isVisible={isDeckVisible} onClose={() => setDeckVisible(false)} selectedTicker={selectedTicker} />
             </Grid>
           ))}
         </Grid>

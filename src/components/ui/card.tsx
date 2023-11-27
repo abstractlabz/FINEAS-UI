@@ -5,7 +5,7 @@ interface SummaryCardProps {
   ticker: string;
   currentPrice: number;
   dailyChange: number;
-  onGenerateReports: () => void;
+  onGenerateReports: (ticker: string) => void;
 }
 
 const SummaryCard: React.FC<SummaryCardProps> = ({ ticker, currentPrice = 0, dailyChange = 0, onGenerateReports  }) => {
@@ -35,7 +35,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ ticker, currentPrice = 0, dai
       </CardBody>
       <Divider />
       <CardFooter>
-        <Button color="secondary" isLoading={false} onClick={onGenerateReports}>
+        <Button color="secondary" isLoading={false} onClick={() => onGenerateReports(ticker)}>
           Generate Reports
         </Button>
       </CardFooter>

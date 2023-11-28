@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { UserContext } from '@/providers/UserProvider';
 import SummaryCard from '../../components/ui/card';
 import { Grid } from '@mui/material';
-import { Textarea } from '@nextui-org/react';
+import { Button, Textarea } from '@nextui-org/react';
 import { restClient } from '@polygon.io/client-js';
 import Deck from '../../components/deck';
 import Nav from '@/components/Nav';
@@ -22,11 +22,23 @@ const Markets = () => {
   const [error, setError] = useState<string | null>(null);
   const [isDeckVisible, setDeckVisible] = useState(false);
   const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
+  const [textareaValue, setTextareaValue] = useState('');
+
+  const handleChange = (e) => {
+    // Update the state with the current value of the textarea
+    setTextareaValue(e.target.value);
+  };
 
 
   const toggleDeck = (ticker: string) => {
     setSelectedTicker(ticker);
     setDeckVisible(!isDeckVisible);
+  };
+
+  const handleButtonClick = () => {
+    // Access the current value of the textarea using the state variable
+    console.log('Textarea value:', textareaValue);
+    // Perform other actions with the value...
   };
 
   useEffect(() => {
@@ -99,6 +111,8 @@ const Markets = () => {
       <br />
       <div>
         <Textarea
+          value={textareaValue}
+          onChange={handleChange}
           variant="underlined"
           label=""
           labelPlacement="inside"
@@ -107,6 +121,7 @@ const Markets = () => {
           className="col-span-12 md:col-span-6 mb-6 md:mb-0"
           style={backgroundColor}
         />
+      <Button onClick={() => toggleDeck(textareaValue)}>Click to Generate Report</Button>
       </div>
       <div style={divStyle} className="flex flex-col items-center justify-center w-full h-screen">
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>

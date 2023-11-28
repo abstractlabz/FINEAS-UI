@@ -1,3 +1,2 @@
-- Generate summaries for entered tickers
 - Resolve css conflicts
 - Resolve minor bugs

@@ -1,14 +1,17 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, SetStateAction } from 'react';
 import { useRouter } from 'next/router';
 import { UserContext } from '@/providers/UserProvider';
 import SummaryCard from '../../components/ui/card';
 import { Grid } from '@mui/material';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input, Tab, Tabs } from '@nextui-org/react';
 import { restClient } from '@polygon.io/client-js';
 import Deck from '../../components/deck';
 import Nav from '@/components/Nav';
 import Slider from "react-slick";
-import tickers from '@/data/techtickers.json'; // Adjust the path to match your project structure
+import techTickers from '@/data/techtickers.json';
+import industryTickers from '@/data/industrytickers.json';
+import financialTickers from '@/data/financetickers.json';
+import cryptoTickers from '@/data/cryptotickers.json';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 
@@ -27,6 +30,12 @@ const Markets = () => {
   const [isDeckVisible, setDeckVisible] = useState(false);
   const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
   const [textareaValue, setTextareaValue] = useState('');
+  const [activeTab, setActiveTab] = useState('technology'); // Initialize with the first tab as active
+  const handleTabClick = (tabName: any) => {
+    setActiveTab(tabName); // Update the activeTab state with the clicked tab name
+    fetchData(tabName); // Fetch data for the clicked tab
+  };
+
 
   const handleChange = (e) => {
     // Update the state with the current value of the textarea
@@ -36,51 +45,57 @@ const Markets = () => {
 
   const toggleDeck = (ticker: string) => {
     setSelectedTicker(ticker);
-    setDeckVisible(!isDeckVisible);
+    setDeckVisible(true);
   };
 
-  const handleButtonClick = () => {
-    // Access the current value of the textarea using the state variable
-    console.log('Textarea value:', textareaValue);
-    // Perform other actions with the value...
+  const fetchData = async (tab: string) => {
+    try {
+      setLoading(true);
+      const rest = restClient("9AMw0r6sFAXDm3V42p7s0txblRgFw4w0");
+
+      // Determine which data file to use based on the active tab
+      const tickers = tab === 'technology' ? techTickers :
+                tab === 'finance' ? financialTickers :
+                tab === 'industry' ? industryTickers :
+                tab === 'crypto' ? cryptoTickers : techTickers;
+
+      const stockDataPromises = tickers.map(async (ticker) => {
+        // if the crypto tab is activated
+        if (tab === 'crypto') {
+          //const data = await rest.crypto.snapshotTicker(ticker);
+          //const currentPrice = data?.ticker?.day?.c ?? 0;
+          //const dailyChange = data?.ticker?.todaysChangePerc?.toFixed(2) ?? 0;
+
+        } else {
+        const data = await rest.stocks.snapshotTicker(ticker);
+        const currentPrice = data?.ticker?.day?.c ?? 0;
+        const dailyChange = data?.ticker?.todaysChangePerc?.toFixed(2) ?? 0;
+
+        return { ticker, currentPrice, dailyChange };
+        }
+      });
+
+      const stockData = await Promise.all(stockDataPromises);
+      const transformedStockData = stockData.map((data) => ({
+        ticker: data.ticker,
+        currentprice: data.currentPrice,
+        dailychange: data.dailyChange,
+      }));
+
+      setCardInfoTechData(transformedStockData);
+      setLoading(false);
+    } catch (error) {
+      console.error('An error happened:', error);
+      setError('Error fetching data');
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rest = restClient("9AMw0r6sFAXDm3V42p7s0txblRgFw4w0");
-    
-        const stockDataPromises = tickers.map(async (ticker) => {
-          const data = await rest.stocks.snapshotTicker(ticker);
-          const currentPrice = data?.ticker?.day?.c ?? 0;
-          const dailyChange = data?.ticker?.todaysChangePerc?.toFixed(2) ?? 0;
-    
-          return { ticker, currentPrice, dailyChange };
-        });
-    
-        const stockData = await Promise.all(stockDataPromises);
-
-        const transformedStockData = stockData.map((data) => ({
-          ticker: data.ticker,
-          currentprice: data.currentPrice,
-          dailychange: data.dailyChange,
-        }));
-    
-        // Cast stockData to the correct type before setting it in the state
-        setCardInfoTechData(transformedStockData);
-        setLoading(false);
-      } catch (error) {
-        console.error('An error happened:', error);
-        setError('Error fetching data');
-        setLoading(false);
-      }
-    };
-    
-
     if (user !== null) {
       router.push('/markets').catch((err) => console.log(err));
     } else {
-      fetchData();
+      fetchData('technology'); // Load 'technology' data initially
     }
   }, [user, router]);
 
@@ -88,7 +103,7 @@ const sliderSettings = {
   dots: true,
   infinite: true,
   speed: 500,
-  slidesToShow: 3,
+  slidesToShow: 4,
   slidesToScroll: 1,
   responsive: [
     {
@@ -133,7 +148,50 @@ const sliderSettings = {
           </Button>
         </div>
       </div>
-      <div style={{width: 1450, paddingTop: '250px' }}>
+      <div className="flex flex-wrap gap-4 mt-4" style={{ paddingLeft: '55px', paddingTop: '100px' }}>
+        <div className="border-b border-gray-200">
+          <ul className="flex" role="tablist" style={{ marginBottom: '10px' }}>
+            <li className="mr-4">
+              <a
+                href="#technology"
+                className={`py-2 px-4 text-lg ${activeTab === 'technology' ? 'border-b-2 border-blue-500' : ''}`}
+                onClick={() => handleTabClick('technology')}
+                role="tab"
+                aria-controls="technology"
+                aria-selected={activeTab === 'technology' ? 'true' : 'false'}
+              >
+                Technology
+              </a>
+            </li>
+            <li className="mr-4">
+              <a
+                href="#finance"
+                className={`py-2 px-4 text-lg ${activeTab === 'finance' ? 'border-b-2 border-blue-500' : ''}`}
+                onClick={() => handleTabClick('finance')}
+                role="tab"
+                aria-controls="finance"
+                aria-selected={activeTab === 'finance' ? 'true' : 'false'}
+              >
+                Finance
+              </a>
+            </li>
+            <li>
+              <a
+                href="#industry"
+                className={`py-2 px-4 text-lg ${activeTab === 'industry' ? 'border-b-2 border-blue-500' : ''}`}
+                onClick={() => handleTabClick('industry')}
+                role="tab"
+                aria-controls="industry"
+                aria-selected={activeTab === 'industry' ? 'true' : 'false'}
+              >
+                Industry
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style={{ width: 1450, paddingTop: '90px' }}>
         <Slider {...sliderSettings}>
           {cardInfoTechData.map((stock, index) => (
             <div key={index} className="px-2">
@@ -147,7 +205,13 @@ const sliderSettings = {
           ))}
         </Slider>
       </div>
-      {isDeckVisible && <Deck onClose={() => setDeckVisible(false)} selectedTicker={selectedTicker} isVisible={false} />}
+      {isDeckVisible && (
+        <Deck 
+          onClose={() => setDeckVisible(false)} 
+          selectedTicker={selectedTicker}
+          isVisible={isDeckVisible}  // Ensure this prop is correctly used in the Deck component
+        />
+      )}
     </>
   );
 };

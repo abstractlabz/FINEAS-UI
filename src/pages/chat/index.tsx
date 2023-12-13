@@ -51,7 +51,7 @@ const Chat = () => {
 
             if (parsedOutput.length === 0) {
                 setInput('');
-                setError('No songs found. Please try again.');
+                setError('No data found. Please try again.');
                 return;
             }
       

@@ -28,10 +28,25 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
     borderRadius: '10px',
     color: 'white',
     zIndex: '999',
-    width: isVisible ? '65%' : 0,
-    height: isVisible ? '65%' : 0,
+    border: '2px solid #fff', // Added border
+    width: isVisible ? '70%' : 0,
+    height: isVisible ? '70%' : 0,
+    overflow: 'hidden', // Handle overflow
     transition: 'width 0.5s, height 0.5s',
   };
+
+  // Custom styles for the tabs
+  const tabStyle = {
+    backgroundColor: '#1e1e1e', // Tab background color
+    borderBottom: '2px solid #fff', // Underline for tabs
+    borderRadius: '10px',
+    border: '2px solid #fff' // Added border
+  };
+
+  const activeTabStyle = {
+    borderBottomColor: '#4caf50', // Underline color for active tab
+  };
+
 
   // Fetch data when the selectedTicker changes
   useEffect(() => {
@@ -79,6 +94,27 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
     console.log('Error:', error);
   }
 
+  const AnimatedText = ({ text= " ", delay = 125 }) => {
+    const [displayedText, setDisplayedText] = useState('');
+  
+    useEffect(() => {
+      if (text) {
+        let index = 0;
+        const intervalId = setInterval(() => {
+          if (index < text.length) {
+            setDisplayedText(displayedText => displayedText + text.charAt(index));
+            index++;
+          } else {
+            clearInterval(intervalId);
+          }
+        }, delay);
+  
+        return () => clearInterval(intervalId);
+      }
+    }, [text, delay]);
+  
+    return <p>{displayedText || "Loading..."}</p>;
+  };
   // Render the Deck component
   return (
     <div>
@@ -99,39 +135,22 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
           </span>
 
           {/* Tabs for different sections */}
-          <Tabs aria-label="Options">
-            {/* Company Summary Tab */}
-            <Tab key="companySummary" title="Company Summary">
-              <Card>
-                <CardBody>
-                  {/* Render specific properties or format data for Company Summary */}
-                  <h1>COMPANY SUMMARY DATA:</h1>
-                  {<p>{companySummaryData}</p>}
-                </CardBody>
-              </Card>
-            </Tab>
-
-            {/* Financials Summary Tab */}
-            <Tab key="financialSummary" title="Financials Summary">
-              <Card>
-                <CardBody>
-                  {/* Render specific properties or format data for Financials Summary */}
-                  <h1>FINANCIAL SUMMARY DATA:</h1>
-                  {<p>{financialSummaryData}</p>}
-                </CardBody>
-              </Card>
-            </Tab>
-
-            {/* Stock Analysis Tab */}
-            <Tab key="stockAnalysis" title="Stock Analysis">
-              <Card>
-                <CardBody>
-                  {/* Render specific properties or format data for Stock Analysis */}
-                  <h1>STOCK ANALYSIS DATA:</h1>
-                  {<p>{stockAnalysisData}</p>}
-                </CardBody>
-              </Card>
-            </Tab>
+          <Tabs aria-label="Options" style={tabStyle}>
+            {/* Loop through tabs to create each Tab */}
+            {['Company Summary', 'Financials Summary', 'Stock Analysis'].map((tabTitle, index) => (
+              <Tab key={index} title={tabTitle} style={activeTabStyle}>
+                <Card>
+                  <CardBody>
+                    {/* Render specific properties or format data for each tab */}
+                    <h1>{tabTitle.toUpperCase()} DATA:</h1>
+                    {/* Conditionally render data based on tabTitle */}
+                    {tabTitle === 'Company Summary' && <AnimatedText text={companySummaryData || ''} />}
+                    {tabTitle === 'Financials Summary' && <AnimatedText text={financialSummaryData || ''} />}
+                    {tabTitle === 'Stock Analysis' && <AnimatedText text={stockAnalysisData || ''} />}
+                  </CardBody>
+                </Card>
+              </Tab>
+            ))}
           </Tabs>
         </div>
       )}

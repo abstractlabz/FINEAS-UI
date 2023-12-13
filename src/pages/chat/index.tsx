@@ -40,7 +40,7 @@ const Chat = () => {
               method: 'POST',
               headers: {
                 'Content-Type': 'text/plain',
-                'Authorization': `Bearer ` + token,
+                'Authorization': `Bearer ` + token,  
               }
             });
       

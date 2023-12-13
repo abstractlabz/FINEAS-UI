@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Card, CardHeader, CardBody, CardFooter, Divider, Image, Button } from "@nextui-org/react";
 
 interface SummaryCardProps {
@@ -8,34 +8,54 @@ interface SummaryCardProps {
   onGenerateReports: (ticker: string) => void;
 }
 
-const SummaryCard: React.FC<SummaryCardProps> = ({ ticker, currentPrice = 0, dailyChange = 0, onGenerateReports  }) => {
+const SummaryCard: React.FC<SummaryCardProps> = ({ ticker, currentPrice = 0, dailyChange = 0, onGenerateReports }) => {
 
-  const divStyle = {
-    textAlign: 'center',
-  };
+  // Determine text color based on daily change
+  const dailyChangeColor = dailyChange < 0 ? '#f46e6e' : '#6ef48f';
 
   return (
-    <Card className="max-w-[400px]">
-      <CardHeader className="flex gap-3">
+    <Card 
+      className="m-auto" 
+      style={{ 
+        maxWidth: '250px',
+        backgroundColor: '#333',
+        padding: '20px',
+        borderRadius: '10px',
+        border: '2px solid',
+        borderColor: '#ccc'
+      }}
+    >
+      <CardHeader className="flex justify-between items-center">
         <Image
           alt={`${ticker} logo`}
           height={40}
-          radius="sm"
-          src="/browser.png"
           width={40}
+          radius="sm" 
+          src="/browser.png"
+          style={{ objectFit: 'cover' }}
         />
-        <div className="flex flex-col">
-          <p className="text-md">{ticker}</p>
-        </div>
+        <div className="text-md">{ticker}</div>
       </CardHeader>
-      <Divider />
-      <CardBody>
-        <p style={divStyle}>Current Price: ${currentPrice}</p>
-        <p style={divStyle}>Daily Change: {dailyChange}%</p>
+      <Divider height={2} />
+      <CardBody className="text-center">
+        <p>Current Price: ${currentPrice}</p>
+        <p style={{ color: dailyChangeColor }}>Daily Change: {dailyChange}%</p>
       </CardBody>
       <Divider />
-      <CardFooter>
-        <Button color="secondary" isLoading={false} onClick={() => onGenerateReports(ticker)}>
+      <CardFooter className="flex justify-center p-0">
+        <Button 
+          color="secondary"
+          onClick={() => onGenerateReports(ticker)}
+          style={{
+            width: '100%',
+            fontSize: '1.20rem',
+            padding: '15px',
+            borderRadius: '8px',
+            border: '2px solid',
+            borderColor: '#ccc'
+          }}
+          fullWidth
+        >
           Generate Reports
         </Button>
       </CardFooter>

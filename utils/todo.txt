@@ -1,2 +1,6 @@
 - Resolve css conflicts
 - Resolve minor bugs
+- Center cards
+- Carousel for cards
+- Tabs for card Carousel
+- Make sure buttons pop up 

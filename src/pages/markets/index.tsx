@@ -3,10 +3,14 @@ import { useRouter } from 'next/router';
 import { UserContext } from '@/providers/UserProvider';
 import SummaryCard from '../../components/ui/card';
 import { Grid } from '@mui/material';
-import { Button, Textarea } from '@nextui-org/react';
+import { Button, Input } from '@nextui-org/react';
 import { restClient } from '@polygon.io/client-js';
 import Deck from '../../components/deck';
 import Nav from '@/components/Nav';
+import Slider from "react-slick";
+import tickers from '@/data/techtickers.json'; // Adjust the path to match your project structure
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 interface StockData {
   ticker: string;
@@ -45,32 +49,25 @@ const Markets = () => {
     const fetchData = async () => {
       try {
         const rest = restClient("9AMw0r6sFAXDm3V42p7s0txblRgFw4w0");
+    
+        const stockDataPromises = tickers.map(async (ticker) => {
+          const data = await rest.stocks.snapshotTicker(ticker);
+          const currentPrice = data?.ticker?.day?.c ?? 0;
+          const dailyChange = data?.ticker?.todaysChangePerc?.toFixed(2) ?? 0;
+    
+          return { ticker, currentPrice, dailyChange };
+        });
+    
+        const stockData = await Promise.all(stockDataPromises);
 
-        const dataAAPL = await rest.stocks.snapshotTicker('AAPL');
-        const datacard1 = dataAAPL?.ticker?.day?.c ?? 0;
-
-        const dataTSLA = await rest.stocks.snapshotTicker('TSLA');
-        const datacard2 = dataTSLA?.ticker?.day?.c ?? 0;
-
-        const dataGOOG = await rest.stocks.snapshotTicker('GOOG');
-        const datacard3 = dataGOOG?.ticker?.day?.c ?? 0;
-
-        const dataAAPLdelta = await rest.stocks.snapshotTicker('AAPL');
-        const deltacard1 = dataAAPLdelta?.ticker?.todaysChangePerc.toFixed(2) ?? 0;
-
-        const dataTSLAdelta = await rest.stocks.snapshotTicker('TSLA');
-        const deltacard2 = dataTSLAdelta?.ticker?.todaysChangePerc.toFixed(2) ?? 0;
-
-        const dataGOOGdelta = await rest.stocks.snapshotTicker('GOOG');
-        const deltacard3 = dataGOOGdelta?.ticker?.todaysChangePerc?.toFixed(2) ?? 0;
-
-        // Update the state after all API calls are complete
-        setCardInfoTechData([
-          { ticker: 'AAPL', currentprice: datacard1, dailychange: deltacard1 },
-          { ticker: 'TSLA', currentprice: datacard2, dailychange: deltacard2 },
-          { ticker: 'GOOG', currentprice: datacard3, dailychange: deltacard3 },
-        ]);
-
+        const transformedStockData = stockData.map((data) => ({
+          ticker: data.ticker,
+          currentprice: data.currentPrice,
+          dailychange: data.dailyChange,
+        }));
+    
+        // Cast stockData to the correct type before setting it in the state
+        setCardInfoTechData(transformedStockData);
         setLoading(false);
       } catch (error) {
         console.error('An error happened:', error);
@@ -78,6 +75,7 @@ const Markets = () => {
         setLoading(false);
       }
     };
+    
 
     if (user !== null) {
       router.push('/markets').catch((err) => console.log(err));
@@ -86,59 +84,70 @@ const Markets = () => {
     }
   }, [user, router]);
 
-  const divStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center', // Center horizontally
-    alignItems: 'center', // Center vertically
-  };
-
-  const backgroundColor: React.CSSProperties = {
-    backgroundColor: '#1E1E1E',
-  };
-
-  if (loading) {
-    return <p>Loading...</p>; // Add a loading indicator
-  }
-
-  if (error) {
-    return <p>{error}</p>; // Display an error message
-  }
+const sliderSettings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        infinite: true,
+        dots: true
+      }
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }
+  ]
+};
 
   return (
     <>
-      <Nav/>
-      <br />
-      <br />
-      <div>
-        <Textarea
+      <Nav />
+      <div className="mt-4 mb-4 mx-auto max-w-4xl px-4">
+        <Input
           value={textareaValue}
           onChange={handleChange}
-          variant="underlined"
-          label=""
-          labelPlacement="inside"
-          rows={1}
+          clearable
+          bordered
+          color="primary"
           placeholder="Enter a ticker symbol here."
-          className="col-span-12 md:col-span-6 mb-6 md:mb-0"
-          style={backgroundColor}
+          className="w-full mb-4"
+          style={{ backgroundColor: '#1E1E1E', borderRadius: '12px', fontSize: '1.25rem' }}
         />
-      <Button onClick={() => toggleDeck(textareaValue)}>Click to Generate Report</Button>
+        <div className="text-center">
+          <Button
+            style={{ backgroundColor: '#2d3ded', padding: '10px 20px', borderRadius: '10px', borderColor: 'black', borderWidth: '2px', borderStyle: 'solid' }}
+            onClick={() => toggleDeck(textareaValue)}
+          >
+            Click to Generate Report
+          </Button>
+        </div>
       </div>
-      <div style={divStyle} className="flex flex-col items-center justify-center w-full h-screen">
-        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+      <div style={{width: 1450, paddingTop: '250px' }}>
+        <Slider {...sliderSettings}>
           {cardInfoTechData.map((stock, index) => (
-            <Grid item xs={2} sm={4} md={4} key={index}>
+            <div key={index} className="px-2">
               <SummaryCard
-                key={index}
                 ticker={stock.ticker}
                 currentPrice={stock.currentprice}
                 dailyChange={stock.dailychange}
                 onGenerateReports={() => toggleDeck(stock.ticker)}
               />
-              <Deck isVisible={isDeckVisible} onClose={() => setDeckVisible(false)} selectedTicker={selectedTicker} />
-            </Grid>
+            </div>
           ))}
-        </Grid>
+        </Slider>
       </div>
+      {isDeckVisible && <Deck onClose={() => setDeckVisible(false)} selectedTicker={selectedTicker} isVisible={false} />}
     </>
   );
 };

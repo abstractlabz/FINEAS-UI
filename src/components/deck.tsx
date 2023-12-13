@@ -71,12 +71,12 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
 
   // Display loading state
   if (loading) {
-    return <p>Loading...</p>;
+    console.log('Loading...');
   }
 
   // Display error state
   if (error) {
-    return <p>Error: {error}</p>;
+    console.log('Error:', error);
   }
 
   // Render the Deck component

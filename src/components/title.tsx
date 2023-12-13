@@ -6,7 +6,7 @@ const TitleComponent: React.FC = () => {
             <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">
                 FINEAS.AI
             </h1>
-            <Badge variant="destructive" className="h-5">BETA</Badge>
+            <Badge variant="destructive" className="h-5">PRE-ALPHA</Badge>
         </div>
     )
 }

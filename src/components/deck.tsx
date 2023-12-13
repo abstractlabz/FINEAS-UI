@@ -94,7 +94,7 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
     console.log('Error:', error);
   }
 
-  const AnimatedText = ({ text= " ", delay = 125 }) => {
+  const AnimatedText = ({ text= " ", delay = 30 }) => {
     const [displayedText, setDisplayedText] = useState('');
   
     useEffect(() => {

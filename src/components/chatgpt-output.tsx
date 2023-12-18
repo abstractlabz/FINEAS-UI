@@ -5,25 +5,33 @@ type OutputProps = {
     input: string;
     output: string[];
 }
-const AnimatedText = ({ text, delay = 30 }) => {
-    const [displayedText, setDisplayedText] = useState('');
-  
-    useEffect(() => {
-      let index = 0;
+
+const AnimatedText = ({ text = "" }) => {
+  const [displayedText, setDisplayedText] = useState('');
+  const delay = 30; // Delay in milliseconds between each character
+
+  useEffect(() => {
+    setDisplayedText(''); // Reset displayed text on text change
+    if (text) {
+      const words = text.split(' ');
+      const firstWord = words.shift(); // Extract the first word
+      let index = -1;
+      setDisplayedText(firstWord + ' '); // Start with the first word
       const intervalId = setInterval(() => {
-        if (index < text.length) {
-          setDisplayedText(displayedText => displayedText + text.charAt(index));
+        if (index < words.join(' ').length) {
+          setDisplayedText(currentText => currentText + words.join(' ').charAt(index));
           index++;
         } else {
           clearInterval(intervalId);
         }
       }, delay);
-  
+
       return () => clearInterval(intervalId);
-    }, [text, delay]);
-  
-    return <span>{displayedText}</span>;
-  };
+    }
+  }, [text]);
+
+  return <p>{displayedText}</p>;
+};
 
   const ChatGPTOutputComponent = ({ input, output }: OutputProps) => {
     // Concatenate all elements of the output array into a single string

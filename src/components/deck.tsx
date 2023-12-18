@@ -9,13 +9,14 @@ interface DeckProps {
 
 const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
   // State to hold data for different tabs
-  const [companySummaryData, setCompanySummaryData] = useState<any>(null);
-  const [financialSummaryData, setFinancialSummaryData] = useState<any>(null);
-  const [stockAnalysisData, setStockAnalysisData] = useState<any>(null);
+  const [companySummaryData, setCompanySummaryData] = useState<string>("");
+  const [financialSummaryData, setFinancialSummaryData] = useState<string>("");
+  const [stockAnalysisData, setStockAnalysisData] = useState<string>("");
 
   // State for loading and error handling
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [dataFetched, setDataFetched] = useState<boolean>(false);
 
   // Styles for the deck
   const deckStyle = {
@@ -49,40 +50,38 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
 
 
   // Fetch data when the selectedTicker changes
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-
-        // Fetch data from the server using the selectedTicker
-        const response = await fetch(`http://localhost:8080/?ticker=${selectedTicker}`);
-
-        // Check if the request was successful
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
+    if (isVisible && selectedTicker && !dataFetched) {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const response = await fetch(`http://localhost:8080/?ticker=${selectedTicker}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch data');
+          }
+          const result: JSON = await response.json();
+          setCompanySummaryData(Object.values(result)[0]);
+          setFinancialSummaryData(Object.values(result)[1]);
+          setStockAnalysisData(Object.values(result)[2]);
+          setError(null);
+        } catch (error: any) {
+          setError(error.message);
+        } finally {
+          setLoading(false);
+          setDataFetched(true); // Set flag to true after fetching data
         }
+      };
+      fetchData();
+    }
+  }, [selectedTicker, isVisible]);
 
-        // Parse the JSON response
-        const result = await response.json();
-
-        // Extract specific properties or format data as needed for each tab
-        setCompanySummaryData(Object.values(result)[0]);
-        setFinancialSummaryData(Object.values(result)[1]);
-        setStockAnalysisData(Object.values(result)[2]);
-
-        // Reset error state on successful fetch
-        setError(null);
-      } catch (error: any) {
-        // Handle errors and update the error state
-        setError(error.message);
-      } finally {
-        // Set loading to false when the request completes (whether successful or not)
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [selectedTicker]);
+  useEffect(() => {
+    // Reset dataFetched when the ticker changes or deck is closed
+    if (!isVisible || selectedTicker === null) {
+      setDataFetched(false);
+    }
+  }, [selectedTicker, isVisible]);
 
   // Display loading state
   if (loading) {
@@ -94,15 +93,41 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
     console.log('Error:', error);
   }
 
-  const AnimatedText = ({ text= " ", delay = 30 }) => {
+  
+  const LoadingText = () => {
+    const [loadingText, setLoadingText] = useState('Loading');
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setLoadingText(prev => prev.length < 10 ? prev + '.' : 'Loading');
+      }, 500);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return <p>{loadingText}</p>;
+  };
+
+  const handleClose = () => {
+    onClose(); // Call the onClose function passed in props
+    setDataFetched(false); // Reset data fetched state
+    // Reset other states if needed
+  };
+
+  const AnimatedText = ({ text = "" }) => {
     const [displayedText, setDisplayedText] = useState('');
+    const delay = 30; // Delay in milliseconds between each character
   
     useEffect(() => {
+      setDisplayedText(''); // Reset displayed text on text change
       if (text) {
-        let index = 0;
+        const words = text.split(' ');
+        const firstWord = words.shift(); // Extract the first word
+        let index = -1;
+        setDisplayedText(firstWord + ' '); // Start with the first word
         const intervalId = setInterval(() => {
-          if (index < text.length) {
-            setDisplayedText(displayedText => displayedText + text.charAt(index));
+          if (index < words.join(' ').length) {
+            setDisplayedText(currentText => currentText + words.join(' ').charAt(index));
             index++;
           } else {
             clearInterval(intervalId);
@@ -111,50 +136,41 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
   
         return () => clearInterval(intervalId);
       }
-    }, [text, delay]);
+    }, [text]);
   
-    return <p>{displayedText || "Loading..."}</p>;
+    return <p>{displayedText}</p>;
   };
+
   // Render the Deck component
   return (
     <div>
-      {isVisible && (
-        <div style={deckStyle}>
-          {/* Close button */}
-          <span
-            style={{
-              position: 'absolute',
-              top: '10px',
-              right: '10px',
-              cursor: 'pointer',
-              fontSize: '20px',
-            }}
-            onClick={onClose}
-          >
-            &times;
-          </span>
-
-          {/* Tabs for different sections */}
+    {isVisible && (
+      <div style={deckStyle}>
+        {/* Close button and Tabs (Unchanged) */}
+        <button onClick={handleClose} style={{ position: 'absolute', top: '10px', right: '10px' }}>
+            X
+          </button>
+        {loading && <LoadingText />}
+        {!loading && (
           <Tabs aria-label="Options" style={tabStyle}>
             {/* Loop through tabs to create each Tab */}
             {['Company Summary', 'Financials Summary', 'Stock Analysis'].map((tabTitle, index) => (
               <Tab key={index} title={tabTitle} style={activeTabStyle}>
                 <Card>
                   <CardBody>
-                    {/* Render specific properties or format data for each tab */}
                     <h1>{tabTitle.toUpperCase()} DATA:</h1>
-                    {/* Conditionally render data based on tabTitle */}
-                    {tabTitle === 'Company Summary' && <AnimatedText text={companySummaryData || ''} />}
-                    {tabTitle === 'Financials Summary' && <AnimatedText text={financialSummaryData || ''} />}
-                    {tabTitle === 'Stock Analysis' && <AnimatedText text={stockAnalysisData || ''} />}
+                    {tabTitle === 'Company Summary' && <AnimatedText text={companySummaryData} />}
+                    {tabTitle === 'Financials Summary' && <AnimatedText text={financialSummaryData} />}
+                    {tabTitle === 'Stock Analysis' && <AnimatedText text={stockAnalysisData} />}
                   </CardBody>
                 </Card>
               </Tab>
             ))}
           </Tabs>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    )}
+  </div>
   );
 };
 

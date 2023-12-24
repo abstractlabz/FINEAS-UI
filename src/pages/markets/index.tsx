@@ -48,6 +48,57 @@ const Markets = () => {
     setDeckVisible(true);
   };
 
+  function isWeekend(): boolean {
+    const today = new Date(); // Get the current date
+    const dayOfWeek = today.getDay(); // Get the day of the week (0-6, where 0 is Sunday and 6 is Saturday)
+
+    return dayOfWeek === 0 || dayOfWeek === 6; // Return true if it's Saturday (6) or Sunday (0)
+  }
+
+  function getRecentFriday(): string {
+    // Get today's date
+    const today = new Date();
+
+    // Calculate the difference to the most recent Friday
+    // (5 represents Friday; getDay() returns 0 for Sunday, 1 for Monday, ..., 6 for Saturday)
+    let daysToLastFriday = today.getDay() - 5;
+    if (daysToLastFriday <= 0) {
+        // Adjust if today is before Friday or is Friday
+        daysToLastFriday += 7;
+    }
+
+    // Get the most recent Friday
+    const lastFriday = new Date(today);
+    lastFriday.setDate(today.getDate() - daysToLastFriday);
+
+    // Format the date as YYYY-MM-DD
+    const formattedDate = lastFriday.toISOString().split('T')[0];
+
+    console.log(formattedDate); // Outputs the most recent Friday in "YYYY-MM-DD" format
+    return formattedDate || "2023-01-02";
+}
+
+  function getDateBefore(inputDateStr: string) {
+    // Parse the input string to a Date object
+    const inputDate = new Date(inputDateStr);
+
+    // Check if the input date is valid
+    if (isNaN(inputDate.getTime())) {
+        throw new Error('Invalid date format. Please use "YYYY-MM-DD" format.');
+    }
+
+    // Subtract one day
+    inputDate.setDate(inputDate.getDate() - 1);
+
+    // Format the date to YYYY-MM-DD
+    const year = inputDate.getFullYear();
+    const month = String(inputDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(inputDate.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+
   const fetchData = async (tab: string) => {
     try {
       setLoading(true);
@@ -67,11 +118,24 @@ const Markets = () => {
           //const dailyChange = data?.ticker?.todaysChangePerc?.toFixed(2) ?? 0;
 
         } else {
-        const data = await rest.stocks.snapshotTicker(ticker);
-        const currentPrice = data?.ticker?.day?.c ?? 0;
-        const dailyChange = data?.ticker?.todaysChangePerc?.toFixed(2) ?? 0;
-
-        return { ticker, currentPrice, dailyChange };
+        if (isWeekend()) {
+          const data = await rest.stocks.previousClose(ticker)
+          const weekdaydata = await rest.stocks.dailyOpenClose(ticker, getRecentFriday())
+          if (data.results != undefined) {
+          const currentPrice = data.results[0]?.c ?? 0;
+          const oldPrice = weekdaydata?.open ?? 0;
+          console.log(currentPrice)
+          let dailyChange: number = ((currentPrice - oldPrice) / oldPrice) * 100;
+          dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
+          return { ticker, currentPrice, dailyChange };
+          }
+        }
+        else {
+          const data = await rest.stocks.snapshotTicker(ticker);
+          const currentPrice = data?.ticker?.day?.c ?? 0;
+          const dailyChange = data?.ticker?.todaysChangePerc?.toFixed(2) ?? 0;
+          return { ticker, currentPrice, dailyChange };
+        }
         }
       });
 

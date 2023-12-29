@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { UserContext } from '@/providers/UserProvider';
 import SummaryCard from '../../components/ui/card';
 import { Grid } from '@mui/material';
-import { Button, Input, Tab, Tabs } from '@nextui-org/react';
+import { Button, Input, Tab, Tabs, dataFocusVisibleClasses } from '@nextui-org/react';
 import { restClient } from '@polygon.io/client-js';
 import Deck from '../../components/deck';
 import Nav from '@/components/Nav';
@@ -124,17 +124,51 @@ const Markets = () => {
           if (data.results != undefined) {
           const currentPrice = data.results[0]?.c ?? 0;
           const oldPrice = weekdaydata?.open ?? 0;
-          console.log(currentPrice)
           let dailyChange: number = ((currentPrice - oldPrice) / oldPrice) * 100;
           dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
+
           return { ticker, currentPrice, dailyChange };
           }
         }
         else {
-          const data = await rest.stocks.snapshotTicker(ticker);
-          const currentPrice = data?.ticker?.day?.c ?? 0;
-          const dailyChange = data?.ticker?.todaysChangePerc?.toFixed(2) ?? 0;
-          return { ticker, currentPrice, dailyChange };
+          //if the time is before 9:30am
+          // then set the current price to previous day's close
+          //else set the current price to the current price
+          const currentTime = new Date(); // Gets the current date and time
+          const currentHour = currentTime.getHours(); // Gets the hour part of the time (0-23)
+          const currentMinutes = currentTime.getMinutes(); // Gets the minutes part of the time (0-59)
+
+          if (currentHour < 9 || (currentHour === 9 && currentMinutes < 30)) {
+            const data = await rest.stocks.snapshotTicker(ticker);
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            console.log(getDateBefore(formattedDate))
+            const currentPrice = data?.ticker?.day?.c ?? 0;
+            const olddata = await rest.stocks.dailyOpenClose(ticker, getDateBefore(formattedDate))
+            const oldPrice = olddata?.open ?? 0;
+            let dailyChange: number = ((currentPrice - oldPrice) / oldPrice) * 100;
+            dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
+            return { ticker, currentPrice, dailyChange };
+          } else {
+            const data = await rest.stocks.snapshotTicker(ticker);
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            console.log(getDateBefore(formattedDate))
+            const currentPrice = data?.ticker?.prevDay?.c ?? 0;
+            const olddata = await rest.stocks.dailyOpenClose(ticker, getDateBefore(formattedDate))
+            const oldPrice = olddata?.open ?? 0;
+            let dailyChange: number = ((currentPrice - oldPrice) / oldPrice) * 100;
+            dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
+
+            return { ticker, currentPrice, dailyChange };
+          }
+          
         }
         }
       });

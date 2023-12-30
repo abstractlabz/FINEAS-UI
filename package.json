@@ -17,6 +17,7 @@
     "@polygon.io/client-js": "^7.3.2",
     "@radix-ui/react-label": "^2.0.1",
     "@radix-ui/react-select": "^1.2.1",
+    "@react-oauth/google": "^0.12.1",
     "@t3-oss/env-nextjs": "^0.2.1",
     "@tanstack/react-query": "^4.29.5",
     "@tanstack/react-query-devtools": "^4.29.6",

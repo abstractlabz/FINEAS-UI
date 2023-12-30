@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { ChatContext } from '@/providers/ChatProvider';
 import { UserContext } from '@/providers/UserProvider';
 import Nav from '@/components/Nav';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import React from 'react';
 
 const Chat = () => {
     const router = useRouter();
@@ -74,6 +76,8 @@ const Chat = () => {
 
     return (
         <>
+        <GoogleOAuthProvider clientId="684619174291-3515q33o0vl2spdq5t0ur23f7sepgk26.apps.googleusercontent.com">
+        <React.StrictMode>
         <Nav/>
         <div className="grid min-h-screen md:grid-cols-4 sm:grid-cols-1">
             <div className="col-span-1"></div>
@@ -107,6 +111,8 @@ const Chat = () => {
             </div>
             <div className="col-span-1"></div>
         </div>
+        </React.StrictMode>
+        </GoogleOAuthProvider>
         </>
     )
 }

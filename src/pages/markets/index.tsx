@@ -14,6 +14,8 @@ import financialTickers from '@/data/financetickers.json';
 import cryptoTickers from '@/data/cryptotickers.json';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import React from 'react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 interface StockData {
   ticker: string;
@@ -225,6 +227,8 @@ const sliderSettings = {
 
   return (
     <>
+    <GoogleOAuthProvider clientId="684619174291-3515q33o0vl2spdq5t0ur23f7sepgk26.apps.googleusercontent.com">
+    <React.StrictMode>
       <Nav />
       <div className="mt-4 mb-4 mx-auto max-w-4xl px-4">
         <Input
@@ -310,6 +314,8 @@ const sliderSettings = {
           isVisible={isDeckVisible}  // Ensure this prop is correctly used in the Deck component
         />
       )}
+      </React.StrictMode>
+      </GoogleOAuthProvider>
     </>
   );
 };

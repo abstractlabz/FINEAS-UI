@@ -16,6 +16,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import React from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Weekend } from '@mui/icons-material';
 
 interface StockData {
   ticker: string;
@@ -33,6 +34,42 @@ const Markets = () => {
   const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
   const [textareaValue, setTextareaValue] = useState('');
   const [activeTab, setActiveTab] = useState('technology'); // Initialize with the first tab as active
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  useEffect(() => {
+      // Function to update the window width
+      const handleResize = () => setWindowWidth(window.innerWidth);
+
+      // Set initial value
+      handleResize();
+
+      // Add event listener
+      window.addEventListener('resize', handleResize);
+
+      // Cleanup function
+      return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Determine the Tailwind class for the slider container based on the window width
+  let sliderContainerClass;
+
+  if (windowWidth >= 1600) {
+      sliderContainerClass = '1600px'; // Very large screens
+  } else if (windowWidth >= 1400 && windowWidth < 1600) {
+      sliderContainerClass = '1400px'; // Large screens
+  } else if (windowWidth >= 1200 && windowWidth < 1400) {
+      sliderContainerClass = '1200px'; // Medium to large screens
+  } else if (windowWidth >= 1024 && windowWidth < 1200) {
+      sliderContainerClass = '1024px'; // Medium screens
+  } else if (windowWidth >= 900 && windowWidth < 1024) {
+      sliderContainerClass = '900px'; // Small to medium screens
+  } else if (windowWidth >= 768 && windowWidth < 900) {
+      sliderContainerClass = '768px'; // Tablets and larger mobile devices
+  } else if (windowWidth >= 600 && windowWidth < 768) {
+      sliderContainerClass = '600px'; // Larger mobile screens
+  } else {
+      sliderContainerClass = '400px'; // Smaller mobile screens
+  }
   const handleTabClick = (tabName: any) => {
     setActiveTab(tabName); // Update the activeTab state with the clicked tab name
     fetchData(tabName); // Fetch data for the clicked tab
@@ -55,6 +92,13 @@ const Markets = () => {
     const dayOfWeek = today.getDay(); // Get the day of the week (0-6, where 0 is Sunday and 6 is Saturday)
 
     return dayOfWeek === 0 || dayOfWeek === 6; // Return true if it's Saturday (6) or Sunday (0)
+  }
+
+  function isMonday(): boolean {
+    const today = new Date(); // Get the current date
+    const dayOfWeek = today.getDay(); // Get the day of the week (0-6, where 0 is Sunday and 6 is Saturday)
+
+    return dayOfWeek === 1; // Return true if it's Monday (1)
   }
 
   function getRecentFriday(): string {
@@ -121,6 +165,7 @@ const Markets = () => {
 
         } else {
         if (isWeekend()) {
+          console.log("Here 1")
           const data = await rest.stocks.previousClose(ticker)
           const weekdaydata = await rest.stocks.dailyOpenClose(ticker, getRecentFriday())
           if (data.results != undefined) {
@@ -141,20 +186,31 @@ const Markets = () => {
           const currentMinutes = currentTime.getMinutes(); // Gets the minutes part of the time (0-59)
 
           if (currentHour < 9 || (currentHour === 9 && currentMinutes < 30)) {
+            console.log("Here 2")
             const data = await rest.stocks.snapshotTicker(ticker);
             const today = new Date();
             const year = today.getFullYear();
             const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
             const day = String(today.getDate()).padStart(2, '0');
             const formattedDate = `${year}-${month}-${day}`;
-            console.log(getDateBefore(formattedDate))
+            console.log(formattedDate)
             const currentPrice = data?.ticker?.day?.c ?? 0;
-            const olddata = await rest.stocks.dailyOpenClose(ticker, getDateBefore(formattedDate))
-            const oldPrice = olddata?.open ?? 0;
-            let dailyChange: number = ((currentPrice - oldPrice) / oldPrice) * 100;
-            dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
-            return { ticker, currentPrice, dailyChange };
+            if (isWeekend() || isMonday()) {
+              const olddata = await rest.stocks.dailyOpenClose(ticker, getRecentFriday())
+              const oldPrice = olddata?.open ?? 0;
+              let dailyChange: number = ((currentPrice - oldPrice) / oldPrice) * 100;
+              dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
+              return { ticker, currentPrice, dailyChange };
+            }
+            else {
+              const olddata = await rest.stocks.dailyOpenClose(ticker, getDateBefore(formattedDate))
+              const oldPrice = olddata?.open ?? 0;
+              let dailyChange: number = ((currentPrice - oldPrice) / oldPrice) * 100;
+              dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
+              return { ticker, currentPrice, dailyChange };
+            }
           } else {
+            console.log("Here 3")
             const data = await rest.stocks.snapshotTicker(ticker);
             const today = new Date();
             const year = today.getFullYear();
@@ -199,31 +255,59 @@ const Markets = () => {
     }
   }, [user, router]);
 
-const sliderSettings = {
-  dots: true,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 5,
-  slidesToScroll: 1,
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        infinite: true,
-        dots: true
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1400,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
       }
-    },
-    {
-      breakpoint: 600,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1
-      }
-    }
-  ]
-};
+    ]
+  };
+  
 
   return (
     <>
@@ -293,7 +377,7 @@ const sliderSettings = {
         </div>
       </div>
 
-      <div style={{ width: 1450, paddingTop: '90px' }}>
+      <div style={{ width: sliderContainerClass, paddingTop: '90px' }}>
         <Slider {...sliderSettings}>
           {cardInfoTechData.map((stock, index) => (
             <div key={index} className="px-2">

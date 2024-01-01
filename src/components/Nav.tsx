@@ -1,45 +1,77 @@
-import {Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/react";
-import { Button } from "@/components/ui/button";
-import LogoMain from "./ui/logo-main";
-import { GoogleLogin } from '@react-oauth/google';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import React, { useState, useEffect } from 'react';
-import { googleLogout, useGoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
+import { Link, Navbar, NavbarBrand, NavbarItem, Button, NavbarContent } from "@nextui-org/react";
+import LogoMain from "./ui/logo-main";
 import SignInComponent from "./sign-in";
 
 const Nav = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
 
+  const toggleMenu = () => {
+      setIsMenuOpen(!isMenuOpen);
+  };
 
-  // log out function to log the user out of google and set the profile array to null
+  // Close the menu when the window is resized to a wider screen
+  useEffect(() => {
+      const handleResize = () => {
+          setWindowWidth(window.innerWidth);
+          if (window.innerWidth >= 640) { // Adjust this value based on your breakpoint
+              setIsMenuOpen(false);
+          }
+      };
 
-    return (   
+      // Check if window is defined (client-side)
+      if (typeof window !== 'undefined') {
+          window.addEventListener('resize', handleResize);
+          return () => window.removeEventListener('resize', handleResize);
+      }
+  }, []);
+
+    return (
         <Navbar>
             <NavbarBrand>
-              <LogoMain />
+                <LogoMain />
             </NavbarBrand>
+            <div className="sm:hidden">
+                <Button auto flat onClick={toggleMenu}>
+                    <img src="/path-to-hamburger-icon.svg" alt="Menu" />
+                </Button>
+            </div>
+
+            {/* Mobile Menu */}
+            {isMenuOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+                    <div className="relative flex flex-col items-start p-4 bg-white w-64 h-full">
+                        <button onClick={toggleMenu} className="absolute top-4 right-4">
+                            <img className="text-black" src="/path-to-close-icon.svg" alt="Close" /> {/* Replace with your close icon */}
+                        </button>
+                        <NavbarItem>
+                            <Link className='text-black' color="foreground" href="/chat" onClick={toggleMenu}>Chat</Link>
+                        </NavbarItem>
+                        <NavbarItem>
+                            <Link className='text-black' href="/markets" aria-current="page" onClick={toggleMenu}>Markets</Link>
+                        </NavbarItem>
+                        <NavbarItem>
+                            <SignInComponent />
+                        </NavbarItem>
+                    </div>
+                </div>
+            )}
+
+            {/* Regular Navbar for Larger Screens */}
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
-              <NavbarItem>
-                <Link color="foreground" href="/chat">
-                  Chat
-                </Link>
-              </NavbarItem>
-              <NavbarItem isActive>
-                <Link href="/markets" aria-current="page">
-                  Markets
-                </Link>
-              </NavbarItem>
-              <NavbarItem>
-              <SignInComponent/>
-              </NavbarItem>
+                <NavbarItem>
+                    <Link color="foreground" href="/chat">Chat</Link>
+                </NavbarItem>
+                <NavbarItem isActive>
+                    <Link href="/markets" aria-current="page">Markets</Link>
+                </NavbarItem>
+                <NavbarItem>
+                    <SignInComponent />
+                </NavbarItem>
             </NavbarContent>
-            <NavbarContent justify="end">
-              <NavbarItem className="hidden lg:flex">
-              </NavbarItem>
-            </NavbarContent>
-          </Navbar>
+        </Navbar>
     );
-    
 }
 
 export default Nav;

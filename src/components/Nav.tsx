@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, Navbar, NavbarBrand, NavbarItem, Button, NavbarContent } from "@nextui-org/react";
 import LogoMain from "./ui/logo-main";
 import SignInComponent from "./sign-in";
+import menubar from "../../public/menu-bar.png";
+import Image from 'next/image';
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,7 +36,7 @@ const Nav = () => {
             </NavbarBrand>
             <div className="sm:hidden">
                 <Button auto flat onClick={toggleMenu}>
-                    <img src="/path-to-hamburger-icon.svg" alt="Menu" />
+                    <Image src={menubar} alt="Menu" />
                 </Button>
             </div>
 
@@ -43,7 +45,7 @@ const Nav = () => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
                     <div className="relative flex flex-col items-start p-4 bg-white w-64 h-full">
                         <button onClick={toggleMenu} className="absolute top-4 right-4">
-                            <img className="text-black" src="/path-to-close-icon.svg" alt="Close" /> {/* Replace with your close icon */}
+                            <img className="text-black" src="/path-to-close-icon.svg" alt="x" /> {/* Replace with your close icon */}
                         </button>
                         <NavbarItem>
                             <Link className='text-black' color="foreground" href="/chat" onClick={toggleMenu}>Chat</Link>

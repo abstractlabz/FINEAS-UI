@@ -20,9 +20,10 @@ import { Weekend } from '@mui/icons-material';
 
 interface StockData {
   ticker: string;
-  currentprice: number;
-  dailychange: string | undefined | number;
+  currentprice: number | null;
+  dailychange: string | undefined | number | null;
 }
+
 
 const Markets = () => {
   const { user } = useContext(UserContext) || {};
@@ -120,7 +121,6 @@ const Markets = () => {
     // Format the date as YYYY-MM-DD
     const formattedDate = lastFriday.toISOString().split('T')[0];
 
-    console.log(formattedDate); // Outputs the most recent Friday in "YYYY-MM-DD" format
     return formattedDate || "2023-01-02";
 }
 
@@ -156,80 +156,66 @@ const Markets = () => {
                 tab === 'industry' ? industryTickers :
                 tab === 'crypto' ? cryptoTickers : techTickers;
 
-      const stockDataPromises = tickers.map(async (ticker) => {
-        // if the crypto tab is activated
-        if (tab === 'crypto') {
-          //const data = await rest.crypto.snapshotTicker(ticker);
-          //const currentPrice = data?.ticker?.day?.c ?? 0;
-          //const dailyChange = data?.ticker?.todaysChangePerc?.toFixed(2) ?? 0;
-
-        } else {
-        if (isWeekend()) {
-          console.log("Here 1")
-          const data = await rest.stocks.previousClose(ticker)
-          const weekdaydata = await rest.stocks.dailyOpenClose(ticker, getRecentFriday())
-          if (data.results != undefined) {
-          const currentPrice = data.results[0]?.c ?? 0;
-          const oldPrice = weekdaydata?.open ?? 0;
-          let dailyChange: number = ((currentPrice - oldPrice) / oldPrice) * 100;
-          dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
-
-          return { ticker, currentPrice, dailyChange };
-          }
-        }
-        else {
-          //if the time is before 9:30am
-          // then set the current price to previous day's close
-          //else set the current price to the current price
-          const currentTime = new Date(); // Gets the current date and time
-          const currentHour = currentTime.getHours(); // Gets the hour part of the time (0-23)
-          const currentMinutes = currentTime.getMinutes(); // Gets the minutes part of the time (0-59)
-
-          if (currentHour < 9 || (currentHour === 9 && currentMinutes < 30)) {
-            console.log("Here 2")
-            const data = await rest.stocks.snapshotTicker(ticker);
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-            const day = String(today.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
-            console.log(formattedDate)
-            const currentPrice = data?.ticker?.day?.c ?? 0;
-            if (isWeekend() || isMonday()) {
-              const olddata = await rest.stocks.dailyOpenClose(ticker, getRecentFriday())
-              const oldPrice = olddata?.open ?? 0;
-              let dailyChange: number = ((currentPrice - oldPrice) / oldPrice) * 100;
-              dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
-              return { ticker, currentPrice, dailyChange };
-            }
-            else {
-              const olddata = await rest.stocks.dailyOpenClose(ticker, getDateBefore(formattedDate))
-              const oldPrice = olddata?.open ?? 0;
-              let dailyChange: number = ((currentPrice - oldPrice) / oldPrice) * 100;
-              dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
-              return { ticker, currentPrice, dailyChange };
-            }
-          } else {
-            console.log("Here 3")
-            const data = await rest.stocks.snapshotTicker(ticker);
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-            const day = String(today.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
-            console.log(getDateBefore(formattedDate))
-            const currentPrice = data?.ticker?.prevDay?.c ?? 0;
-            const olddata = await rest.stocks.dailyOpenClose(ticker, getDateBefore(formattedDate))
-            const oldPrice = olddata?.open ?? 0;
-            let dailyChange: number = ((currentPrice - oldPrice) / oldPrice) * 100;
-            dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
-
-            return { ticker, currentPrice, dailyChange };
-          }
-          
-        }
-        }
-      });
+                const stockDataPromises = tickers.map(async (ticker) => {
+                  try {
+                    let currentPrice = null;
+                    let dailyChange = null;
+                
+                    // if the crypto tab is activated
+                    if (tab === 'crypto') {
+                      // Add your crypto data fetching logic here
+                      // Make sure to set currentPrice and dailyChange or leave them as null if data is not available
+                    } else {
+                      let data;
+                      let oldPriceData;
+                
+                      if (isWeekend()) {
+                        data = await rest.stocks.previousClose(ticker);
+                        oldPriceData = await rest.stocks.dailyOpenClose(ticker, getRecentFriday());
+                      } else {
+                        // Your existing logic for non-weekend days
+                        const currentTime = new Date();
+                        const currentHour = currentTime.getHours();
+                        const currentMinutes = currentTime.getMinutes();
+                        const formattedDate = currentTime.toISOString().split('T')[0];
+                
+                        if (currentHour < 9 || (currentHour === 9 && currentMinutes < 30)) {
+                          data = await rest.stocks.snapshotTicker(ticker);
+                          if (isWeekend() || isMonday()) {
+                            oldPriceData = await rest.stocks.dailyOpenClose(ticker, getRecentFriday());
+                          } else {
+                            oldPriceData = await rest.stocks.dailyOpenClose(ticker, getDateBefore(formattedDate));
+                          }
+                        } else {
+                          data = await rest.stocks.snapshotTicker(ticker);
+                          oldPriceData = await rest.stocks.dailyOpenClose(ticker, getDateBefore(formattedDate));
+                        }
+                      }
+                
+                      if (data && oldPriceData) {
+                        currentPrice = data.results ? data.results[0]?.c : data?.ticker?.prevDay?.c;
+                        const oldPrice = oldPriceData?.open ?? 0;
+                        dailyChange = ((currentPrice - oldPrice) / oldPrice) * 100;
+                        dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
+                      }
+                    }
+                
+                    return {
+                      ticker,
+                      currentprice: currentPrice !== null ? currentPrice : 'N/A',
+                      dailychange: dailyChange !== null ? dailyChange : 'N/A',
+                    };
+                
+                  } catch (error) {
+                    console.error('Error fetching data for ticker:', ticker, error);
+                    return {
+                      ticker,
+                      currentprice: 'N/A',
+                      dailychange: 'N/A'
+                    };
+                  }
+                });
+                
 
       const stockData = await Promise.all(stockDataPromises);
       const transformedStockData = stockData.map((data) => ({
@@ -379,16 +365,16 @@ const Markets = () => {
 
       <div style={{ width: sliderContainerClass, paddingTop: '90px' }}>
         <Slider {...sliderSettings}>
-          {cardInfoTechData.map((stock, index) => (
-            <div key={index} className="px-2">
-              <SummaryCard
-                ticker={stock.ticker}
-                currentPrice={stock.currentprice}
-                dailyChange={stock.dailychange}
-                onGenerateReports={() => toggleDeck(stock.ticker)}
-              />
-            </div>
-          ))}
+        {cardInfoTechData.map((stock, index) => (
+        <div key={index} className="px-2">
+          <SummaryCard
+            ticker={stock.ticker}
+            currentPrice={stock.currentprice !== null ? stock.currentprice : 'N/A'}
+            dailyChange={stock.dailychange !== null ? stock.dailychange : 'N/A'}
+            onGenerateReports={() => toggleDeck(stock.ticker)}
+          />
+        </div>
+      ))}
         </Slider>
       </div>
       {isDeckVisible && (

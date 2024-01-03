@@ -21,7 +21,7 @@ import { Weekend } from '@mui/icons-material';
 interface StockData {
   ticker: string;
   currentprice: number | null;
-  dailychange: string | undefined | number | null;
+  dailychange: number | null;
 }
 
 
@@ -77,7 +77,7 @@ const Markets = () => {
   };
 
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     // Update the state with the current value of the textarea
     setTextareaValue(e.target.value);
   };
@@ -124,7 +124,7 @@ const Markets = () => {
     return formattedDate || "2023-01-02";
 }
 
-  function getDateBefore(inputDateStr: string) {
+  function getDateBefore(inputDateStr: string | undefined) {
     // Parse the input string to a Date object
     const inputDate = new Date(inputDateStr);
 
@@ -158,52 +158,47 @@ const Markets = () => {
 
                 const stockDataPromises = tickers.map(async (ticker) => {
                   try {
-                    let currentPrice = null;
-                    let dailyChange = null;
+                    let currentPrice = 0;
+                    let oldPrice = 0;
+                    let dailyChange = 0;
+                    const today = new Date();
+                    const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+                    const currentHour = today.getHours();
+                    const currentMinutes = today.getMinutes();
                 
-                    // if the crypto tab is activated
-                    if (tab === 'crypto') {
-                      // Add your crypto data fetching logic here
-                      // Make sure to set currentPrice and dailyChange or leave them as null if data is not available
+                    let isBeforeMarketOpen = currentHour < 9 || (currentHour === 9 && currentMinutes < 30);
+                    let isWeekend = dayOfWeek === 0 || dayOfWeek === 6; // Sunday or Saturday
+                
+                    if (isWeekend) {
+                      // Fetch data for the previous Friday
+                      let fridayData = await rest.stocks.dailyOpenClose(ticker, getRecentFriday());
+                      currentPrice = fridayData?.close ?? 0;
+                      oldPrice = fridayData?.open ?? 0;
                     } else {
-                      let data;
-                      let oldPriceData;
-                
-                      if (isWeekend()) {
-                        data = await rest.stocks.previousClose(ticker);
-                        oldPriceData = await rest.stocks.dailyOpenClose(ticker, getRecentFriday());
+                      // Fetch data for a weekday
+                      if (isBeforeMarketOpen) {
+                        let prevCloseData = await rest.stocks.previousClose(ticker);
+                        let prevOpenData = await rest.stocks.dailyOpenClose(ticker, getDateBefore(today.toISOString().split('T')[0]));
+                        currentPrice = prevCloseData?.results[0]?.c ?? 0;
+                        oldPrice = prevOpenData?.open ?? 0;
                       } else {
-                        // Your existing logic for non-weekend days
-                        const currentTime = new Date();
-                        const currentHour = currentTime.getHours();
-                        const currentMinutes = currentTime.getMinutes();
-                        const formattedDate = currentTime.toISOString().split('T')[0];
-                
-                        if (currentHour < 9 || (currentHour === 9 && currentMinutes < 30)) {
-                          data = await rest.stocks.snapshotTicker(ticker);
-                          if (isWeekend() || isMonday()) {
-                            oldPriceData = await rest.stocks.dailyOpenClose(ticker, getRecentFriday());
-                          } else {
-                            oldPriceData = await rest.stocks.dailyOpenClose(ticker, getDateBefore(formattedDate));
-                          }
-                        } else {
-                          data = await rest.stocks.snapshotTicker(ticker);
-                          oldPriceData = await rest.stocks.dailyOpenClose(ticker, getDateBefore(formattedDate));
-                        }
+                        let snapshotData = await rest.stocks.snapshotTicker(ticker);
+                        let prevCloseData = await rest.stocks.previousClose(ticker);
+                        currentPrice = snapshotData?.ticker?.day?.c ?? 0;
+                        oldPrice = prevCloseData?.results[0]?.c ?? 0;
                       }
+                    }
                 
-                      if (data && oldPriceData) {
-                        currentPrice = data.results ? data.results[0]?.c : data?.ticker?.prevDay?.c;
-                        const oldPrice = oldPriceData?.open ?? 0;
-                        dailyChange = ((currentPrice - oldPrice) / oldPrice) * 100;
-                        dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
-                      }
+                    // Calculate daily change
+                    if (currentPrice !== 0 && oldPrice !== 0) {
+                      dailyChange = ((currentPrice - oldPrice) / oldPrice) * 100;
+                      dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
                     }
                 
                     return {
                       ticker,
-                      currentprice: currentPrice !== null ? currentPrice : 'N/A',
-                      dailychange: dailyChange !== null ? dailyChange : 'N/A',
+                      currentprice: currentPrice,
+                      dailychange: dailyChange,
                     };
                 
                   } catch (error) {
@@ -215,13 +210,12 @@ const Markets = () => {
                     };
                   }
                 });
-                
 
       const stockData = await Promise.all(stockDataPromises);
       const transformedStockData = stockData.map((data) => ({
         ticker: data.ticker,
-        currentprice: data.currentPrice,
-        dailychange: data.dailyChange,
+        currentprice: data.currentprice,
+        dailychange: data.dailychange,
       }));
 
       setCardInfoTechData(transformedStockData);

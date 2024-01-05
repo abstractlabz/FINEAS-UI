@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, Tab, Card, CardBody } from '@nextui-org/react';
+import dynamic from 'next/dynamic';
+
+const LineChart = dynamic(
+  () => import('@/components/chart'), // Adjust the path to where your LineChart component is located
+  { ssr: false } // This will load the component only on the client-side
+);
+
 
 interface DeckProps {
   isVisible: boolean;
@@ -9,9 +16,10 @@ interface DeckProps {
 
 const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
   // State to hold data for different tabs
-  const [companySummaryData, setCompanySummaryData] = useState<string>("");
+  const [priceInfoData, setPriceInfoData] = useState<string>("");
   const [financialSummaryData, setFinancialSummaryData] = useState<string>("");
-  const [stockAnalysisData, setStockAnalysisData] = useState<string>("");
+  const [newsStockData, setNewsStockData] = useState<string>("");
+  const [technicalAnalysisData, setTechnicalAnalysisData] = useState<string>("");
 
   // State for loading and error handling
   const [loading, setLoading] = useState<boolean>(true);
@@ -30,8 +38,8 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
     color: 'white',
     zIndex: '999',
     border: '2px solid #fff', // Added border
-    width: isVisible ? '70%' : 0,
-    height: isVisible ? '70%' : 0,
+    width: isVisible ? '85%' : 0,
+    height: isVisible ? '80%' : 0,
     overflow: 'hidden', // Handle overflow
     transition: 'width 0.5s, height 0.5s',
   };
@@ -61,9 +69,10 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
             throw new Error('Failed to fetch data');
           }
           const result: JSON = await response.json();
-          setCompanySummaryData(Object.values(result)[0]);
+          setPriceInfoData(Object.values(result)[0]);
           setFinancialSummaryData(Object.values(result)[1]);
-          setStockAnalysisData(Object.values(result)[2]);
+          setNewsStockData(Object.values(result)[2]);
+          setTechnicalAnalysisData(Object.values(result)[4]);
           setError(null);
         } catch (error: any) {
           setError(error.message);
@@ -140,7 +149,14 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
   
     return <p>{displayedText}</p>;
   };
-
+  const contentStyle = {
+    overflowY: 'scroll', // Temporarily force scrollbar
+    maxHeight: '380px', // You may need to adjust this
+    padding: '20px',
+  };
+  
+  
+  const data = [45, 52, 38, 45, 19, 23, 2, 50];
   // Render the Deck component
   return (
     <div>
@@ -154,14 +170,16 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
         {!loading && (
           <Tabs aria-label="Options" style={tabStyle}>
             {/* Loop through tabs to create each Tab */}
-            {['Company Summary', 'Financials Summary', 'Stock Analysis'].map((tabTitle, index) => (
+            {['Price Info', 'Financials', 'News Info', 'Technical Analysis'].map((tabTitle, index) => (
               <Tab key={index} title={tabTitle} style={activeTabStyle}>
                 <Card>
-                  <CardBody>
+                  <CardBody style={contentStyle}>
                     <h1>{tabTitle.toUpperCase()} DATA:</h1>
-                    {tabTitle === 'Company Summary' && <AnimatedText text={companySummaryData} />}
-                    {tabTitle === 'Financials Summary' && <AnimatedText text={financialSummaryData} />}
-                    {tabTitle === 'Stock Analysis' && <AnimatedText text={stockAnalysisData} />}
+                    <LineChart data={data} tickerName={selectedTicker} />
+                    {tabTitle === 'Price Info' && <AnimatedText text={priceInfoData} />}
+                    {tabTitle === 'Financials' && <AnimatedText text={financialSummaryData} />}
+                    {tabTitle === 'News Info' && <AnimatedText text={newsStockData} />}
+                    {tabTitle === 'Technical Analysis' && <AnimatedText text={technicalAnalysisData} />}
                   </CardBody>
                 </Card>
               </Tab>

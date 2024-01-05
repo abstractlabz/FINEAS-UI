@@ -38,18 +38,27 @@ const Markets = () => {
   const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
-      // Function to update the window width
-      const handleResize = () => setWindowWidth(window.innerWidth);
+    // Function to update the window width
+    const handleResize = () => {
+        // Check if window is defined (so it runs only in the browser)
+        if (typeof window !== 'undefined') {
+            setWindowWidth(window.innerWidth);
+        }
+    };
 
-      // Set initial value
-      handleResize();
+    // Check if window is defined
+    if (typeof window !== 'undefined') {
+        // Set initial value
+        handleResize();
 
-      // Add event listener
-      window.addEventListener('resize', handleResize);
+        // Add event listener
+        window.addEventListener('resize', handleResize);
 
-      // Cleanup function
-      return () => window.removeEventListener('resize', handleResize);
-  }, []);
+        // Cleanup function
+        return () => window.removeEventListener('resize', handleResize);
+    }
+}, []);
+
 
   // Determine the Tailwind class for the slider container based on the window width
   let sliderContainerClass;
@@ -88,19 +97,6 @@ const Markets = () => {
     setDeckVisible(true);
   };
 
-  function isWeekend(): boolean {
-    const today = new Date(); // Get the current date
-    const dayOfWeek = today.getDay(); // Get the day of the week (0-6, where 0 is Sunday and 6 is Saturday)
-
-    return dayOfWeek === 0 || dayOfWeek === 6; // Return true if it's Saturday (6) or Sunday (0)
-  }
-
-  function isMonday(): boolean {
-    const today = new Date(); // Get the current date
-    const dayOfWeek = today.getDay(); // Get the day of the week (0-6, where 0 is Sunday and 6 is Saturday)
-
-    return dayOfWeek === 1; // Return true if it's Monday (1)
-  }
 
   function getRecentFriday(): string {
     // Get today's date

@@ -39,7 +39,9 @@
       "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
       "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
-
+  .apexcharts-menu-item {
+    @apply text-black !important;
+}
   .dark {
     --background: 224 71% 4%;
     --foreground: 213 31% 91%;

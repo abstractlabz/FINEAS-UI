@@ -30,7 +30,7 @@ const Nav = () => {
   }, []);
 
     return (
-        <Navbar>
+        <Navbar style={{ zIndex: 1000 }}>
             <NavbarBrand>
                 <LogoMain />
             </NavbarBrand>

@@ -36,7 +36,7 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
     padding: '20px',
     borderRadius: '10px',
     color: 'white',
-    zIndex: '999',
+    zIndex: '10',
     border: '2px solid #fff', // Added border
     width: isVisible ? '85%' : 0,
     height: isVisible ? '80%' : 0,

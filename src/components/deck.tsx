@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Tabs, Tab, Card, CardBody } from '@nextui-org/react';
 import dynamic from 'next/dynamic';
+import { motion } from 'framer-motion';
 
 const LineChart = dynamic(
   () => import('@/components/chart'), // Adjust the path to where your LineChart component is located
@@ -16,7 +17,7 @@ interface DeckProps {
 
 const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
   // State to hold data for different tabs
-  const [priceInfoData, setPriceInfoData] = useState<string>("");
+  const [priceInfoData, setPriceInfoData] = useState<string>(" ");
   const [financialSummaryData, setFinancialSummaryData] = useState<string>("");
   const [newsStockData, setNewsStockData] = useState<string>("");
   const [technicalAnalysisData, setTechnicalAnalysisData] = useState<string>("");
@@ -70,6 +71,7 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
           }
           const result: JSON = await response.json();
           setPriceInfoData(Object.values(result)[0]);
+          console.log("Fetched text for Price Info Data:", Object.values(result)[0]);
           setFinancialSummaryData(Object.values(result)[1]);
           setNewsStockData(Object.values(result)[2]);
           setTechnicalAnalysisData(Object.values(result)[4]);
@@ -123,32 +125,27 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
     // Reset other states if needed
   };
 
-  const AnimatedText = ({ text = "" }) => {
-    const [displayedText, setDisplayedText] = useState('');
-    const delay = 30; // Delay in milliseconds between each character
-  
-    useEffect(() => {
-      setDisplayedText(''); // Reset displayed text on text change
-      if (text) {
-        const words = text.split(' ');
-        const firstWord = words.shift(); // Extract the first word
-        let index = -1;
-        setDisplayedText(firstWord + ' '); // Start with the first word
-        const intervalId = setInterval(() => {
-          if (index < words.join(' ').length) {
-            setDisplayedText(currentText => currentText + words.join(' ').charAt(index));
-            index++;
-          } else {
-            clearInterval(intervalId);
-          }
-        }, delay);
-  
-        return () => clearInterval(intervalId);
-      }
-    }, [text]);
-  
-    return <p>{displayedText}</p>;
-  };
+  const AnimatedText = ({ text }) => {
+  const textArray = text.split('');
+
+  return (
+    <div>
+      {textArray.map((char, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.005 }}
+        >
+          {char}
+        </motion.span>
+      ))}
+    </div>
+  );
+};
+
+
+
   const contentStyle = {
     overflowY: 'scroll', // Temporarily force scrollbar
     maxHeight: '380px', // You may need to adjust this

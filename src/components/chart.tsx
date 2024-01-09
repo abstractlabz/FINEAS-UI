@@ -1,15 +1,51 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import ApexCharts from 'react-apexcharts';
 
-const LineGraph = ({ data, tickerName }) => {
-    const [series, setSeries] = useState([{
-        name: tickerName || 'Series 1', // Use ticker name if provided
-        data: data || [30, 40, 35, 50, 49, 60, 70, 91]
-    }]);
+const LineGraph = ({tickerName}) => {
+    const [series, setSeries] = useState([{ name: '', data: [] }]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const now = new Date();
+            const sixMonthsAgo = new Date();
+            sixMonthsAgo.setMonth(now.getMonth() - 6);
+
+            try {
+                // Replace vX with the correct API version
+                const response = await axios.get(`https://api.polygon.io/v2/aggs/ticker/${tickerName}/range/1/day/${formatDate(sixMonthsAgo)}/${formatDate(now)}`, {
+                    params: {
+                        apiKey: '9AMw0r6sFAXDm3V42p7s0txblRgFw4w0' // Replace with your actual API key
+                    }
+                });
+
+                const formattedData = response.data.results.map(item => ({
+                    x: new Date(item.t).toLocaleDateString(),
+                    y: item.c
+                }));
+
+                setSeries([{ name: tickerName, data: formattedData }]);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                // Additional logging for debugging
+                console.log(`Requested URL: ${error.config.url}`);
+                console.log(`Response data: ${error.response?.data}`);
+            }
+        };
+
+        if (tickerName) {
+            fetchData();
+        }
+    }, [tickerName]);
+
+    const formatDate = (date) => {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    };
+
 
     const options = {
         chart: {
-            height: 350,
+            height: 370,
             type: 'line',
             zoom: {
                 enabled: false
@@ -17,7 +53,7 @@ const LineGraph = ({ data, tickerName }) => {
             toolbar: {
                 show: true,
                 tools: {
-                    download: true, // Show the download tool
+                    download: true,
                     selection: true,
                     zoom: true,
                     zoomin: true,
@@ -26,14 +62,13 @@ const LineGraph = ({ data, tickerName }) => {
                     reset: true | '<img src="/static/icons/reset.png" width="20">',
                     customIcons: []
                 },
-                // Add export menu options
                 export: {
                     csv: {
                         filename: `${tickerName}_Data`,
                         columnDelimiter: ',',
                         headerCategory: 'category',
                         headerValue: 'value',
-                        dateFormatter(timestamp: string | number | Date) {
+                        dateFormatter: function (timestamp: any) {
                             return new Date(timestamp).toDateString();
                         }
                     },
@@ -44,7 +79,7 @@ const LineGraph = ({ data, tickerName }) => {
                         filename: `${tickerName}_Data`,
                     }
                 },
-                autoSelected: 'zoom' 
+                autoSelected: 'zoom'
             },
         },
         dataLabels: {
@@ -52,13 +87,13 @@ const LineGraph = ({ data, tickerName }) => {
         },
         stroke: {
             curve: 'straight',
-            colors: ['#28a745'] // Line color set to green
+            colors: ['#28a745']
         },
         title: {
-            text: tickerName ? `${tickerName}: Historical Data` : 'Line Graph', // Dynamic title
+            text: tickerName ? `${tickerName}: Historical Data` : 'Line Graph',
             align: 'left',
             style: {
-                color: '#ffffff' // Title color
+                color: '#ffffff'
             }
         },
         grid: {
@@ -68,46 +103,45 @@ const LineGraph = ({ data, tickerName }) => {
             },
         },
         xaxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+            type: 'datetime',
             labels: {
                 style: {
-                    colors: '#ffffff' // X-axis labels color
+                    colors: '#ffffff'
                 }
             }
         },
         yaxis: {
             labels: {
                 style: {
-                    colors: '#ffffff' // Y-axis labels color
+                    colors: '#ffffff'
                 }
             }
         },
         tooltip: {
-            theme: 'dark' // Tooltip theme
+            theme: 'dark'
         },
     };
 
     return (
-        
         <>
-        <div id="chart">
-            <ApexCharts options={options} series={series} type="line" height={350} />
-        </div>
-        <style jsx global>{`
-            .apexcharts-menu.apexcharts-menu-open {
-                color: black;
-            }
+            <div id="chart">
+                <ApexCharts options={options} series={series} type="line" height={340} />
+            </div>
+            <style jsx global>{`
+                .apexcharts-menu.apexcharts-menu-open {
+                    color: black;
+                }
 
-            .apexcharts-menu-item:hover {
-                background-color: #f3f3f3;
-                color: black;
-            }
+                .apexcharts-menu-item:hover {
+                    background-color: #f3f3f3;
+                    color: black;
+                }
 
-            .apexcharts-menu-item {
-                color: black;
-            }
-        `}</style>
-    </>
+                .apexcharts-menu-item {
+                    color: black;
+                }
+            `}</style>
+        </>
     );
 };
 

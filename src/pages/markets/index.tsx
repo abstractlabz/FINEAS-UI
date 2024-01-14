@@ -16,7 +16,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import React from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { Weekend } from '@mui/icons-material';
+import env from 'react-dotenv';
 
 interface StockData {
   ticker: string;
@@ -144,7 +144,8 @@ const Markets = () => {
   const fetchData = async (tab: string) => {
     try {
       setLoading(true);
-      const rest = restClient("9AMw0r6sFAXDm3V42p7s0txblRgFw4w0");
+      
+      const rest = restClient(process.env.NEXT_PUBLIC_POLY_API_KEY);
 
       // Determine which data file to use based on the active tab
       const tickers = tab === 'technology' ? techTickers :

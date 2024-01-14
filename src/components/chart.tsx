@@ -15,7 +15,7 @@ const LineGraph = ({tickerName}) => {
                 // Replace vX with the correct API version
                 const response = await axios.get(`https://api.polygon.io/v2/aggs/ticker/${tickerName}/range/1/day/${formatDate(sixMonthsAgo)}/${formatDate(now)}`, {
                     params: {
-                        apiKey: '9AMw0r6sFAXDm3V42p7s0txblRgFw4w0' // Replace with your actual API key
+                        apiKey: process.env.NEXT_PUBLIC_POLY_API_KEY // Replace with your actual API key
                     }
                 });
 
@@ -87,7 +87,7 @@ const LineGraph = ({tickerName}) => {
         },
         stroke: {
             curve: 'straight',
-            colors: ['#28a745']
+            colors: ['#2d9e57']
         },
         title: {
             text: tickerName ? `${tickerName}: Historical Data` : 'Line Graph',

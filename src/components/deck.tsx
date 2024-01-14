@@ -33,7 +33,7 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    backgroundColor: '#41447c',
+    backgroundColor: '#572d9e',
     padding: '20px',
     borderRadius: '10px',
     color: 'white',

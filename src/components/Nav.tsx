@@ -35,7 +35,7 @@ const Nav = () => {
                 <LogoMain />
             </NavbarBrand>
             <div className="sm:hidden">
-                <Button auto flat onClick={toggleMenu}>
+                <Button onClick={toggleMenu}>
                     <Image src={menubar} alt="Menu" />
                 </Button>
             </div>

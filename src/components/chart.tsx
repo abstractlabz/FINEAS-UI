@@ -1,21 +1,33 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import ApexCharts from 'react-apexcharts';
+import type { ApexOptions } from 'apexcharts'; // Updated import
 
-const LineGraph = ({tickerName}) => {
+interface LineChartProps {
+    tickerName: string;
+}
+
+interface ApiResponse {
+    results: Array<{
+        t: number; // Assuming 't' is a timestamp
+        c: number; // Assuming 'c' is the value you need
+    }>;
+}
+
+const LineChart: React.FC<LineChartProps> = ({ tickerName }) => {
     const [series, setSeries] = useState([{ name: '', data: [] }]);
 
     useEffect(() => {
+        // Async function declared inside useEffect
         const fetchData = async () => {
             const now = new Date();
             const sixMonthsAgo = new Date();
             sixMonthsAgo.setMonth(now.getMonth() - 6);
 
             try {
-                // Replace vX with the correct API version
-                const response = await axios.get(`https://api.polygon.io/v2/aggs/ticker/${tickerName}/range/1/day/${formatDate(sixMonthsAgo)}/${formatDate(now)}`, {
+                const response = await axios.get<ApiResponse>(`https://api.polygon.io/v2/aggs/ticker/${tickerName}/range/1/day/${formatDate(sixMonthsAgo)}/${formatDate(now)}`, {
                     params: {
-                        apiKey: process.env.NEXT_PUBLIC_POLY_API_KEY // Replace with your actual API key
+                        apiKey: process.env.NEXT_PUBLIC_POLY_API_KEY
                     }
                 });
 
@@ -27,86 +39,73 @@ const LineGraph = ({tickerName}) => {
                 setSeries([{ name: tickerName, data: formattedData }]);
             } catch (error) {
                 console.error('Error fetching data:', error);
-                // Additional logging for debugging
-                console.log(`Requested URL: ${error.config.url}`);
-                console.log(`Response data: ${error.response?.data}`);
             }
         };
 
         if (tickerName) {
-            fetchData();
+            // Call fetchData and handle any potential errors
+            fetchData().catch(console.error);
         }
     }, [tickerName]);
 
-    const formatDate = (date) => {
+    const formatDate = (date: Date) => {
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     };
 
+    const chartType: ApexOptions["chart"]["type"] = "line";
+    const strokeType: ApexOptions["stroke"]["curve"] = "straight";
+    const alignType: ApexOptions["title"]["align"] = "left";
+    const dateType: ApexOptions["xaxis"]["type"] = "datetime";
 
-    const options = {
+    const options: ApexOptions = {
         chart: {
-            height: 370,
-            type: 'line',
-            zoom: {
-                enabled: false
-            },
-            toolbar: {
-                show: true,
-                tools: {
-                    download: true,
-                    selection: true,
-                    zoom: true,
-                    zoomin: true,
-                    zoomout: true,
-                    pan: true,
-                    reset: true | '<img src="/static/icons/reset.png" width="20">',
-                    customIcons: []
-                },
-                export: {
-                    csv: {
-                        filename: `${tickerName}_Data`,
-                        columnDelimiter: ',',
-                        headerCategory: 'category',
-                        headerValue: 'value',
-                        dateFormatter: function (timestamp: any) {
-                            return new Date(timestamp).toDateString();
-                        }
-                    },
-                    svg: {
-                        filename: `${tickerName}_Data`,
-                    },
-                    png: {
-                        filename: `${tickerName}_Data`,
-                    }
-                },
-                autoSelected: 'zoom'
-            },
+          height: 350,
+          type: chartType,
+          zoom: {
+            enabled: true
+          },
+          toolbar: {
+            show: true,
+            tools: {
+              download: true,
+              selection: true,
+              zoom: true,
+              zoomin: true,
+              zoomout: true,
+              pan: true,
+              reset: true
+            }
+          },
+          background: '#3e0699'
         },
         dataLabels: {
-            enabled: false
+          enabled: false
         },
         stroke: {
-            curve: 'straight',
-            colors: ['#2d9e57']
+          curve: strokeType,
+          width: 5,
+          colors: ['#39FF14']
         },
         title: {
-            text: tickerName ? `${tickerName}: Historical Data` : 'Line Graph',
-            align: 'left',
+          text: tickerName + " Historical Data",
+          align: alignType,
             style: {
                 color: '#ffffff'
             }
         },
         grid: {
-            row: {
-                colors: ['#f3f3f3', 'transparent'],
-                opacity: 0.5
-            },
+          borderColor: "#e7e7e7",
+          row: {
+            colors: ["#f3f3f3", "transparent"],
+            opacity: 0.5
+          }
         },
         xaxis: {
-            type: 'datetime',
+          type: dateType,
+          categories: [],
             labels: {
                 style: {
-                    colors: '#ffffff'
+                colors: '#ffffff'
                 }
             }
         },
@@ -124,25 +123,29 @@ const LineGraph = ({tickerName}) => {
 
     return (
         <>
-            <div id="chart">
-                <ApexCharts options={options} series={series} type="line" height={340} />
-            </div>
-            <style jsx global>{`
-                .apexcharts-menu.apexcharts-menu-open {
-                    color: black;
-                }
+        <div id="chart">
+            <ApexCharts options={options} series={series} type="line" height={350} />
+        </div>
+        <style jsx global>{`
+            .apexcharts-menu.apexcharts-menu-open {
+                color: black;
+            }
 
-                .apexcharts-menu-item:hover {
-                    background-color: #f3f3f3;
-                    color: black;
-                }
+            .apexcharts-menu-item:hover {
+                background-color: #f3f3f3;
+                color: black;
+            }
 
-                .apexcharts-menu-item {
-                    color: black;
-                }
-            `}</style>
+            .apexcharts-menu-item {
+                color: black;
+            }
+
+            #chart {
+                background: #3e0699;
+            }
+        `}</style>
         </>
     );
 };
 
-export default LineGraph;
+export default LineChart;

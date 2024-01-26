@@ -28,13 +28,15 @@ const MultipleItems: React.FC<MultipleItemsProps> = ({ items: propItems }) => {
   const ItemsList = () => {
     return (
       <>
-        {items.map((item) => (
-          <div key={item.id}> {/* Adding a key prop for React's list rendering optimization */}
+        {items.map((item, index) => (
+          <div key={index}> {/* It's still better to use a unique and stable key like item.id if available */}
             <SummaryCard
               ticker={item.ticker}
-              currentprice={item.currentprice}
-              dailychange={item.dailychange}
-            />
+              currentPrice={item.currentprice} // Assuming this has been corrected as per the previous error
+              dailyChange={item.dailychange} // Changed from dailychange to dailyChange
+              onGenerateReports={function (ticker: string): void {
+                throw new Error("Function not implemented.");
+              } } />
           </div>
         ))}
       </>

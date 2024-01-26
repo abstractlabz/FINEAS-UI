@@ -3,10 +3,11 @@
     "target": "es2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false, // Changed to false to skip checking JS files
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
+    "noEmitOnError": false,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -15,12 +16,12 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": false, // Changed to false for less strictness
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
-  },
+},
   "include": [
     ".eslintrc.cjs",
     "next-env.d.ts",

@@ -1,13 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs, Tab, Card, CardBody } from '@nextui-org/react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 
 const LineChart = dynamic(
-  () => import('@/components/chart'), // Adjust the path to where your LineChart component is located
-  { ssr: false } // This will load the component only on the client-side
+  () => import('@/components/chart'),
+  { ssr: false }
 );
-
 
 interface DeckProps {
   isVisible: boolean;
@@ -15,84 +14,89 @@ interface DeckProps {
   selectedTicker: string | null;
 }
 
-const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
-  // State to hold data for different tabs
-  const [priceInfoData, setPriceInfoData] = useState<string>(" ");
-  const [financialSummaryData, setFinancialSummaryData] = useState<string>("");
-  const [newsStockData, setNewsStockData] = useState<string>("");
-  const [technicalAnalysisData, setTechnicalAnalysisData] = useState<string>("");
+interface ApiResponse {
+  ticker: string;
+  priceInfoData: string;
+  financialSummaryData: string;
+  newsStockData: string;
+  technicalAnalysisData: string;
+}
 
-  // State for loading and error handling
+const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [dataFetched, setDataFetched] = useState<boolean>(false);
 
-  // Styles for the deck
-  const deckStyle = {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: '#572d9e',
-    padding: '20px',
-    borderRadius: '10px',
-    color: 'white',
-    zIndex: '10',
-    border: '2px solid #fff', // Added border
-    width: isVisible ? '85%' : 0,
-    height: isVisible ? '80%' : 0,
-    overflow: 'hidden', // Handle overflow
-    transition: 'width 0.5s, height 0.5s',
-  };
+  // Styles remain the same
+    // Styles for the deck
+    const deckStyle: React.CSSProperties = {
+      position: 'fixed',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      backgroundColor: '#572d9e',
+      padding: '20px',
+      borderRadius: '10px',
+      color: 'white',
+      zIndex: 10, // Changed from string to number
+      border: '2px solid #fff',
+      width: isVisible ? '85%' : '0', // Ensure types match (string in both cases)
+      height: isVisible ? '80%' : '0', // Ensure types match (string in both cases)
+      overflow: 'hidden',
+      transition: 'width 0.5s, height 0.5s',
+    };
+    
+  
+    // Custom styles for the tabs
+    const tabStyle = {
+      backgroundColor: '#1e1e1e', // Tab background color
+      borderBottom: '2px solid #fff', // Underline for tabs
+      borderRadius: '10px',
+      border: '2px solid #fff' // Added border
+    };
+  
+    const activeTabStyle = {
+      borderBottomColor: '#4caf50', // Underline color for active tab
+    };
+    const [priceInfoData, setPriceInfoData] = useState<string>(" ");
+    const [financialSummaryData, setFinancialSummaryData] = useState<string>("");
+    const [newsStockData, setNewsStockData] = useState<string>("");
+    const [technicalAnalysisData, setTechnicalAnalysisData] = useState<string>("");
+  
 
-  // Custom styles for the tabs
-  const tabStyle = {
-    backgroundColor: '#1e1e1e', // Tab background color
-    borderBottom: '2px solid #fff', // Underline for tabs
-    borderRadius: '10px',
-    border: '2px solid #fff' // Added border
-  };
-
-  const activeTabStyle = {
-    borderBottomColor: '#4caf50', // Underline color for active tab
-  };
-
-
-  // Fetch data when the selectedTicker changes
-
-  useEffect(() => {
-    if (isVisible && selectedTicker && !dataFetched) {
-      const fetchData = async () => {
-        try {
-          setLoading(true);
-          const response = await fetch(`http://localhost:8080/?ticker=${selectedTicker}`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch data');
+    useEffect(() => {
+      if (isVisible && selectedTicker && !dataFetched) {
+        const fetchData = async () => {
+          try {
+            setLoading(true);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_AGGREGATORURL}/ret?ticker=${selectedTicker}`);
+            if (!response.ok) {
+              throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+            }
+            const result = await response.json() as ApiResponse;
+            // Use the result here to set state
+            setPriceInfoData(result.priceInfoData);
+            setFinancialSummaryData(result.financialSummaryData);
+            setNewsStockData(result.newsStockData);
+            setTechnicalAnalysisData(result.technicalAnalysisData);
+            
+          } catch (err) {
+            const error = err as Error;
+            setError(error.message);
+          } finally {
+            setLoading(false);
+            setDataFetched(true);
           }
-          const result: JSON = await response.json();
-          setPriceInfoData(Object.values(result)[0]);
-          console.log("Fetched text for Price Info Data:", Object.values(result)[0]);
-          setFinancialSummaryData(Object.values(result)[1]);
-          setNewsStockData(Object.values(result)[2]);
-          setTechnicalAnalysisData(Object.values(result)[4]);
-          setError(null);
-        } catch (error: any) {
-          setError(error.message);
-        } finally {
-          setLoading(false);
-          setDataFetched(true); // Set flag to true after fetching data
-        }
-      };
-      fetchData();
-    }
-  }, [selectedTicker, isVisible]);
-
-  useEffect(() => {
-    // Reset dataFetched when the ticker changes or deck is closed
-    if (!isVisible || selectedTicker === null) {
-      setDataFetched(false);
-    }
-  }, [selectedTicker, isVisible]);
+        };
+        fetchData().catch(console.error);
+      }
+    }, [selectedTicker, isVisible, dataFetched]);
+  
+    useEffect(() => {
+      if (!isVisible || selectedTicker === null) {
+        setDataFetched(false);
+      }
+    }, [selectedTicker, isVisible]);
 
   // Display loading state
   if (loading) {
@@ -106,17 +110,28 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
 
   
   const LoadingText = () => {
-    const [loadingText, setLoadingText] = useState('Loading');
-
+    const messages = ['Searching the internet', 'Analyzing data', 'Generating visuals', 'Finishing touches'];
+    const [currentMessage, setCurrentMessage] = useState(0);
+    const [dots, setDots] = useState('');
+  
     useEffect(() => {
-      const intervalId = setInterval(() => {
-        setLoadingText(prev => prev.length < 10 ? prev + '.' : 'Loading');
+      // Interval for changing messages
+      const messageInterval = setInterval(() => {
+        setCurrentMessage(prev => (prev < messages.length - 1 ? prev + 1 : prev));
+      }, 6000);
+  
+      // Interval for animating dots
+      const dotsInterval = setInterval(() => {
+        setDots(prev => (prev.length < 3 ? prev + '.' : ''));
       }, 500);
-
-      return () => clearInterval(intervalId);
+  
+      return () => {
+        clearInterval(messageInterval);
+        clearInterval(dotsInterval);
+      };
     }, []);
-
-    return <p>{loadingText}</p>;
+  
+    return <p>{messages[currentMessage]}{dots}</p>;
   };
 
   const handleClose = () => {
@@ -125,68 +140,66 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
     // Reset other states if needed
   };
 
-  const AnimatedText = ({ text }) => {
-  const textArray = text.split('');
+  const AnimatedText = ({ text }: { text: string }) => {
+    const textArray = text.split('');
 
-  return (
-    <div>
-      {textArray.map((char, index) => (
-        <motion.span
-          key={index}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.005 }}
-        >
-          {char}
-        </motion.span>
-      ))}
-    </div>
-  );
-};
-
-
-
-  const contentStyle = {
-    overflowY: 'scroll', // Temporarily force scrollbar
-    maxHeight: '380px', // You may need to adjust this
-    padding: '20px',
+    return (
+      <div>
+        {textArray.map((char, index) => (
+          <motion.span
+            key={index}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.005 }}
+          >
+            {char}
+          </motion.span>
+        ))}
+      </div>
+    );
   };
+
+
+
+const contentStyle: React.CSSProperties = {
+  overflowY: 'scroll',
+  maxHeight: '380px',
+  padding: '20px',
+};
   
-  
-  const data = [45, 52, 38, 45, 19, 23, 2, 50];
   // Render the Deck component
   return (
     <div>
-    {isVisible && (
-      <div style={deckStyle}>
-        {/* Close button and Tabs (Unchanged) */}
-        <button onClick={handleClose} style={{ position: 'absolute', top: '10px', right: '10px' }}>
-            X
+      {isVisible && (
+        <div style={deckStyle}>
+          {/* Close button and Tabs (Unchanged) */}
+          <button onClick={handleClose} style={{ position: 'absolute', top: '10px', right: '10px' }}>
+              X
           </button>
-        {loading && <LoadingText />}
-        {!loading && (
-          <Tabs aria-label="Options" style={tabStyle}>
-            {/* Loop through tabs to create each Tab */}
-            {['Price Info', 'Financials', 'News Info', 'Technical Analysis'].map((tabTitle, index) => (
-              <Tab key={index} title={tabTitle} style={activeTabStyle}>
-                <Card>
-                  <CardBody style={contentStyle}>
-                    <h1>{tabTitle.toUpperCase()} DATA:</h1>
-                    <LineChart data={data} tickerName={selectedTicker} />
-                    {tabTitle === 'Price Info' && <AnimatedText text={priceInfoData} />}
-                    {tabTitle === 'Financials' && <AnimatedText text={financialSummaryData} />}
-                    {tabTitle === 'News Info' && <AnimatedText text={newsStockData} />}
-                    {tabTitle === 'Technical Analysis' && <AnimatedText text={technicalAnalysisData} />}
-                  </CardBody>
-                </Card>
-              </Tab>
-            ))}
-          </Tabs>
-        )}
-      </div>
-    )}
-  </div>
+          {loading && <LoadingText />}
+          {!loading && (
+            <Tabs aria-label="Options" style={tabStyle}>
+              {/* Loop through tabs to create each Tab */}
+              {['Price Info', 'Financials', 'News Info', 'Technical Analysis'].map((tabTitle, index) => (
+                <Tab key={index} title={tabTitle} style={activeTabStyle}>
+                  <Card>
+                    <CardBody style={contentStyle}>
+                      {/* Updated LineChart usage to only include tickerName prop */}
+                      <LineChart tickerName={selectedTicker} />
+                      <h1> {selectedTicker} {tabTitle.toUpperCase()} DATA:</h1>
+                      {tabTitle === 'Price Info' && <AnimatedText text={priceInfoData} />}
+                      {tabTitle === 'Financials' && <AnimatedText text={financialSummaryData} />}
+                      {tabTitle === 'News Info' && <AnimatedText text={newsStockData} />}
+                      {tabTitle === 'Technical Analysis' && <AnimatedText text={technicalAnalysisData} />}
+                    </CardBody>
+                  </Card>
+                </Tab>
+              ))}
+            </Tabs>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
-
 export default Deck;

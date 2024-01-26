@@ -37,8 +37,8 @@ const Chat = () => {
             setLoading(true); 
             setError(null);
             const parsedInput: string = input;
-            const token: string = '671b31a4e4d59e1f4e344e91fb343c6988462a0afcf828bcd3f55404058819f2'
-            const response = fetch('http://localhost:6002/chat?prompt='+encodeURIComponent(parsedInput), {
+            const token: string = process.env.NEXT_PUBLIC_FINEAS_API_KEY ?? '';
+            const response = fetch(process.env.NEXT_PUBLIC_CHATBOTQUERYURL +'/chat?prompt='+encodeURIComponent(parsedInput), {
               method: 'POST',
               headers: {
                 'Content-Type': 'text/plain',

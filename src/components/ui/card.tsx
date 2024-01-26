@@ -36,7 +36,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ ticker, currentPrice = 0, dai
         />
         <div className="text-md">{ticker}</div>
       </CardHeader>
-      <Divider height={2} />
+      <Divider />
       <CardBody className="text-center">
         <p>Current Price: ${currentPrice}</p>
         <p style={{ color: dailyChangeColor }}>Daily Change: {dailyChange}%</p>

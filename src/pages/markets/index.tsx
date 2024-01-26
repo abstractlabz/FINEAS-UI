@@ -16,7 +16,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import React from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import env from 'react-dotenv';
 
 interface StockData {
   ticker: string;
@@ -142,18 +141,18 @@ const Markets = () => {
 
 
   const fetchData = async (tab: string) => {
-    try {
-      setLoading(true);
-      
-      const rest = restClient(process.env.NEXT_PUBLIC_POLY_API_KEY);
+  try {
+    setLoading(true);
+    
+    const rest = restClient(process.env.NEXT_PUBLIC_POLY_API_KEY);
 
-      // Determine which data file to use based on the active tab
-      const tickers = tab === 'technology' ? techTickers :
-                tab === 'finance' ? financialTickers :
-                tab === 'industry' ? industryTickers :
-                tab === 'crypto' ? cryptoTickers : techTickers;
+    // Determine which data file to use based on the active tab
+    const tickers = tab === 'technology' ? techTickers :
+              tab === 'finance' ? financialTickers :
+              tab === 'industry' ? industryTickers :
+              tab === 'crypto' ? cryptoTickers : techTickers;
 
-                const stockDataPromises = tickers.map(async (ticker) => {
+    const stockDataPromises = tickers.map(async (ticker) => {
                   try {
                     let currentPrice = 0;
                     let oldPrice = 0;
@@ -202,8 +201,8 @@ const Markets = () => {
                     console.error('Error fetching data for ticker:', ticker, error);
                     return {
                       ticker,
-                      currentprice: 'N/A',
-                      dailychange: 'N/A'
+                      currentprice: 0,
+                      dailychange: 0
                     };
                   }
                 });
@@ -295,8 +294,7 @@ const Markets = () => {
         <Input
           value={textareaValue}
           onChange={handleChange}
-          clearable
-          bordered
+          isClearable={true}
           color="primary"
           placeholder="Enter a ticker symbol here."
           className="w-full mb-4"
@@ -360,8 +358,8 @@ const Markets = () => {
         <div key={index} className="px-2">
           <SummaryCard
             ticker={stock.ticker}
-            currentPrice={stock.currentprice !== null ? stock.currentprice : 'N/A'}
-            dailyChange={stock.dailychange !== null ? stock.dailychange : 'N/A'}
+            currentPrice={stock.currentprice !== null ? stock.currentprice : 0}
+            dailyChange={stock.dailychange !== null ? stock.dailychange : 0}
             onGenerateReports={() => toggleDeck(stock.ticker)}
           />
         </div>

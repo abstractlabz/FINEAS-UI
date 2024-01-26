@@ -26,6 +26,10 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [dataFetched, setDataFetched] = useState<boolean>(false);
+  const [priceInfoData, setPriceInfoData] = useState<string>(" ");
+  const [financialSummaryData, setFinancialSummaryData] = useState<string>(" ");
+  const [newsStockData, setNewsStockData] = useState<string>(" ");
+  const [technicalAnalysisData, setTechnicalAnalysisData] = useState<string>(" ");
 
   // Styles remain the same
     // Styles for the deck
@@ -58,11 +62,6 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
     const activeTabStyle = {
       borderBottomColor: '#4caf50', // Underline color for active tab
     };
-    const [priceInfoData, setPriceInfoData] = useState<string>(" ");
-    const [financialSummaryData, setFinancialSummaryData] = useState<string>("");
-    const [newsStockData, setNewsStockData] = useState<string>("");
-    const [technicalAnalysisData, setTechnicalAnalysisData] = useState<string>("");
-  
 
     useEffect(() => {
       if (isVisible && selectedTicker && !dataFetched) {
@@ -74,11 +73,13 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
               throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
             }
             const result = await response.json() as ApiResponse;
+            console.log(result); // Log the result to inspect the structure
+
             // Use the result here to set state
-            setPriceInfoData(result.priceInfoData);
-            setFinancialSummaryData(result.financialSummaryData);
-            setNewsStockData(result.newsStockData);
-            setTechnicalAnalysisData(result.technicalAnalysisData);
+            setPriceInfoData(result['StockPerformance'] as string);
+            setFinancialSummaryData(result['FinancialHealth'] as string);
+            setNewsStockData(result['NewsSummary'] as string);
+            setTechnicalAnalysisData(result['TechnicalAnalysis'] as string);
             
           } catch (err) {
             const error = err as Error;
@@ -141,8 +142,9 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
   };
 
   const AnimatedText = ({ text }: { text: string }) => {
-    const textArray = text.split('');
-
+    const safeText = text || "No data available"; // Fallback for empty or undefined text
+    const textArray = safeText.split('');
+  
     return (
       <div>
         {textArray.map((char, index) => (
@@ -158,6 +160,7 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
       </div>
     );
   };
+  
 
 
 

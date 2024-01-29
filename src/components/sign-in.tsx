@@ -3,14 +3,19 @@ import Cookies from 'js-cookie';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 
+// Define a type for the user profile
+interface UserProfile {
+    picture: string;
+    // Add other user profile fields as needed
+}
+
 const SignInComponent = () => {
-    const [profile, setProfile] = useState(null);
+    const [profile, setProfile] = useState<UserProfile | null>(null);
 
     useEffect(() => {
-        // Check for user information in cookies on component mount
         const savedProfile = Cookies.get('userProfile');
         if (savedProfile) {
-            setProfile(JSON.parse(savedProfile));
+            setProfile(JSON.parse(savedProfile) as UserProfile);
         }
     }, []);
 
@@ -23,9 +28,9 @@ const SignInComponent = () => {
                 },
             })
             .then((res) => {
-                setProfile(res.data);
-                // Save user information as a cookie
-                Cookies.set('userProfile', JSON.stringify(res.data), { expires: 7 }); // Expires in 7 days
+                const userProfile = res.data as UserProfile; // Cast res.data to UserProfile
+                setProfile(userProfile);
+                Cookies.set('userProfile', JSON.stringify(userProfile), { expires: 7 });
             })
             .catch((err) => console.log(err));
         },
@@ -35,7 +40,7 @@ const SignInComponent = () => {
     const logOut = () => {
         googleLogout();
         setProfile(null);
-        Cookies.remove('userProfile'); // Remove the cookie on logout
+        Cookies.remove('userProfile');
     };
 
     return (
@@ -46,7 +51,7 @@ const SignInComponent = () => {
                     <button onClick={logOut} className="text-black bg-white py-2 px-4 rounded-full hover:bg-gray-100">Log out</button>
                 </div>
             ) : (
-                <button onClick={() => login()} className="text-black bg-white py-2 px-4 rounded-full hover:bg-gray-100">Sign in with Google 🚀 </button>
+                <button onClick={() => login()} className="text-black bg-white py-2 px-4 rounded-full hover:bg-gray-100">Sign in with Google 🚀</button>
             )}
         </>
     );

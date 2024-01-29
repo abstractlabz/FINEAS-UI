@@ -2,8 +2,15 @@ import React from "react";
 import Slider from "react-slick";
 import SummaryCard from '../components/ui/card';
 
+// Define an interface for the item
+interface Item {
+  ticker: string;
+  currentprice: number;
+  dailychange: number;
+}
+
 interface MultipleItemsProps {
-  items?: any[]; // Define the type of 'items' prop
+  items?: Item[];
 }
 
 const MultipleItems: React.FC<MultipleItemsProps> = ({ items: propItems }) => {
@@ -29,14 +36,15 @@ const MultipleItems: React.FC<MultipleItemsProps> = ({ items: propItems }) => {
     return (
       <>
         {items.map((item, index) => (
-          <div key={index}> {/* It's still better to use a unique and stable key like item.id if available */}
+          <div key={index}>
             <SummaryCard
               ticker={item.ticker}
-              currentPrice={item.currentprice} // Assuming this has been corrected as per the previous error
-              dailyChange={item.dailychange} // Changed from dailychange to dailyChange
-              onGenerateReports={function (ticker: string): void {
+              currentPrice={item.currentprice}
+              dailyChange={item.dailychange}
+              onGenerateReports={() => {
                 throw new Error("Function not implemented.");
-              } } />
+              }}
+            />
           </div>
         ))}
       </>

@@ -1,9 +1,8 @@
-import { useState, useEffect, useContext, SetStateAction } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { UserContext } from '@/providers/UserProvider';
 import SummaryCard from '../../components/ui/card';
-import { Grid } from '@mui/material';
-import { Button, Input, Tab, Tabs, dataFocusVisibleClasses } from '@nextui-org/react';
+import { Button, Input } from '@nextui-org/react';
 import { restClient } from '@polygon.io/client-js';
 import Deck from '../../components/deck';
 import Nav from '@/components/Nav';
@@ -23,19 +22,15 @@ interface StockData {
   dailychange: number | null;
 }
 
-
 const Markets = () => {
   const { user } = useContext(UserContext) || {};
   const router = useRouter();
   const [cardInfoTechData, setCardInfoTechData] = useState<StockData[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [isDeckVisible, setDeckVisible] = useState(false);
   const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
   const [textareaValue, setTextareaValue] = useState('');
-  const [activeTab, setActiveTab] = useState('technology'); // Initialize with the first tab as active
+  const [activeTab, setActiveTab] = useState('technology');
   const [windowWidth, setWindowWidth] = useState(0);
-
   useEffect(() => {
     // Function to update the window width
     const handleResize = () => {
@@ -60,7 +55,7 @@ const Markets = () => {
 
 
   // Determine the Tailwind class for the slider container based on the window width
-  let sliderContainerClass;
+  let sliderContainerClass: string;
 
   if (windowWidth >= 1600) {
       sliderContainerClass = '1600px'; // Very large screens
@@ -79,14 +74,12 @@ const Markets = () => {
   } else {
       sliderContainerClass = '400px'; // Smaller mobile screens
   }
-  const handleTabClick = (tabName: any) => {
-    setActiveTab(tabName); // Update the activeTab state with the clicked tab name
-    fetchData(tabName); // Fetch data for the clicked tab
+  const handleTabClick = async (tabName: string) => {
+    setActiveTab(tabName);
+    await fetchData(tabName);
   };
 
-
-  const handleChange = (e: any) => {
-    // Update the state with the current value of the textarea
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTextareaValue(e.target.value);
   };
 
@@ -140,96 +133,103 @@ const Markets = () => {
   }
 
 
-  const fetchData = async (tab: string) => {
-  try {
-    setLoading(true);
-    
-    const rest = restClient(process.env.NEXT_PUBLIC_POLY_API_KEY);
-
-    // Determine which data file to use based on the active tab
-    const tickers = tab === 'technology' ? techTickers :
-              tab === 'finance' ? financialTickers :
-              tab === 'industry' ? industryTickers :
-              tab === 'crypto' ? cryptoTickers : techTickers;
-
-    const stockDataPromises = tickers.map(async (ticker) => {
-                  try {
-                    let currentPrice = 0;
-                    let oldPrice = 0;
-                    let dailyChange = 0;
-                    const today = new Date();
-                    const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
-                    const currentHour = today.getHours();
-                    const currentMinutes = today.getMinutes();
-                
-                    let isBeforeMarketOpen = currentHour < 9 || (currentHour === 9 && currentMinutes < 30);
-                    let isWeekend = dayOfWeek === 0 || dayOfWeek === 6; // Sunday or Saturday
-                
-                    if (isWeekend) {
-                      // Fetch data for the previous Friday
-                      let fridayData = await rest.stocks.dailyOpenClose(ticker, getRecentFriday());
-                      currentPrice = fridayData?.close ?? 0;
-                      oldPrice = fridayData?.open ?? 0;
-                    } else {
-                      // Fetch data for a weekday
-                      if (isBeforeMarketOpen) {
-                        let prevCloseData = await rest.stocks.previousClose(ticker);
-                        let prevOpenData = await rest.stocks.dailyOpenClose(ticker, getDateBefore(today.toISOString().split('T')[0]));
-                        currentPrice = prevCloseData?.results[0]?.c ?? 0;
-                        oldPrice = prevOpenData?.open ?? 0;
-                      } else {
-                        let snapshotData = await rest.stocks.snapshotTicker(ticker);
-                        let prevCloseData = await rest.stocks.previousClose(ticker);
-                        currentPrice = snapshotData?.ticker?.day?.c ?? 0;
-                        oldPrice = prevCloseData?.results[0]?.c ?? 0;
-                      }
-                    }
-                
-                    // Calculate daily change
-                    if (currentPrice !== 0 && oldPrice !== 0) {
-                      dailyChange = ((currentPrice - oldPrice) / oldPrice) * 100;
-                      dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
-                    }
-                
-                    return {
-                      ticker,
-                      currentprice: currentPrice,
-                      dailychange: dailyChange,
-                    };
-                
-                  } catch (error) {
-                    console.error('Error fetching data for ticker:', ticker, error);
-                    return {
-                      ticker,
-                      currentprice: 0,
-                      dailychange: 0
-                    };
-                  }
-                });
-
+  const fetchData = useCallback(async(tab: string) => {
+    try {
+      const rest = restClient(process.env.NEXT_PUBLIC_POLY_API_KEY);
+  
+      // Determine which data file to use based on the active tab
+      const tickers = tab === 'technology' ? techTickers :
+                      tab === 'finance' ? financialTickers :
+                      tab === 'industry' ? industryTickers :
+                      tab === 'crypto' ? cryptoTickers : techTickers;
+  
+      const stockDataPromises = tickers.map(async (ticker) => {
+        try {
+          let currentPrice = 0;
+          let oldPrice = 0;
+          let dailyChange = 0;
+          const today = new Date();
+          const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+          const currentHour = today.getHours();
+          const currentMinutes = today.getMinutes();
+  
+          const isBeforeMarketOpen = currentHour < 9 || (currentHour === 9 && currentMinutes < 30);
+          const isWeekend = dayOfWeek === 0 || dayOfWeek === 6; // Sunday or Saturday
+  
+          if (isWeekend) {
+            // Fetch data for the previous Friday
+            const fridayData = await rest.stocks.dailyOpenClose(ticker, getRecentFriday());
+            currentPrice = fridayData?.close ?? 0;
+            oldPrice = fridayData?.open ?? 0;
+          } else {
+            // Fetch data for a weekday
+            if (isBeforeMarketOpen) {
+              const prevCloseData = await rest.stocks.previousClose(ticker);
+              const prevOpenData = await rest.stocks.dailyOpenClose(ticker, getDateBefore(today.toISOString().split('T')[0]));
+              currentPrice = prevCloseData?.results[0]?.c ?? 0;
+              oldPrice = prevOpenData?.open ?? 0;
+            } else {
+              const snapshotData = await rest.stocks.snapshotTicker(ticker);
+              const prevCloseData = await rest.stocks.previousClose(ticker);
+              currentPrice = snapshotData?.ticker?.day?.c ?? 0;
+              oldPrice = prevCloseData?.results[0]?.c ?? 0;
+            }
+          }
+  
+          // Calculate daily change
+          if (currentPrice !== 0 && oldPrice !== 0) {
+            dailyChange = ((currentPrice - oldPrice) / oldPrice) * 100;
+            dailyChange = Math.round((dailyChange + Number.EPSILON) * 100) / 100;
+          }
+  
+          return {
+            ticker,
+            currentprice: currentPrice,
+            dailychange: dailyChange,
+          };
+  
+        } catch (error) {
+          console.error('Error fetching data for ticker:', ticker, error);
+          return {
+            ticker,
+            currentprice: null, // Changed from 0 to null for consistency
+            dailychange: null, // Changed from 0 to null for consistency
+          };
+        }
+      });
+  
       const stockData = await Promise.all(stockDataPromises);
-      const transformedStockData = stockData.map((data) => ({
-        ticker: data.ticker,
-        currentprice: data.currentprice,
-        dailychange: data.dailychange,
-      }));
-
-      setCardInfoTechData(transformedStockData);
-      setLoading(false);
+      setCardInfoTechData(stockData);
     } catch (error) {
       console.error('An error happened:', error);
-      setError('Error fetching data');
-      setLoading(false);
     }
-  };
+  },[]);
 
   useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== 'undefined') {
+        setWindowWidth(window.innerWidth);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial call to set the window width
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    void fetchData(activeTab); // Use void to handle the promise
+  }, [user, activeTab, fetchData]);
+  
+
+   useEffect(() => {
     if (user !== null) {
-      router.push('/markets').catch((err) => console.log(err));
+      router.push('/markets').catch((err) => console.error(err));
     } else {
-      fetchData('technology'); // Load 'technology' data initially
+       void fetchData('technology');
     }
-  }, [user, router]);
+  }, [user, router, fetchData]);
 
   const sliderSettings = {
     dots: true,
@@ -316,7 +316,7 @@ const Markets = () => {
               <a
                 href="#technology"
                 className={`py-2 px-4 text-lg ${activeTab === 'technology' ? 'border-b-2 border-blue-500' : ''}`}
-                onClick={() => handleTabClick('technology')}
+                onClick={() => void handleTabClick('technology')}
                 role="tab"
                 aria-controls="technology"
                 aria-selected={activeTab === 'technology' ? 'true' : 'false'}
@@ -328,7 +328,7 @@ const Markets = () => {
               <a
                 href="#finance"
                 className={`py-2 px-4 text-lg ${activeTab === 'finance' ? 'border-b-2 border-blue-500' : ''}`}
-                onClick={() => handleTabClick('finance')}
+                onClick={() => void handleTabClick('finance')}
                 role="tab"
                 aria-controls="finance"
                 aria-selected={activeTab === 'finance' ? 'true' : 'false'}
@@ -340,7 +340,7 @@ const Markets = () => {
               <a
                 href="#industry"
                 className={`py-2 px-4 text-lg ${activeTab === 'industry' ? 'border-b-2 border-blue-500' : ''}`}
-                onClick={() => handleTabClick('industry')}
+                onClick={() => void handleTabClick('industry')}
                 role="tab"
                 aria-controls="industry"
                 aria-selected={activeTab === 'industry' ? 'true' : 'false'}

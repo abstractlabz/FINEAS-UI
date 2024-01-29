@@ -48,7 +48,7 @@ const Chat = () => {
       
             const output = (await response).text();
       
-            let parsedOutput: string[] = [];
+            const parsedOutput: string[] = [];
             parsedOutput.push(await output);
 
             if (parsedOutput.length === 0) {

@@ -91,46 +91,44 @@ const Markets = () => {
 
 
   function getRecentFriday(): string {
-    // Get today's date
+    // Get today's date in UTC
     const today = new Date();
+    const utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
 
     // Calculate the difference to the most recent Friday
-    // (5 represents Friday; getDay() returns 0 for Sunday, 1 for Monday, ..., 6 for Saturday)
-    let daysToLastFriday = today.getDay() - 5;
+    let daysToLastFriday = utcToday.getUTCDay() - 5;
     if (daysToLastFriday <= 0) {
         // Adjust if today is before Friday or is Friday
         daysToLastFriday += 7;
     }
 
     // Get the most recent Friday
-    const lastFriday = new Date(today);
-    lastFriday.setDate(today.getDate() - daysToLastFriday);
+    utcToday.setUTCDate(utcToday.getUTCDate() - daysToLastFriday);
 
     // Format the date as YYYY-MM-DD
-    const formattedDate = lastFriday.toISOString().split('T')[0];
+    const formattedDate = utcToday.toISOString().split('T')[0];
 
-    return formattedDate || "2023-01-02";
+    return formattedDate;
 }
 
-  function getDateBefore(inputDateStr: string | undefined) {
-    // Parse the input string to a Date object
-    const inputDate = new Date(inputDateStr);
 
-    // Check if the input date is valid
-    if (isNaN(inputDate.getTime())) {
-        throw new Error('Invalid date format. Please use "YYYY-MM-DD" format.');
-    }
+function getDateBefore(inputDateStr: string | undefined) {
+  // Parse the input string to a UTC Date object
+  const inputDate = new Date(inputDateStr);
+  const utcInputDate = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth(), inputDate.getUTCDate()));
 
-    // Subtract one day
-    inputDate.setDate(inputDate.getDate() - 1);
-
-    // Format the date to YYYY-MM-DD
-    const year = inputDate.getFullYear();
-    const month = String(inputDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-    const day = String(inputDate.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
+  // Check if the input date is valid
+  if (isNaN(utcInputDate.getTime())) {
+      throw new Error('Invalid date format. Please use "YYYY-MM-DD" format.');
   }
+
+  // Subtract one day
+  utcInputDate.setUTCDate(utcInputDate.getUTCDate() - 1);
+
+  // Format the date to YYYY-MM-DD
+  return utcInputDate.toISOString().split('T')[0];
+}
+
 
 
   const fetchData = useCallback(async(tab: string) => {
@@ -148,14 +146,19 @@ const Markets = () => {
           let currentPrice = 0;
           let oldPrice = 0;
           let dailyChange = 0;
-          const today = new Date();
-          const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
-          const currentHour = today.getHours();
-          const currentMinutes = today.getMinutes();
-  
-          const isBeforeMarketOpen = currentHour < 9 || (currentHour === 9 && currentMinutes < 30);
-          const isWeekend = dayOfWeek === 0 || dayOfWeek === 6; // Sunday or Saturday
-  
+          const now = new Date();
+          const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes()));
+
+          const dayOfWeekUTC = todayUTC.getUTCDay(); // 0 (Sunday) to 6 (Saturday)
+          const currentUTCHour = todayUTC.getUTCHours();
+          const currentUTCMinutes = todayUTC.getUTCMinutes();
+      
+          const isBeforeMarketOpen = currentUTCHour < 9 || (currentUTCHour === 9 && currentUTCMinutes < 30); // Adjust these hours as per the market's timezone
+          const isWeekend = dayOfWeekUTC === 0 || dayOfWeekUTC === 6; // Sunday or Saturday
+          console.log('isBeforeMarketOpen:', isBeforeMarketOpen);
+          console.log('isWeekend:', isWeekend);
+          console.log('todayUTC:', todayUTC);
+      
           if (isWeekend) {
             // Fetch data for the previous Friday
             const fridayData = await rest.stocks.dailyOpenClose(ticker, getRecentFriday());
@@ -165,7 +168,7 @@ const Markets = () => {
             // Fetch data for a weekday
             if (isBeforeMarketOpen) {
               const prevCloseData = await rest.stocks.previousClose(ticker);
-              const prevOpenData = await rest.stocks.dailyOpenClose(ticker, getDateBefore(today.toISOString().split('T')[0]));
+              const prevOpenData = await rest.stocks.dailyOpenClose(ticker, getDateBefore(now.toISOString().split('T')[0]));
               currentPrice = prevCloseData?.results[0]?.c ?? 0;
               oldPrice = prevOpenData?.open ?? 0;
             } else {

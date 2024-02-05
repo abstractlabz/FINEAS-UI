@@ -166,7 +166,7 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
 
 const contentStyle: React.CSSProperties = {
   overflowY: 'scroll',
-  maxHeight: '380px',
+  maxHeight: '450px',
   padding: '20px',
 };
   

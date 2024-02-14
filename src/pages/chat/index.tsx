@@ -21,11 +21,7 @@ const Chat = () => {
     const [loading, setLoading] = useState<boolean>(false); 
     const [error, setError] = useState<string | null>(null)
 
-    useEffect(() => {
-        if (user === null) {
-            router.push('/chat').catch((err) => console.log(err));
-        }
-    }, [user, router]);
+    
 
     const handleInput = useCallback(async (): Promise<void> => {
         if (input === '') {

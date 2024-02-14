@@ -73,8 +73,6 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
               throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
             }
             const result = await response.json() as ApiResponse;
-            console.log(result); // Log the result to inspect the structure
-
             // Use the result here to set state
             setPriceInfoData(result['StockPerformance'] as string);
             setFinancialSummaryData(result['FinancialHealth'] as string);
@@ -98,11 +96,6 @@ const Deck: React.FC<DeckProps> = ({ isVisible, onClose, selectedTicker }) => {
         setDataFetched(false);
       }
     }, [selectedTicker, isVisible]);
-
-  // Display loading state
-  if (loading) {
-    console.log('Loading...');
-  }
 
   // Display error state
   if (error) {

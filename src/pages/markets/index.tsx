@@ -155,9 +155,6 @@ function getDateBefore(inputDateStr: string | undefined) {
       
           const isBeforeMarketOpen = currentUTCHour < 9 || (currentUTCHour === 9 && currentUTCMinutes < 30); // Adjust these hours as per the market's timezone
           const isWeekend = dayOfWeekUTC === 0 || dayOfWeekUTC === 6; // Sunday or Saturday
-          console.log('isBeforeMarketOpen:', isBeforeMarketOpen);
-          console.log('isWeekend:', isWeekend);
-          console.log('todayUTC:', todayUTC);
       
           if (isWeekend) {
             // Fetch data for the previous Friday

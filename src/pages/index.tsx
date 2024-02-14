@@ -11,7 +11,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
       if (user !== null) {
-          router.push('/chat').catch((err) => console.log(err));
+          router.push('/markets').catch((err) => console.log(err));
       }
   }, [user, router]);
   

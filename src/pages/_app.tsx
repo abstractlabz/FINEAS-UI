@@ -1,9 +1,5 @@
 import '@/styles/globals.css';
-
-import { ChatProvider } from '@/providers/ChatProvider';
-import { UserProvider } from '@/providers/UserProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
 import type { AppType } from 'next/dist/shared/lib/utils';
 
 
@@ -13,11 +9,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <div className="min-h-screen antialiased bg-background">
       <QueryClientProvider client={queryClient}>
-        <UserProvider>
-          <ChatProvider>
-            <Component {...pageProps} />
-          </ChatProvider>
-        </UserProvider>
+        <Component {...pageProps} />
       </QueryClientProvider>
     </div>
   );

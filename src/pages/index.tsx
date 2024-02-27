@@ -1,4 +1,4 @@
-import Analysis from '@/pages/markets/index';
+import Analysis from '@/pages/analysis/index';
 
 const Home = () => {  
 

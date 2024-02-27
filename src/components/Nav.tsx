@@ -61,7 +61,7 @@ const Nav = () => {
           <Link color="foreground" href="/chat">Chat</Link>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link href="/markets" aria-current="page">Markets</Link>
+          <Link href="/analysis" aria-current="page">Analysis</Link>
         </NavbarItem>
         <NavbarItem>
           <SignInComponent />

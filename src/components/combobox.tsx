@@ -20,58 +20,62 @@ import {
 
 const frameworks = [
   {
-    value: "next.js",
-    label: "Next.js",
+    value: "msft",
+    label: "Microsoft",
   },
   {
-    value: "sveltekit",
-    label: "SvelteKit",
+    value: "aapl",
+    label: "Apple",
   },
   {
-    value: "nuxt.js",
-    label: "Nuxt.js",
+    value: "goog",
+    label: "Google",
   },
   {
-    value: "remix",
-    label: "Remix",
+    value: "amzn",
+    label: "Amazon",
   },
   {
-    value: "astro",
-    label: "Astro",
+    value: "tsla",
+    label: "Tesla",
+  },
+  {
+    value: "nflx",
+    label: "Netflix",
   },
 ]
 
 export function Combobox() {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(true)
   const [value, setValue] = React.useState("")
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-[200px] justify-between bg-main-color"
         >
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
+            : "Select ticker..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search framework..." />
-          <CommandEmpty>No framework found.</CommandEmpty>
-          <CommandGroup>
+      <PopoverContent className="w-[200px] p-0 bg-main-color">
+        <Command className="bg-main-color">
+          <CommandInput className="bg-main-color" placeholder="Enter a ticker symbol..." />
+          <CommandEmpty>No companies found.</CommandEmpty>
+          <CommandGroup heading="Suggestions">
             {frameworks.map((framework) => (
               <CommandItem
                 key={framework.value}
                 value={framework.value}
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue)
-                  setOpen(false)
+                  setOpen(true)
                 }}
               >
                 <Check

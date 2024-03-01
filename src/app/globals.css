@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add this to your CSS file */
+.glowing-border {
+    --border-glow-color: 239, 181, 137; /* RGB format of Tailwind's blue-500 */
+    border: 2px solid rgba(var(--border-glow-color), 0.3); /* Adjust border color and opacity */
+    box-shadow: 
+      0 0 10px rgba(var(--border-glow-color), 0.3),
+      0 0 20px rgba(var(--border-glow-color), 0.4),
+      0 0 30px rgba(var(--border-glow-color), 0.5),
+      0 0 40px rgba(var(--border-glow-color), 0.6),
+      0 0 50px rgba(var(--border-glow-color), 0.7),
+      0 0 60px rgba(var(--border-glow-color), 0.8),
+      0 0 65px rgba(var(--border-glow-color), 0.85);
+
+  }
+  

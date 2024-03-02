@@ -1,7 +1,6 @@
 "use client";
 import React, { Component } from "react";
 import Chart from "react-apexcharts";
-import { useState } from "react";
 
 class CandleChart extends Component {
     constructor(props: any) {
@@ -61,7 +60,7 @@ class CandleChart extends Component {
             chart: {
               id: "candlestick-volume",
               type: "candlestick",
-              height: 350,
+              height: 500,
             },
             title: {
                 text: "NVDA/USD",
@@ -163,8 +162,8 @@ class CandleChart extends Component {
                             options={this.state.options}
                             series={this.state.series}
                             type="line" // You might want to change this to "candlestick" if that's what you're aiming for
-                            width="500"
-                            height="450"
+                            width="600"
+                            height="525"
                         />
                     </div>
                 </div>

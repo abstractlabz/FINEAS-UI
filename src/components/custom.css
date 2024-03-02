@@ -1,7 +1,0 @@
-/* custom.css */
-@media (max-width: 1150px) {
-    .custom-breakpoint {
-      flex-direction: column!important;
-    }
-  }
-  

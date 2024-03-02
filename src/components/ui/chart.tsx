@@ -8,7 +8,7 @@ class CandleChart extends Component {
         
         
 
-        const volumedata = [
+        let volumedata = [
             { x: 1, y: 458256 },
             { x: 2, y: 345212 },
             { x: 3, y: 207461 },
@@ -22,7 +22,7 @@ class CandleChart extends Component {
             { x: 11, y: 126001 }
         ];
     
-        const pricedata: {
+        let pricedata: {
             x: number;
             y: number[];
         }[] = [

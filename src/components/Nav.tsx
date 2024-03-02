@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
+import Linker from 'next/link';
 import { Link, Navbar, NavbarBrand, NavbarItem, Button, NavbarContent } from "@nextui-org/react";
 import LogoMain from "./ui/logo-main";
 import SignInComponent from "./sign-in";
@@ -47,7 +48,7 @@ const Nav = () => {
               <img className="text-black" src="/path-to-close-icon.svg" alt="x" /> {/* Replace with your close icon */}
             </button>
             <NavbarItem>
-              <Link className='text-black' color="foreground" href="/chat" onClick={toggleMenu}>Chat</Link>
+              <Linker className='text-black' color="foreground" href="/chat" onClick={toggleMenu}>Chat</Linker>
             </NavbarItem>
             <NavbarItem>
               <Link className='text-black' href="/markets" aria-current="page" onClick={toggleMenu}>Markets</Link>

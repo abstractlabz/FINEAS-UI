@@ -17,33 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-
-const frameworks = [
-  {
-    value: "msft",
-    label: "Microsoft",
-  },
-  {
-    value: "aapl",
-    label: "Apple",
-  },
-  {
-    value: "goog",
-    label: "Google",
-  },
-  {
-    value: "amzn",
-    label: "Amazon",
-  },
-  {
-    value: "tsla",
-    label: "Tesla",
-  },
-  {
-    value: "nflx",
-    label: "Netflix",
-  },
-]
+import { frameworks } from "../data/tickerslist"
 
 export function Combobox() {
   const [open, setOpen] = React.useState(true)
@@ -75,7 +49,7 @@ export function Combobox() {
                 value={framework.value}
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue)
-                  setOpen(true)
+                  setOpen(open)
                 }}
               >
                 <Check

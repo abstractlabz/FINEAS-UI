@@ -157,12 +157,12 @@ class CandleChart extends Component {
         return (
             <div className="app">
                 <div className="row">
-                    <div className="mixed-chart">
+                    <div className="mixed-chart pr-6">
                         <Chart
                             options={this.state.options}
                             series={this.state.series}
-                            type="line" // You might want to change this to "candlestick" if that's what you're aiming for
-                            width="600"
+                            type="candlestick" // You might want to change this to "candlestick" if that's what you're aiming for
+                            width="425"
                             height="525"
                         />
                     </div>

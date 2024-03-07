@@ -23,8 +23,8 @@ const config = {
     },
     extend: {
       colors: {
-        'main-color': '#F7E2D2',
-        'alternate-color': '#EFB589',
+        'main-color': '#D1C4E9',
+        'alternate-color': '#9575CD',
       },
       keyframes: {
         "accordion-down": {

@@ -19,30 +19,20 @@ import {
 } from "@/components/ui/popover"
 import { frameworks } from "../data/tickerslist"
 
-export function Combobox() {
+export function ChatSearch() {
   const [open, setOpen] = React.useState(true)
   const [value, setValue] = React.useState("")
 
   return (
     <Popover open={open}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between bg-main-color"
-        >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select ticker..."}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
+      <PopoverTrigger>
+
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0 bg-main-color">
-        <Command className="bg-main-color">
-          <CommandInput className="bg-main-color" placeholder="Enter a ticker symbol..." />
-          <CommandEmpty>No companies found.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
+      <PopoverContent className="flex justify-center items-center w-full pt-8 p-5 bg-main-color">
+        <Command className="flex justify-center w-full bg-main-color">
+          <CommandInput className="flex justify-center w-full bg-main-color" placeholder="Search your chats here..." />
+          <CommandEmpty>No chats found.</CommandEmpty>
+          <CommandGroup className="w-full"heading="Chats">
             {frameworks.map((framework) => (
               <CommandItem
                 key={framework.value}

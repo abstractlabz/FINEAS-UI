@@ -1,3 +1,4 @@
+"use client"
 import Analysis from "./analysis";
 import Nav from "../components/Nav";
 
@@ -6,7 +7,7 @@ export default function Home() {
 
     <>      
       <div className="bg-main-color h-screen w-full">
-      <Nav />
+      <Nav variant="" />
       <Analysis />
     </div>
     </>

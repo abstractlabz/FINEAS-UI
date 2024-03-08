@@ -28,9 +28,9 @@ export function ChatSearch() {
       <PopoverTrigger>
 
       </PopoverTrigger>
-      <PopoverContent className="flex justify-center items-center w-full pt-8 p-5 bg-main-color">
-        <Command className="flex justify-center w-full bg-main-color">
-          <CommandInput className="flex justify-center w-full bg-main-color" placeholder="Search your chats here..." />
+      <PopoverContent className="flex justify-center items-center w-full pt-8 p-5 bg-alternate-color">
+        <Command className="flex justify-center w-full bg-alternate-color">
+        <CommandInput style={{ color: 'black' }} placeholder="Search your chats here..." />
           <CommandEmpty>No chats found.</CommandEmpty>
           <CommandGroup className="w-full"heading="Chats">
             {frameworks.map((framework) => (

@@ -19,8 +19,10 @@ const Chat: React.FC = () => {
     <div className="bg-main-color w-full h-full">
       <Nav variant="chat" />
       <div className="flex h-full pt-2"> {/* Replace [height_of_nav] with the actual height of your Nav component */}
-        <div className="glowing-border p-1 border shadow-md w-64 rounded-lg h-[50vh] bg-alternate-color fixed left-0 overflow-auto z-10000">
+        <div className="p-1 border w-64 rounded-lg h-[100vh] bg-alternate-color fixed left-0 overflow-auto z-10000">
           <ChatSearch />
+          <Input placeholder="Enter Chat Name..." className='w-full mt-[325px]' />
+          <Button variant="default" className='w-full h-10 rounded-md mt-[8px] justify-between bg-black text-white flex justify-center items-center'>Save Chat</Button>
         </div>
         <div className="flex-1 pl-64 flex flex-col items-center h-[85.25vh] pt-0"> {/* Removed justify-center to align the card to the top */}
           <Card className="glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden h-[78vh] mb-10"> {/* Adjust the margin-bottom as needed */}

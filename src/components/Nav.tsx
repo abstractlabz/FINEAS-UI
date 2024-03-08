@@ -46,7 +46,7 @@ const Nav: React.FC<NavProps> = ({variant}) => {
 
   return (
     <GoogleOAuthProvider clientId="684619174291-3515q33o0vl2spdq5t0ur23f7sepgk26.apps.googleusercontent.com">
-      <Navbar style={{ zIndex: 1000 }}>
+      <Navbar className='relative bg-main-color' style={{ zIndex: 10 }}>
         <NavbarBrand>
           <LogoMain />
         </NavbarBrand>

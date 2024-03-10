@@ -19,12 +19,13 @@ import {
 } from "@/components/ui/popover"
 import { frameworks } from "../data/tickerslist"
 
-export function ChatSearch() {
+export function ChatSearch(props: { popoveropen: boolean }) {
   const [open, setOpen] = React.useState(true)
   const [value, setValue] = React.useState("")
 
   return (
-    <Popover open={open}>
+
+    <Popover open={props.popoveropen}>
       <PopoverTrigger>
 
       </PopoverTrigger>

@@ -19,7 +19,7 @@ function CandleChart() {
       "width": "100%",
       "height": "500",
       "symbol": "NASDAQ:AAPL",
-      "interval": "D",
+      "interval": "1",
       "timezone": "Etc/UTC",
       "theme": "dark",
       "style": "1",

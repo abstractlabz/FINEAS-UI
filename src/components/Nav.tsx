@@ -46,7 +46,7 @@ const Nav: React.FC<NavProps> = ({variant}) => {
 
   return (
     <GoogleOAuthProvider clientId="684619174291-3515q33o0vl2spdq5t0ur23f7sepgk26.apps.googleusercontent.com">
-      <Navbar className='relative bg-main-color' style={{ zIndex: 10 }}>
+      <Navbar className='relative bg-main-color' style={{ zIndex: 50 }}>
         <NavbarBrand>
           <LogoMain />
         </NavbarBrand>
@@ -77,29 +77,29 @@ const Nav: React.FC<NavProps> = ({variant}) => {
           </div>
         )}
 
-        {isMenuOpen && isChat && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-            <div className="relative flex flex-col items-start p-4 bg-alternate-color w-64 h-full">
-              <button onClick={toggleMenu} className="absolute top-4 right-4">
-                <Image src="" alt="X" />
-              </button>
-              <h2 className="text-black text-xl mb-4">Navigation</h2>
-              <Linker href="/chat" onClick={toggleMenu} className="flex items-center text-black mb-2">
-                <Image src="icons/chat-icon.svg" alt="" width={50} height={50} />
-                <span className="ml-2">Chat</span>
-              </Linker>
-              <Linker href="/" onClick={toggleMenu} className="flex items-center text-black mb-2">
-                <Image src="icons/analysis-icon.svg" alt="" width={50} height={50} />
-                <span className="ml-2">Analysis</span>
-              </Linker>
-              <SignInComponent />
-              <ChatSearch />
-              <Input placeholder="Enter Chat Name..." className='w-full mt-[325px]' />
-              <Button variant="solid" className='w-full h-10 rounded-md mt-[8px] justify-between bg-black text-white flex justify-center items-center'>Save Chat</Button>
-            </div>
+      {isMenuOpen && isChat && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="relative flex flex-col items-start p-4 bg-alternate-color w-64 h-full">
+            <button onClick={toggleMenu} className="absolute top-4 right-4">
+              <Image src="" alt="X" />
+            </button>
+            <h2 className="text-black text-xl mb-4">Navigation</h2>
+            <Linker href="/chat" onClick={toggleMenu} className="flex items-center text-black mb-2">
+              <Image src="icons/chat-icon.svg" alt="" width={50} height={50} />
+              <span className="ml-2">Chat</span>
+            </Linker>
+            <Linker href="/" onClick={toggleMenu} className="flex items-center text-black mb-2">
+              <Image src="icons/analysis-icon.svg" alt="" width={50} height={50} />
+              <span className="ml-2">Analysis</span>
+            </Linker>
+            <SignInComponent />
+            {/* Assuming ChatSearch respects the popoverOpen prop for its internal state */}
+            <ChatSearch popoveropen={isMenuOpen} />
+            <Input placeholder="Enter Chat Name..." className='w-full mt-[325px]' />
+            <Button variant="solid" className='w-full h-10 rounded-md mt-[8px] justify-between bg-black text-white flex justify-center items-center'>Save Chat</Button>
           </div>
-        )}
-
+        </div>
+      )}
 
         {/* Regular Navbar for Larger Screens */}
         <NavbarContent className="hidden sm:flex gap-4" justify="start">

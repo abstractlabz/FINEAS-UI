@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 const Deck: React.FC = () => {
   return (
-    <div className="flex justify-center items-center md:p-4 sm:p-1 pt-3.5">
+    <div className="flex justify-center items-center md:p-4 sm:p-1 pt-6">
       <Card className="glowing-border p-1 border shadow-xl w-full max-w-[230vh] bg-main-color overflow-hidden relative" style={{ minHeight: '5vh' }}>
       <CardContent className="flex flex-col items-start space-y-8 2xl:space-y-0 lg:flex-row 2xl:items-start relative" style={{ gap: '25px' }}>
           {/* Combobox and Generate Analysis button grouping, adjusted for vertical spacing */}

@@ -14,8 +14,8 @@ const config = {
       center: true,
       padding: "2rem",
       screens: {
-        'sm': '640px',
-        'md': '768px',
+        'sm': '375px',
+        'md': '675px',
         'lg': '1024px',
         'xl': '1280px',
         '2xl': '1536px',
@@ -23,8 +23,8 @@ const config = {
     },
     extend: {
       colors: {
-        'main-color': '#D1C4E9',
-        'alternate-color': '#9575CD',
+        'main-color': '#F7E2D2',
+        'alternate-color': '#EFB589',
       },
       keyframes: {
         "accordion-down": {

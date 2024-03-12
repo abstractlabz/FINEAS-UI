@@ -38,11 +38,31 @@ export function Combobox() {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0 bg-main-color">
+      <PopoverContent className="w-[200px] p-0 bg-main-color overflow-auto max-h-64">
         <Command className="bg-main-color">
           <CommandInput className="bg-main-color" placeholder="Enter a ticker symbol..." />
           <CommandEmpty>No companies found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
+            {frameworks.map((framework) => (
+              <CommandItem
+                key={framework.value}
+                value={framework.value}
+                onSelect={(currentValue) => {
+                  setValue(currentValue === value ? "" : currentValue)
+                  setOpen(open)
+                }}
+              >
+                <Check
+                  className={cn(
+                    "mr-2 h-4 w-4",
+                    value === framework.value ? "opacity-100" : "opacity-0"
+                  )}
+                />
+                {framework.label}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandGroup heading="Watchlist">
             {frameworks.map((framework) => (
               <CommandItem
                 key={framework.value}

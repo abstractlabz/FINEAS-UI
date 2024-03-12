@@ -4,6 +4,7 @@ import "@/app/globals.css"
 import { ChatSearch } from '@/components/chatsearch';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 import {
   Card,
   CardContent,
@@ -46,16 +47,18 @@ const Chat: React.FC = () => {
           <Button variant="default" className='w-full h-10 rounded-md mt-[8px] justify-between bg-black text-white flex justify-center items-center'>Save Chat</Button>
         </div>
         <div className="flex-1 md:pl-64 pl-0 flex flex-col items-center h-[85.25vh] pt-0">
-          <Card className="glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden h-[78vh] mb-10">
+          <Card className="glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden relative h-[78vh] mb-10">
             <CardHeader>
               <CardTitle>Discover Stock Market Alpha!</CardTitle>
             </CardHeader>
-            <CardContent className="mb-22">
+            <CardContent className="mb-50">
               <p>Chat Content</p>
             </CardContent>
-            <div className="w-full flex absolute bottom-0 py-19">
-              <Input className="w-[51.5%] mb-2 pl-2" placeholder="Type your question here..."></Input>
-              <Button className="w-[15%] mb-2">Chat to me!</Button>
+            <CardFooter className="w-[15%] mb-2">
+              <Button className='w-[8%] absolute bottom-2 right-2 z-10'>Chat</Button>
+            </CardFooter>
+            <div className='pl-4'>
+              <Input className="max-w-[80%] sm:max-w-[85%] md:max-w-[87%] lg:max-w-[89%] mb-2 pl-2 absolute bottom-0" placeholder="Type your question here..."></Input>
             </div>
           </Card>
         </div>

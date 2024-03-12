@@ -46,7 +46,7 @@ const Nav: React.FC<NavProps> = ({variant}) => {
 
   return (
     <GoogleOAuthProvider clientId="684619174291-3515q33o0vl2spdq5t0ur23f7sepgk26.apps.googleusercontent.com">
-      <Navbar className='relative bg-main-color' style={{ zIndex: 50 }}>
+      <Navbar className='relative bg-main-color pr-4' style={{ zIndex: 50 }}>
         <NavbarBrand>
           <LogoMain />
         </NavbarBrand>
@@ -85,11 +85,11 @@ const Nav: React.FC<NavProps> = ({variant}) => {
             </button>
             <h2 className="text-black text-xl mb-4">Navigation</h2>
             <Linker href="/chat" onClick={toggleMenu} className="flex items-center text-black mb-2">
-              <Image src="icons/chat-icon.svg" alt="" width={50} height={50} />
+              <Image src="icons/chat-icon.svg" alt="" width={47} height={47} />
               <span className="ml-2">Chat</span>
             </Linker>
             <Linker href="/" onClick={toggleMenu} className="flex items-center text-black mb-2">
-              <Image src="icons/analysis-icon.svg" alt="" width={50} height={50} />
+              <Image src="icons/analysis-icon.svg" alt="" width={52} height={52} />
               <span className="ml-2">Analysis</span>
             </Linker>
             <SignInComponent />

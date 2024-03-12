@@ -4,7 +4,7 @@
 
 /* Add this to your CSS file */
 .glowing-border {
-    --border-glow-color: 149, 117, 205; /* RGB format of Tailwind's blue-500 */
+    --border-glow-color: 239, 181, 137; /* RGB format of Tailwind's blue-500 */
     border: 2px solid rgba(var(--border-glow-color), 0.3); /* Adjust border color and opacity */
     box-shadow: 
       0 0 10px rgba(var(--border-glow-color), 0.3),
@@ -13,6 +13,10 @@
       0 0 40px rgba(var(--border-glow-color), 0.6),
       0 0 50px rgba(var(--border-glow-color), 0.7),
       0 0 55px rgba(var(--border-glow-color), 0.8);
+  }
+  html,
+  body {
+    overflow-x: hidden; /* Prevent horizontal scrolling */
   }
 
   

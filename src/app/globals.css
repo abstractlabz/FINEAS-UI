@@ -4,7 +4,7 @@
 
 /* Add this to your CSS file */
 .glowing-border {
-    --border-glow-color: 52, 30, 88; /* RGB format of Tailwind's blue-500 */
+    --border-glow-color: 228, 14, 228; /* RGB format of Tailwind's blue-500 */
     border: 2px solid rgba(var(--border-glow-color), 0.35); /* Adjust border color and opacity */
     box-shadow: 
       0 0 10px rgba(var(--border-glow-color), 0.3),

@@ -55,10 +55,10 @@ const Chat: React.FC = () => {
               <p>Chat Content</p>
             </CardContent>
             <CardFooter className="w-[15%] mb-2">
-              <Button className='w-[8%] absolute bottom-2 right-2 z-10'>Chat</Button>
+              <Button className='w-[8%] absolute bottom-2 right-2 z-10 bg-blue-700'>Chat</Button>
             </CardFooter>
             <div className='pl-4'>
-              <Input className="max-w-[80%] sm:max-w-[85%] md:max-w-[87%] lg:max-w-[89%] mb-2 pl-2 absolute bottom-0" placeholder="Type your question here..."></Input>
+              <Input className="max-w-[80%] sm:max-w-[85%] md:max-w-[87%] lg:max-w-[89%] mb-2 pl-2 absolute bottom-0 text-black" placeholder="Type your question here..."></Input>
             </div>
           </Card>
         </div>

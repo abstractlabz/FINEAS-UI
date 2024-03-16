@@ -13,17 +13,17 @@ const Deck: React.FC = () => {
           {/* Combobox and Generate Analysis button grouping, adjusted for vertical spacing */}
           <div className="w-full lg:w-1/4 flex justify-center items-center flex-col mb-6 relative">
             <Combobox />
-            <Button className="w-full mt-[435px] self-start">Generate Analysis</Button>
+            <Button className="w-full mt-[435px] self-start bg-blue-700">Generate Analysis</Button>
           </div>
 
           {/* Tabs */}
           <div className="w-full md:flex-grow mb-6 flex justify-center">
             <Tabs defaultValue="price" className="w-full">
               <TabsList className='w-full flex justify-center'>
-                <TabsTrigger value="price">Price Info</TabsTrigger>
-                <TabsTrigger value="news">News Info</TabsTrigger>
-                <TabsTrigger value="technical">Technical Analysis</TabsTrigger>
-                <TabsTrigger value="financials">Financials</TabsTrigger>
+                <TabsTrigger className='text-xs md:text-lg' value="price">Price Info</TabsTrigger>
+                <TabsTrigger className='text-xs md:text-lg' value="news">News Info</TabsTrigger>
+                <TabsTrigger className='text-xs md:text-lg' value="technical">Technical Analysis</TabsTrigger>
+                <TabsTrigger className='text-xs md:text-lg' value="financials">Financials</TabsTrigger>
               </TabsList>
               <TabsContent className='text-white' value="price">Price Information</TabsContent>
               <TabsContent className='text-white' value="news">News Information</TabsContent>

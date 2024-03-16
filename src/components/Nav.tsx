@@ -61,7 +61,7 @@ const Nav: React.FC<NavProps> = ({variant}) => {
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-auto">
             <div className="relative flex flex-col items-start p-4 bg-alternate-color w-64 h-full">
               <button onClick={toggleMenu} className="absolute top-4 right-4">
-                <Image src="" alt="X" />
+                <Image className='text-white' src="" alt="X" />
               </button>
               <h2 className="text-white text-xl mb-4">Navigation</h2>
               <Linker href="/chat" onClick={toggleMenu} className="flex items-center text-white mb-2">
@@ -104,7 +104,7 @@ const Nav: React.FC<NavProps> = ({variant}) => {
             {/* Assuming ChatSearch respects the popoverOpen prop for its internal state */}
             <ChatSearch popoveropen={isMenuOpen} />
             <Input placeholder="Enter Chat Name..." className='w-full mt-[275px]' />
-            <Button variant="solid" className='w-full h-10 rounded-md mt-[8px] justify-between bg-black text-white flex justify-center items-center'>Save Chat</Button>
+            <Button className='w-full h-10 rounded-md mt-[8px] justify-between bg-black text-white flex justify-center items-center bg-blue-700'>Save Chat</Button>
           </div>
         </div>
       )}

@@ -23,8 +23,9 @@ const config = {
     },
     extend: {
       colors: {
-        'main-color': '#F7E2D2',
-        'alternate-color': '#EFB589',
+        'main-color': '#10042a',
+        'alternate-color': '#341e58',
+        'accent-color': '#c2bccd',
       },
       keyframes: {
         "accordion-down": {

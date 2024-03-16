@@ -47,7 +47,7 @@ const Chat: React.FC = () => {
           <Button variant="default" className='w-full h-10 rounded-md mt-[8px] justify-between bg-black text-white flex justify-center items-center'>Save Chat</Button>
         </div>
         <div className="flex-1 md:pl-64 pl-0 flex flex-col items-center h-[85.25vh] pt-0">
-          <Card className="glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden relative h-[78vh] mb-10">
+          <Card className="glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden relative h-[78vh] mb-10 text-white">
             <CardHeader>
               <CardTitle>Discover Stock Market Alpha!</CardTitle>
             </CardHeader>

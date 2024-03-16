@@ -13,7 +13,7 @@ const Deck: React.FC = () => {
           {/* Combobox and Generate Analysis button grouping, adjusted for vertical spacing */}
           <div className="w-full lg:w-1/4 flex justify-center items-center flex-col mb-6 relative">
             <Combobox />
-            <Button className="w-full mt-[285px] self-start">Generate Analysis</Button>
+            <Button className="w-full mt-[435px] self-start">Generate Analysis</Button>
           </div>
 
           {/* Tabs */}
@@ -25,10 +25,10 @@ const Deck: React.FC = () => {
                 <TabsTrigger value="technical">Technical Analysis</TabsTrigger>
                 <TabsTrigger value="financials">Financials</TabsTrigger>
               </TabsList>
-              <TabsContent value="price">Price Information</TabsContent>
-              <TabsContent value="news">News Information</TabsContent>
-              <TabsContent value="technical">Technical Analysis Details</TabsContent>
-              <TabsContent value="financials">Financial Details</TabsContent>
+              <TabsContent className='text-white' value="price">Price Information</TabsContent>
+              <TabsContent className='text-white' value="news">News Information</TabsContent>
+              <TabsContent className='text-white' value="technical">Technical Analysis Details</TabsContent>
+              <TabsContent className='text-white' value="financials">Financial Details</TabsContent>
             </Tabs>
           </div>
 
@@ -37,8 +37,8 @@ const Deck: React.FC = () => {
             <CandleChart />
             {/* Credits positioned at the same level as the Chart */}
           </div>
-          <div className='absolute bottom-0 right-4 m-12 text-s text-black-400'>
-            <p>Credits Available: 5</p>
+          <div className='absolute bottom-0 right-4 m-12 text-s text-white-400'>
+            <p className='text-white'>Credits Available: 5</p>
           </div>
         </CardContent>
       </Card>

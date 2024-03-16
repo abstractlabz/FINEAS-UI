@@ -30,26 +30,28 @@ export function Combobox() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between bg-main-color z-20"
+          className="w-[200px] justify-between bg-accent-color z-20"
         >
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select ticker..."}
+            : <p className="text-black">Select Ticker...</p>}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0 bg-main-color overflow-auto max-h-64">
-        <Command className="bg-main-color">
-          <CommandInput className="bg-main-color" placeholder="Enter a ticker symbol..." />
+      <PopoverContent className="w-[200px] p-0 bg-accent-color overflow-auto max-h-[385px]">
+        <Command className="bg-accent-color">
+          <CommandInput className="w-full bg-accent-color text-black" placeholder="Enter a ticker symbol..." />
           <CommandEmpty>No companies found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
             {frameworks.map((framework) => (
               <CommandItem
                 key={framework.value}
                 value={framework.value}
+                className="text-black"
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue)
                   setOpen(open)
+  
                 }}
               >
                 <Check
@@ -67,6 +69,7 @@ export function Combobox() {
               <CommandItem
                 key={framework.value}
                 value={framework.value}
+                className="text-black"
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue)
                   setOpen(open)

@@ -32,23 +32,24 @@ export function ChatSearch(props: { popoveropen: boolean }) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between bg-alternate-color z-20"
+          className="w-[200px] justify-between bg-accent-color z-20"
         >
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select chat..."}
+            : <p className="text-black">Search Chats Here...</p>}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="flex justify-center items-center w-full pt-4 p-5 bg-alternate-color max-h-64 overflow-auto">
-        <Command className="flex justify-center w-full bg-alternate-color">
-        <CommandInput style={{ color: 'black' }} placeholder="Search your chats here..." />
+      <PopoverContent className="flex justify-center items-center w-full pt-4 p-5 bg-accent-color max-h-64 overflow-auto">
+        <Command className="flex justify-center w-full bg-accent-color">
+        <CommandInput style={{ color: 'white' }} placeholder="Search your chats here..." />
           <CommandEmpty>No chats found.</CommandEmpty>
           <CommandGroup className="w-full overflow-auto"heading="Chats">
             {frameworks.map((framework) => (
               <CommandItem
                 key={framework.value}
                 value={framework.value}
+                className="text-black"
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue)
                   setOpen(open)

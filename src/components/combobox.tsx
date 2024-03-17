@@ -3,7 +3,6 @@
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 import Image from "next/image"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button";
 import {
@@ -63,7 +62,7 @@ export function Combobox() {
               />
               {framework.label}
             </CommandItem>
-            <Image className="pr-2" src="./plus.svg" width={25} height={25} alt="" onClick={() => {}} />
+            <Image className="pr-2" src="/plus.png" width={25} height={25} alt="+" onClick={() => {}} />
           </div>
         ))}
       </CommandGroup>

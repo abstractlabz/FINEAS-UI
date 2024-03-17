@@ -61,19 +61,19 @@ const Nav: React.FC<NavProps> = ({variant}) => {
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-auto">
             <div className="relative flex flex-col items-start p-4 bg-alternate-color w-64 h-full">
               <button onClick={toggleMenu} className="absolute top-4 right-4">
-                <Image className='text-white' src="" alt="X" />
+                <Image className='text-white' width={35} height={35} src="icons/close-circle-icon.svg" alt="X" />
               </button>
               <h2 className="text-white text-xl mb-4">Navigation</h2>
               <Linker href="/chat" onClick={toggleMenu} className="flex items-center text-white mb-2">
-                <Image src="icons/chat-icon.svg" alt="" width={50} height={50} />
+                <Image src="icons/chat-icon.svg" alt="" width={40} height={40} />
                 <span className="ml-2">Chat</span>
               </Linker>
               <Linker href="/" onClick={toggleMenu} className="flex items-center text-white mb-2">
-                <Image src="icons/analysis-icon.svg" alt="" width={50} height={50} />
+                <Image src="icons/analysis-icon.svg" alt="" width={40} height={40} />
                 <span className="ml-2 text-white">Analysis</span>
               </Linker>
               <Linker href="https://buy.stripe.com/14k9D692d0IM8O47ss" onClick={toggleMenu} className="flex items-center text-white mb-2">
-                <Image src="icons/members-icon.svg" alt="" width={50} height={50} />
+                <Image src="icons/members-icon.svg" alt="" width={40} height={40} />
                 <span className="ml-2">Members</span>
               </Linker>
               <SignInComponent />
@@ -85,19 +85,19 @@ const Nav: React.FC<NavProps> = ({variant}) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-auto">
           <div className="relative flex flex-col items-start p-4 bg-alternate-color w-64 h-full">
             <button onClick={toggleMenu} className="absolute top-4 right-4">
-              <Image className='text-white' src="" alt="X" />
+              <Image className='text-white' width={35} height={35} src="icons/close-circle-icon.svg" alt="X" />
             </button>
             <h2 className="text-white text-xl mb-4">Navigation</h2>
             <Linker href="/chat" onClick={toggleMenu} className="flex items-center text-white mb-2">
-              <Image src="icons/chat-icon.svg" alt="" width={47} height={47} />
+              <Image src="icons/chat-icon.svg" alt="" width={40} height={40} />
               <span className="ml-2 text-white">Chat</span>
             </Linker>
             <Linker href="/" onClick={toggleMenu} className="flex items-center text-white mb-2">
-              <Image src="icons/analysis-icon.svg" alt="" width={52} height={52} />
+              <Image src="icons/analysis-icon.svg" alt="" width={40} height={40} />
               <span className="ml-2 text-white">Analysis</span>
             </Linker>
             <Linker href="https://buy.stripe.com/14k9D692d0IM8O47ss" onClick={toggleMenu} className="flex items-center text-white mb-2">
-              <Image src="icons/members-icon.svg" alt="" width={52} height={52} />
+              <Image src="icons/members-icon.svg" alt="" width={40} height={40} />
               <span className="ml-2 text-white">Members</span>
             </Linker>
             <SignInComponent />

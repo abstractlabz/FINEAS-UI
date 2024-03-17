@@ -40,7 +40,7 @@ export function ChatSearch(props: { popoveropen: boolean }) {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="flex justify-center items-center w-full pt-4 p-5 bg-accent-color max-h-64 overflow-auto">
+      <PopoverContent className="flex justify-center items-center w-[200px] pt-4 p-5 bg-accent-color max-h-64 overflow-auto">
         <Command className="flex justify-center w-full bg-accent-color">
         <CommandInput style={{ color: 'white' }} placeholder="Search your chats here..." />
           <CommandEmpty>No chats found.</CommandEmpty>

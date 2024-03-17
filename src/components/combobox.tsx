@@ -63,7 +63,7 @@ export function Combobox() {
               />
               {framework.label}
             </CommandItem>
-            <Image className="pr-2" src={"icons/plus-icon.svg"} width={40} height={40} alt="Add" onClick={() => {}} />
+            <Image className="pr-2" src="./plus.svg" width={25} height={25} alt="" onClick={() => {}} />
           </div>
         ))}
       </CommandGroup>

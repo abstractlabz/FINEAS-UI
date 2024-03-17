@@ -42,7 +42,9 @@ const Chat: React.FC = () => {
       <Nav variant="chat" />
       <div className="flex h-full pt-2">
         <div className="hidden md:flex md:flex-col md:fixed md:left-0 p-1 border w-64 rounded-lg h-[100vh] bg-alternate-color overflow-auto md:z-10 lg:z-20">
+          <div className='1-full flex justify-center'>
           <ChatSearch popoveropen={popoverOpen} />
+          </div>
           <Input placeholder="Enter Chat Name..." className='w-full mt-[325px]' />
           <Button variant="default" className='w-full h-10 rounded-md mt-[8px] justify-between bg-black text-white flex justify-center items-center'>Save Chat</Button>
         </div>

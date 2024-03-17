@@ -1,8 +1,9 @@
 "use client"
 import React, { useEffect, useRef, memo } from 'react';
+import { never } from 'zod';
 
 function CandleChart() {
-  const containerRef = useRef();
+  const containerRef = useRef<HTMLDivElement>(null);
   const scriptId = 'tradingview-widget-script'; // A unique ID for the script tag
 
   useEffect(() => {
@@ -33,19 +34,21 @@ function CandleChart() {
       "withdateranges": true
     });
 
-    // Append the script to the container
-    containerRef.current.appendChild(script);
+    // Ensure containerRef.current is not null
+    if (containerRef.current) {
+      containerRef.current.appendChild(script);
+    }
 
-    // Cleanup function: remove the script when the component unmounts
     return () => {
+      // Cleanup: ensure containerRef.current is not null before attempting to remove child
       if (containerRef.current) {
         const scriptElement = document.getElementById(scriptId);
-        if (scriptElement) {
+        if (scriptElement && containerRef.current) {
           containerRef.current.removeChild(scriptElement);
         }
       }
     };
-  }, []); // The empty dependency array ensures this effect runs once on mount
+    }, []);
 
   return (
     <div className="tradingview-widget-container rounded-xl overflow-hidden" ref={containerRef} style={{ height: "100%", width: "100%" }}>

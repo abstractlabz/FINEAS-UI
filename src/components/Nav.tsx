@@ -72,7 +72,7 @@ const Nav: React.FC<NavProps> = ({variant}) => {
                 <Image src="icons/analysis-icon.svg" alt="" width={50} height={50} />
                 <span className="ml-2 text-white">Analysis</span>
               </Linker>
-              <Linker href="/members" onClick={toggleMenu} className="flex items-center text-white mb-2">
+              <Linker href="https://buy.stripe.com/14k9D692d0IM8O47ss" onClick={toggleMenu} className="flex items-center text-white mb-2">
                 <Image src="icons/members-icon.svg" alt="" width={50} height={50} />
                 <span className="ml-2">Members</span>
               </Linker>
@@ -96,7 +96,7 @@ const Nav: React.FC<NavProps> = ({variant}) => {
               <Image src="icons/analysis-icon.svg" alt="" width={52} height={52} />
               <span className="ml-2 text-white">Analysis</span>
             </Linker>
-            <Linker href="/" onClick={toggleMenu} className="flex items-center text-white mb-2">
+            <Linker href="https://buy.stripe.com/14k9D692d0IM8O47ss" onClick={toggleMenu} className="flex items-center text-white mb-2">
               <Image src="icons/members-icon.svg" alt="" width={52} height={52} />
               <span className="ml-2 text-white">Members</span>
             </Linker>
@@ -113,7 +113,7 @@ const Nav: React.FC<NavProps> = ({variant}) => {
         <NavbarContent className="hidden sm:flex gap-4" justify="start">
           <Link href="/" className='text-white'>Analysis</Link>
           <Link href="/chat" className='text-white' aria-current="page">Chat</Link>
-          <Link href="/members" className='text-white' aria-current="page">Members</Link>
+          <Link href="https://buy.stripe.com/14k9D692d0IM8O47ss" className='text-white' aria-current="page">Members</Link>
           {/* Add other NavbarItems here */}
           <SignInComponent />
         </NavbarContent>

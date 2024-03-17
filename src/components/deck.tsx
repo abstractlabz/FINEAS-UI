@@ -22,7 +22,7 @@ const Deck: React.FC = () => {
               <TabsList className='w-full flex justify-center'>
                 <TabsTrigger className='text-xs md:text-lg' value="price">Price Info</TabsTrigger>
                 <TabsTrigger className='text-xs md:text-lg' value="news">News Info</TabsTrigger>
-                <TabsTrigger className='text-xs md:text-lg' value="technical">Technical Analysis</TabsTrigger>
+                <TabsTrigger className='text-xs md:text-lg' value="technical">Technicals</TabsTrigger>
                 <TabsTrigger className='text-xs md:text-lg' value="financials">Financials</TabsTrigger>
               </TabsList>
               <TabsContent className='text-white' value="price">Price Information</TabsContent>

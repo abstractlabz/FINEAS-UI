@@ -1,11 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import { Card, CardContent } from "@/components/ui/card";
 import CandleChart from "./ui/chart";
 import { Combobox } from "@/components/combobox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 
+interface UserProfile {
+  picture: string;
+  id_hash: string;
+  stripe_customer_id: string;
+  email: string;
+  credits: number;
+  is_member: boolean;
+  
+  // Add other user profile fields as needed
+}
+
 const Deck: React.FC = () => {
+
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+      const savedProfile = Cookies.get('userProfile');
+      if (savedProfile) {
+          setProfile(JSON.parse(savedProfile) as UserProfile);
+      }
+  }, []);
+
   return (
     <div className="flex justify-center items-center md:p-4 sm:p-1 pt-6">
       <Card className="glowing-border p-1 border shadow-xl w-full max-w-[230vh] bg-main-color overflow-hidden relative" style={{ minHeight: '5vh' }}>
@@ -38,7 +60,7 @@ const Deck: React.FC = () => {
             {/* Credits positioned at the same level as the Chart */}
           </div>
           <div className='absolute bottom-0 right-4 m-12 text-s text-white-400'>
-            <p className='text-white'>Credits Available: 5</p>
+            <p className='text-white'>Credits Available: {profile?.credits}</p>
           </div>
         </CardContent>
       </Card>

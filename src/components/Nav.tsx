@@ -59,7 +59,7 @@ const Nav: React.FC<NavProps> = ({variant}) => {
         {/* Mobile Menu */}
         {isMenuOpen && !isChat && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-auto">
-            <div className="relative flex flex-col items-start p-4 bg-alternate-color w-64 h-full">
+            <div className="relative flex flex-col items-start p-4 bg-alternate-color w-64 h-[100%]">
               <button onClick={toggleMenu} className="absolute top-4 right-4">
                 <Image className='text-white' width={35} height={35} src="icons/close-circle-icon.svg" alt="X" />
               </button>
@@ -72,9 +72,9 @@ const Nav: React.FC<NavProps> = ({variant}) => {
                 <Image src="icons/analysis-icon.svg" alt="" width={40} height={40} />
                 <span className="ml-2 text-white">Analysis</span>
               </Linker>
-              <Linker href="https://buy.stripe.com/14k9D692d0IM8O47ss" onClick={toggleMenu} className="flex items-center text-white mb-2">
+              <Linker href="/checkout" onClick={toggleMenu} className="flex items-center text-white mb-2">
                 <Image src="icons/members-icon.svg" alt="" width={40} height={40} />
-                <span className="ml-2">Members</span>
+                <span className="ml-2">Upgrade</span>
               </Linker>
               <SignInComponent />
             </div>
@@ -96,9 +96,9 @@ const Nav: React.FC<NavProps> = ({variant}) => {
               <Image src="icons/analysis-icon.svg" alt="" width={40} height={40} />
               <span className="ml-2 text-white">Analysis</span>
             </Linker>
-            <Linker href="https://buy.stripe.com/14k9D692d0IM8O47ss" onClick={toggleMenu} className="flex items-center text-white mb-2">
+            <Linker href="/checkout" onClick={toggleMenu} className="flex items-center text-white mb-2">
               <Image src="icons/members-icon.svg" alt="" width={40} height={40} />
-              <span className="ml-2 text-white">Members</span>
+              <span className="ml-2 text-white">Upgrade</span>
             </Linker>
             <SignInComponent />
             {/* Assuming ChatSearch respects the popoverOpen prop for its internal state */}
@@ -113,7 +113,7 @@ const Nav: React.FC<NavProps> = ({variant}) => {
         <NavbarContent className="hidden sm:flex gap-4" justify="start">
           <Link href="/" className='text-white'>Analysis</Link>
           <Link href="/chat" className='text-white' aria-current="page">Chat</Link>
-          <Link href="https://buy.stripe.com/14k9D692d0IM8O47ss" className='text-white' aria-current="page">Members</Link>
+          <Link href="/checkout" className='text-white' aria-current="page">Upgrade</Link>
           {/* Add other NavbarItems here */}
           <SignInComponent />
         </NavbarContent>

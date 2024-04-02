@@ -8,7 +8,7 @@ export const frameworks = [
       label: "Apple",
     },
     {
-      value: "goog",
+      value: "googl",
       label: "Google",
     },
     {

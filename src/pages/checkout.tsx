@@ -30,9 +30,14 @@ const CheckoutPage = () => {
           setProfile(JSON.parse(savedProfile) as UserProfile);
       }
   }, []);
+
   const handleCheckout = async () => {
     console.log(profile?.email);
     console.log(profile?.id_hash);
+    axios.get(`http://localhost:7002/get-user-info?id_hash=${profile?.id_hash}`).then((res) => {
+      console.log(res.data['user'])
+    })
+
     try {
       const response = await axios.post('http://localhost:7002/upgrade_membership', {
         email: profile?.email,

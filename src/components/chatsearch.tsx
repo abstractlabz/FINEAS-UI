@@ -19,7 +19,8 @@ import {
 } from "@/components/ui/popover"
 import { frameworks } from "../data/tickerslist"
 
-export function ChatSearch(props: { popoveropen: boolean }) {
+export function ChatSearch(props: { popoveropen: boolean; chatNames?: string[] }) {
+  const chatNames = props.chatNames || [];
   const [open, setOpen] = React.useState(true)
   const [value, setValue] = React.useState("")
 
@@ -35,7 +36,7 @@ export function ChatSearch(props: { popoveropen: boolean }) {
           className="w-[200px] justify-between bg-accent-color z-20"
         >
           {value
-            ? frameworks.find((framework) => framework.value === value)?.label
+            ? props.chatNames.find((framework: string) => framework === value)
             : <p className="text-black">Search Chats Here...</p>}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -44,27 +45,28 @@ export function ChatSearch(props: { popoveropen: boolean }) {
         <Command className="flex justify-center w-full bg-accent-color">
         <CommandInput style={{ color: 'white' }} placeholder="Search your chats here..." />
           <CommandEmpty>No chats found.</CommandEmpty>
-          <CommandGroup className="w-full overflow-auto"heading="Chats">
-            {frameworks.map((framework) => (
-              <CommandItem
-                key={framework.value}
-                value={framework.value}
-                className="text-black"
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue)
-                  setOpen(open)
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === framework.value ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {framework.label}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          <CommandGroup className="w-full overflow-auto" heading="Chats">
+          {props.chatNames.map((chatName) => (
+            <CommandItem
+              key={chatName}
+              value={chatName}
+              className="text-black"
+              onSelect={(currentValue) => {
+                setValue(currentValue === value ? "" : currentValue)
+                setOpen(open)
+              }}
+            >
+              <Check
+                className={cn(
+                  "mr-2 h-4 w-4",
+                  value === chatName ? "opacity-100" : "opacity-0"
+                )}
+              />
+              {chatName}
+            </CommandItem>
+          ))}
+        </CommandGroup>
+
         </Command>
       </PopoverContent>
     </Popover>

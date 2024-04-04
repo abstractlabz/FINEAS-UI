@@ -36,7 +36,7 @@ export function ChatSearch(props: { popoveropen: boolean; chatNames?: string[] }
           className="w-[200px] justify-between bg-accent-color z-20"
         >
           {value
-            ? props.chatNames.find((framework: string) => framework === value)
+            ? props.chatNames?.find((framework: string) => framework === value)
             : <p className="text-black">Search Chats Here...</p>}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -46,7 +46,7 @@ export function ChatSearch(props: { popoveropen: boolean; chatNames?: string[] }
         <CommandInput style={{ color: 'white' }} placeholder="Search your chats here..." />
           <CommandEmpty>No chats found.</CommandEmpty>
           <CommandGroup className="w-full overflow-auto" heading="Chats">
-          {props.chatNames.map((chatName) => (
+          {props.chatNames?.map((chatName) => (
             <CommandItem
               key={chatName}
               value={chatName}

@@ -220,7 +220,7 @@ const checkCreditsAndSendMessage = async () => {
                 {msg.sender === 'user' && (
                   <img
                     src={profile?.picture}
-                    alt="Chat Icon"
+                    alt=""
                     className="userImage"
                   />
                 )}

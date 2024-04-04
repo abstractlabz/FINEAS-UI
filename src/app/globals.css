@@ -33,4 +33,41 @@
   height: 20px;
   animation: spin 1s linear infinite;
 }
+.messagePair {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adjust the gap as necessary */
+  margin-bottom: 20px; /* Increased spacing */
+}
+
+.userMessage, .botMessage {
+  padding: 10px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.userMessage:before, .botMessage:before {
+  content: "";
+  position: absolute;
+  top: -10px; /* Adjust based on your design */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 2px;
+  background-color: #dedede; /* Border color */
+}
+
+/* Adjusting for the first message not to have a border */
+.messagePair:first-child .userMessage:before,
+.messagePair:first-child .botMessage:before {
+  content: none;
+}
+
+.userImage {
+  width: 40px; /* Making the image bigger */
+  height: 40px; /* Making the image bigger */
+  border: 2px solid white; /* Adding a white border */
+  border-radius: 50%; /* Optional: making the image circular */
+  object-fit: cover; /* Ensures the image covers the area without stretching */
+}
 

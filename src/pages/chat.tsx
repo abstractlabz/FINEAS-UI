@@ -160,14 +160,20 @@ const checkCreditsAndSendMessage = async () => {
     }
   };
   
+  const handleChatSelect = async (chatName: string) => {
+    await loadChat(chatName);
+  };
 
   const loadChat = async (name: string) => {
     setIsLoading(true);
-
     try {
       // Example API call to load chat by name
-      const response = await axios.get('http://localhost:7002/loadchat', { params: { chatName: name, id_hash: profile?.id_hash } });
-      setChatHistory(response.data.chatHistory);
+      const response = await axios.post('http://localhost:7002/loadchat', {
+        chatname: name,
+        id_hash: profile?.id_hash
+      });
+      setChatHistory(response.data.chat_history);
+      console.log(chatHistory);
     } catch (error) {
       console.error('Failed to load chat', error);
       setError('Failed to load chat. Please try again.');
@@ -187,8 +193,7 @@ const checkCreditsAndSendMessage = async () => {
       <div className="flex h-full pt-2">
         <div className="hidden md:flex md:flex-col md:fixed md:left-0 p-1 border w-64 rounded-lg h-[100vh] bg-alternate-color overflow-auto md:z-10 lg:z-20">
           <div className='flex justify-center'>
-            <ChatSearch popoveropen={popoverOpen} chatNames={chatNames} />
-          </div>
+          <ChatSearch popoveropen={popoverOpen} chatNames={chatNames} onChatSelect={handleChatSelect} />          </div>
           <Input 
             value={chatName} 
             onChange={(e) => setChatName(e.target.value)} 
@@ -204,19 +209,33 @@ const checkCreditsAndSendMessage = async () => {
         <div className="flex-1 md:pl-64 pl-0 flex flex-col items-center h-[85.25vh] pt-0">
         <Card className="glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden h-[78vh] mb-10 text-white flex flex-col">
         <CardHeader>
-          <CardTitle>Discover Stock Market Alpha with Fineas.AI's Chatbot!</CardTitle>
+          <CardTitle>Discover Stock Market Alpha with Fineas.AI Chatbot!</CardTitle>
         </CardHeader>
         <CardContent className="overflow-y-auto flex-1 px-4 py-2">
-          {chatHistory.map((msg, index) => (
-            <div key={msg.id} className={`message ${msg.sender} mb-2`}>
-              {msg.sender === 'bot' && msg.animate ? (
-                <TypewriterEffect text={msg.text} speed={10} />
-              ) : (
-                msg.text
-              )}
-            </div>
-          ))}
+          {chatHistory?.map((msg, index, arr) => {
+            const isPairStart = index === 0 || arr[index - 1]?.sender !== msg.sender;
+            return (
+              <div key={msg.id} className={`messagePair ${isPairStart ? 'start' : ''}`}>
+                {/* Example icon for messages; replace src with your desired path */}
+                {msg.sender === 'user' && (
+                  <img
+                    src={profile?.picture}
+                    alt="Chat Icon"
+                    className="userImage"
+                  />
+                )}
+                <div className={`${msg.sender}Message`}>
+                  {msg.sender === 'bot' && msg.animate ? (
+                    <TypewriterEffect text={msg.text} speed={10} />
+                  ) : (
+                    msg.text
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </CardContent>
+
         <CardFooter className="w-full flex justify-between items-center p-4">
           <Input 
             value={message} 

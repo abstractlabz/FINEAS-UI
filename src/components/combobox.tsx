@@ -21,32 +21,43 @@ import {
 } from "@/components/ui/popover"
 import { frameworks } from "../data/tickerslist"
 
+interface ComboboxProps {
+  setSelectedTicker: (ticker: string) => void;
+}
+
+
 // Add a new prop to accept the function for setting selected ticker
-export function Combobox({ setSelectedTicker }) {
+export function Combobox({ setSelectedTicker }: ComboboxProps) {
   const [open, setOpen] = React.useState(true)
   const [value, setValue] = React.useState("")
-  const [watchlist, setWatchlist] = React.useState([]);
+  const [watchlist, setWatchlist] = React.useState<string[]>([]);
 
   React.useEffect(() => {
     const watchlistCookie = Cookies.get('watchlist');
     if (watchlistCookie) {
-      setWatchlist(JSON.parse(watchlistCookie));
+      setWatchlist(JSON.parse(watchlistCookie) as string[]);
     }
   }, []);
 
-  const saveWatchlistToCookies = (watchlist) => {
+  const saveWatchlistToCookies = (watchlist: string[]) => {
     Cookies.set('watchlist', JSON.stringify(watchlist), { expires: 365 });
   };
 
-  const addToWatchlist = (newValue) => {
+  const addToWatchlist = (newValue: string) => {
     setWatchlist((currentWatchlist) => {
-      const updatedWatchlist = [...new Set([...currentWatchlist, newValue])];
+      // Create a new Set with the current watchlist and the new value
+      const watchlistSet = new Set(currentWatchlist);
+      watchlistSet.add(newValue);
+      
+      // Convert the Set back into an array directly
+      const updatedWatchlist = Array.from(watchlistSet);
       saveWatchlistToCookies(updatedWatchlist);
       return updatedWatchlist;
     });
   };
+  
 
-  const removeFromWatchlist = (valueToRemove) => {
+  const removeFromWatchlist = (valueToRemove: string) => {
     setWatchlist((currentWatchlist) => {
       const updatedWatchlist = currentWatchlist.filter(item => item !== valueToRemove);
       saveWatchlistToCookies(updatedWatchlist);
@@ -55,7 +66,7 @@ export function Combobox({ setSelectedTicker }) {
   };
 
   // Update the setValue function to also call setSelectedTicker
-  const handleSelect = (currentValue) => {
+  const handleSelect = (currentValue: any) => {
     const newValue = currentValue === value ? "" : currentValue;
     setValue(newValue);
     setOpen(open);

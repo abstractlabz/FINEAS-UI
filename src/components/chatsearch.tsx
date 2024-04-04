@@ -19,8 +19,7 @@ import {
 } from "@/components/ui/popover"
 import { frameworks } from "../data/tickerslist"
 
-export function ChatSearch(props: { popoveropen: boolean; chatNames?: string[] }) {
-  const chatNames = props.chatNames || [];
+export function ChatSearch(props: { popoveropen: boolean; chatNames?: string[]; onChatSelect: (chatName: string) => void }) {  const chatNames = props.chatNames || [];
   const [open, setOpen] = React.useState(true)
   const [value, setValue] = React.useState("")
 
@@ -52,16 +51,12 @@ export function ChatSearch(props: { popoveropen: boolean; chatNames?: string[] }
               value={chatName}
               className="text-black"
               onSelect={(currentValue) => {
-                setValue(currentValue === value ? "" : currentValue)
-                setOpen(open)
+                setValue(currentValue === value ? "" : currentValue);
+                setOpen(open);
+                props.onChatSelect(currentValue); // Call the callback function with the selected chat name
               }}
             >
-              <Check
-                className={cn(
-                  "mr-2 h-4 w-4",
-                  value === chatName ? "opacity-100" : "opacity-0"
-                )}
-              />
+              <Check className={cn("mr-2 h-4 w-4", value === chatName ? "opacity-100" : "opacity-0")} />
               {chatName}
             </CommandItem>
           ))}

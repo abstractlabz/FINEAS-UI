@@ -31,6 +31,14 @@ const Nav: React.FC<NavProps> = ({variant}) => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Define handleChatSelect
+  const handleChatSelect = (chatName: string) => {
+    console.log(`Chat selected: ${chatName}`);
+    // Close the menu or navigate to the chat, etc.
+    setIsMenuOpen(false);
+  };
+
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 640) {
@@ -102,8 +110,7 @@ const Nav: React.FC<NavProps> = ({variant}) => {
             </Linker>
             <SignInComponent />
             {/* Assuming ChatSearch respects the popoverOpen prop for its internal state */}
-            <ChatSearch popoveropen={isMenuOpen} />
-            <Input placeholder="Enter Chat Name..." className='w-full mt-[275px]' />
+            <ChatSearch popoveropen={isMenuOpen} onChatSelect={handleChatSelect} />            <Input placeholder="Enter Chat Name..." className='w-full mt-[275px]' />
             <Button className='w-full h-10 rounded-md mt-[8px] justify-between bg-black text-white flex justify-center items-center bg-blue-700'>Save Chat</Button>
           </div>
         </div>

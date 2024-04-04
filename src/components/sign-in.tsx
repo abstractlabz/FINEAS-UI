@@ -87,7 +87,7 @@ const SignInComponent = () => {
         <>
             {profile ? (
                 <div className="flex items-center">
-                    <img src={profile.picture} alt="user image" className="w-12 h-12 rounded-full mr-2 border-4 border-white"/>
+                    <img src={profile.picture} alt="" className="w-12 h-12 rounded-full mr-2 border-4 border-white"/>
                     <button onClick={logOut} className="text-black bg-white py-2 px-4 rounded-full hover:bg-gray-100">Log out</button>
                 </div>
             ) : (

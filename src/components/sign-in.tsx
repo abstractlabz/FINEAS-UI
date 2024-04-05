@@ -44,29 +44,28 @@ const SignInComponent = () => {
             })
             .then((res: any) => {
                 if (res.data && res.data.email) {
-
                 const id_hash_val = crypto.createHash('sha256').update(res.data.email).digest('hex');
-                axios.get(`http://localhost:7002/get-user-info?id_hash=${id_hash_val}`).then((res) => {})
-                const picture_val = res.data.picture;
-                const stripe_customer_id_val = '';
-                const email_val = res.data.email;
-    
-                //make an axios call to the backend to get the user profile
-                axios.get(`http://localhost:7002/get-user-info?id_hash=${id_hash_val}`).then((res) => {
-                console.log(res.data['user'].id_hash)
-                const userProfile: UserProfile = {
-                        picture: picture_val,
-                        id_hash: id_hash_val,
-                        stripe_customer_id: stripe_customer_id_val,
-                        email: email_val,
-                        credits: res.data['user'].credits,
-                        is_member: res.data['user'].is_member,
-                        // Initialize other fields as necessary
+                axios.get(`http://62.3.50.146:5600/get-user-info?id_hash=${id_hash_val}`).then((res) => {
+                    const picture_val = res.data.picture;
+                    const stripe_customer_id_val = '';
+                    const email_val = res.data.email;
+                    //make an axios call to the backend to get the user profile
+                    axios.get(`http://62.3.50.146:5600/get-user-info?id_hash=${id_hash_val}`).then((res) => {
+                    console.log(res.data['user'].id_hash)
+                    const userProfile: UserProfile = {
+                            picture: picture_val,
+                            id_hash: id_hash_val,
+                            stripe_customer_id: stripe_customer_id_val,
+                            email: email_val,
+                            credits: res.data['user'].credits,
+                            is_member: res.data['user'].is_member,
+                            // Initialize other fields as necessary
                     };
-                console.log(userProfile);
-                setProfile(userProfile);
-                Cookies.set('userProfile', JSON.stringify(userProfile), { expires: 7 });
-                refreshPage();
+                    console.log(userProfile);
+                    setProfile(userProfile);
+                    Cookies.set('userProfile', JSON.stringify(userProfile), { expires: 7 });
+                    refreshPage();
+                    })
                 })}
             })
             .catch((err) => console.log(err));

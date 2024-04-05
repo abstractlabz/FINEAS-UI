@@ -34,13 +34,12 @@ const CheckoutPage = () => {
   const handleCheckout = async () => {
     console.log(profile?.email);
     console.log(profile?.id_hash);
-    axios.get(`http://62.3.50.146:5600/get-user-info?id_hash=${profile?.id_hash}`).then((res) => {
+    axios.get(`https://upgrade.fineasapp.io:2096/get-user-info?id_hash=${profile?.id_hash}`).then((res) => {
       console.log(res.data['user'])
     })
 
     try {
-      const response = await axios.post('http://62.3.50.146:5600/upgrade_membership', {
-        email: profile?.email,
+      const response = await axios.post('https://upgrade.fineasapp.io:2096/upgrade_membership', {
         id_hash: profile?.id_hash,
       });
 
@@ -63,7 +62,7 @@ const CheckoutPage = () => {
 
   const handleCancellation = async () => {
     try {
-      const response = await axios.post('http://62.3.50.146:5600/cancel-subscription', {
+      const response = await axios.post('https://upgrade.fineasapp.io:2096/cancel-subscription', {
         stripe_customer_id: 'cus_PpPiiNPYmdvbBB',
       });
       //redirect to the analysis page

@@ -42,7 +42,7 @@ const Deck: React.FC = () => {
   const updateProfileCredits = async () => {
     console.log("Current profile credits: ", profile?.credits);
     const profileData = JSON.parse(Cookies.get('userProfile') || '{}');
-    const response = await fetch('http://62.3.50.146:5600/enforce-credits', {
+    const response = await fetch('https://upgrade.fineasapp.io:2096/enforce-credits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id_hash: profileData.id_hash }),

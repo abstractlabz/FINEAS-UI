@@ -82,7 +82,15 @@ const CheckoutPage = () => {
 
   return (
     <>
-      <Nav variant="" />
+      <Nav variant="" onChatSelect={function (chatName: string): void {
+        throw new Error('Function not implemented.');
+      } } chatNames={[]} saveChat={function (): void {
+        throw new Error('Function not implemented.');
+      } } loadChat={function (name: string): void {
+        throw new Error('Function not implemented.');
+      } } chatName={''} setChatName={function (value: React.SetStateAction<string>): void {
+        throw new Error('Function not implemented.');
+      } } />
       <div className="flex flex-col items-center justify-center h-screen bg-main-color">
         {/* Assuming you have defined custom colors in your tailwind.config.js */}
         <Button 

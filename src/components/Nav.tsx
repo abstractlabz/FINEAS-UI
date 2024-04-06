@@ -20,15 +20,27 @@ import CloseIcon from '../../public/icons/close-icon.svg'; // Placeholder path
 
 
 interface NavProps {
-  variant: string;
+  variant?: string;
   onChatSelect: (chatName: string) => void;
   selectedChatName?: string;
-  chatNames: string[]; // Add this line
+  chatNames: string[];
+  saveChat: () => void; // Assuming saveChat is a function that returns a promise
+  loadChat: (name: string) => void; // Assuming loadChat is also a promise-returning function
+  chatName: string;
+  setChatName: React.Dispatch<React.SetStateAction<string>>;
 }
 
 
-const Nav: React.FC<NavProps& { onChatSelect: (chatName: string) => void, selectedChatName?: string}> = ({ variant, onChatSelect, chatNames }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const Nav: React.FC<NavProps> = ({
+  variant,
+  onChatSelect,
+  selectedChatName,
+  chatNames,
+  saveChat,
+  loadChat,
+  chatName,
+  setChatName
+}) => {  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -106,9 +118,21 @@ const Nav: React.FC<NavProps& { onChatSelect: (chatName: string) => void, select
               <SignInComponent />
               {/* ChatSearch and Button positioning */}
               <div style={{ display: 'flex', flexDirection: 'column-reverse', width: '100%', marginTop: 'auto' }}>
-                <Button className='w-full h-10 rounded-md mt-4 justify-between bg-black text-white flex justify-center items-center bg-blue-700'>Save Chat</Button>
-                <Input placeholder="Enter Chat Name..." className='w-full mt-4' />
-                <ChatSearch popoveropen={isMenuOpen} chatNames={chatNames} onChatSelect={onChatSelect} />
+              <Input 
+                  value={chatName}
+                  onChange={(e) => setChatName(e.target.value)}
+                  placeholder="Enter Chat Name..."
+                  className='w-full mt-4'
+                />
+                {/* Button to save chat */}
+                <Button 
+                  onClick={saveChat} 
+                  className='w-full h-8 rounded-md mt-4 justify-between bg-black text-white flex justify-center items-center bg-blue-700'>
+                    Save Chat
+                </Button>
+                <div className='max-h-84 min-h-96'>
+                  <ChatSearch popoveropen={isMenuOpen} chatNames={chatNames} onChatSelect={onChatSelect} />
+                </div>
               </div>
             </div>
           </div>

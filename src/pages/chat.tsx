@@ -192,7 +192,16 @@ const checkCreditsAndSendMessage = async () => {
 
   return (
     <div className="bg-main-color w-full h-full">
-    <Nav variant="chat" onChatSelect={handleChatSelect} chatNames={chatNames} selectedChatName={selectedChatName} />
+      <Nav
+      variant='chat'
+        onChatSelect={handleChatSelect}
+        chatNames={chatNames}
+        selectedChatName={selectedChatName}
+        saveChat={saveChat}
+        loadChat={loadChat}
+        chatName={chatName}
+        setChatName={setChatName}
+      />
       <div className="flex h-full pt-2">
         <div className="hidden md:flex md:flex-col md:fixed md:left-0 p-1 border w-64 rounded-lg h-[100vh] bg-alternate-color overflow-auto md:z-10 lg:z-20">
           <div className='flex justify-center'>

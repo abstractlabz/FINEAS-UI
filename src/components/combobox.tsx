@@ -40,7 +40,7 @@ export function Combobox({ setSelectedTicker }: ComboboxProps) {
   }, []);
 
   const saveWatchlistToCookies = (watchlist: string[]) => {
-    Cookies.set('watchlist', JSON.stringify(watchlist), { expires: 365 });
+    Cookies.set('watchlist', JSON.stringify(watchlist));
   };
 
   const addToWatchlist = (newValue: string) => {

@@ -193,7 +193,7 @@ const checkCreditsAndSendMessage = async () => {
   return (
     <div className="bg-main-color w-full h-full">
       <Nav
-      variant='chat'
+        variant='chat'
         onChatSelect={handleChatSelect}
         chatNames={chatNames}
         selectedChatName={selectedChatName}

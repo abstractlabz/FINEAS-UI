@@ -20,7 +20,7 @@ import CloseIcon from '../../public/icons/close-icon.svg'; // Placeholder path
 
 
 interface NavProps {
-  variant?: string;
+  variant: string;
   onChatSelect: (chatName: string) => void;
   selectedChatName?: string;
   chatNames: string[];

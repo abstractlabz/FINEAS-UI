@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import axios from 'axios';
 import TypewriterEffect from '@/components/ui/typewriter';
+import { set } from 'react-hook-form';
 
 interface IMessage {
   id: string; // or number based on your ID system
@@ -45,6 +46,7 @@ const Chat: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [error, setError] = useState('');
+  const [selectedChatName, setSelectedChatName] = useState<string>('');
 
   useEffect(() => {
     // Function to check and set state based on screen width
@@ -161,6 +163,7 @@ const checkCreditsAndSendMessage = async () => {
   };
   
   const handleChatSelect = async (chatName: string) => {
+    setSelectedChatName(chatName);
     await loadChat(chatName);
   };
 
@@ -189,7 +192,7 @@ const checkCreditsAndSendMessage = async () => {
 
   return (
     <div className="bg-main-color w-full h-full">
-      <Nav variant="chat" />
+    <Nav variant="chat" onChatSelect={handleChatSelect} chatNames={chatNames} selectedChatName={selectedChatName} />
       <div className="flex h-full pt-2">
         <div className="hidden md:flex md:flex-col md:fixed md:left-0 p-1 border w-64 rounded-lg h-[100vh] bg-alternate-color overflow-auto md:z-10 lg:z-20">
           <div className='flex justify-center'>
@@ -242,11 +245,20 @@ const checkCreditsAndSendMessage = async () => {
             onChange={(e) => setMessage(e.target.value)} 
             className="max-w-[80%] sm:max-w-[85%] md:max-w-[87%] lg:max-w-[89%] mb-2 pl-2 text-black" 
             placeholder="Type your question here..." />
-          <Button 
-            onClick={checkCreditsAndSendMessage} 
-            className='ml-2 bg-blue-700 text-white rounded-lg px-4 py-2'>
-              Chat
-          </Button>
+            <div className="relative inline-flex items-center">
+              <button 
+                onClick={!isLoading ? checkCreditsAndSendMessage : undefined} 
+                className={`ml-2 bg-blue-700 text-white rounded-lg px-4 py-3 ${isLoading ? 'bg-blue-300' : ''}`}
+                disabled={isLoading}
+              >
+                {!isLoading ? 'Chat' : 'Sending...'}
+              </button>
+              {isLoading && (
+                <div className="absolute right-0 top-0 mr-3 mt-3">
+                  <div className="loader"></div> {/* Make sure your CSS for .loader is correctly set up */}
+                </div>
+              )}
+            </div>
         </CardFooter>
       </Card>
 

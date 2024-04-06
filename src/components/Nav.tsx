@@ -21,23 +21,18 @@ import CloseIcon from '../../public/icons/close-icon.svg'; // Placeholder path
 
 interface NavProps {
   variant: string;
+  onChatSelect: (chatName: string) => void;
+  selectedChatName?: string;
+  chatNames: string[]; // Add this line
 }
 
 
-const Nav: React.FC<NavProps> = ({variant}) => {
+const Nav: React.FC<NavProps& { onChatSelect: (chatName: string) => void, selectedChatName?: string}> = ({ variant, onChatSelect, chatNames }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
-  // Define handleChatSelect
-  const handleChatSelect = (chatName: string) => {
-    console.log(`Chat selected: ${chatName}`);
-    // Close the menu or navigate to the chat, etc.
-    setIsMenuOpen(false);
-  };
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -89,32 +84,35 @@ const Nav: React.FC<NavProps> = ({variant}) => {
           </div>
         )}
 
-      {isMenuOpen && isChat && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-auto">
-          <div className="relative flex flex-col items-start p-4 bg-alternate-color w-64 h-full">
-            <button onClick={toggleMenu} className="absolute top-4 right-4">
-              <Image className='text-white' width={35} height={35} src="icons/close-circle-icon.svg" alt="X" />
-            </button>
-            <h2 className="text-white text-xl mb-4">Navigation</h2>
-            <Linker href="/chat" onClick={toggleMenu} className="flex items-center text-white mb-2">
-              <Image src="icons/chat-icon.svg" alt="" width={40} height={40} />
-              <span className="ml-2 text-white">Chat</span>
-            </Linker>
-            <Linker href="/" onClick={toggleMenu} className="flex items-center text-white mb-2">
-              <Image src="icons/analysis-icon.svg" alt="" width={40} height={40} />
-              <span className="ml-2 text-white">Analysis</span>
-            </Linker>
-            <Linker href="/checkout" onClick={toggleMenu} className="flex items-center text-white mb-2">
-              <Image src="icons/members-icon.svg" alt="" width={40} height={40} />
-              <span className="ml-2 text-white">Upgrade</span>
-            </Linker>
-            <SignInComponent />
-            {/* Assuming ChatSearch respects the popoverOpen prop for its internal state */}
-            <ChatSearch popoveropen={isMenuOpen} onChatSelect={handleChatSelect} />            <Input placeholder="Enter Chat Name..." className='w-full mt-[275px]' />
-            <Button className='w-full h-10 rounded-md mt-[8px] justify-between bg-black text-white flex justify-center items-center bg-blue-700'>Save Chat</Button>
+        {isMenuOpen && isChat && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-auto">
+            <div className="relative flex flex-col items-start p-4 bg-alternate-color w-64 h-full">
+              <button onClick={toggleMenu} className="absolute top-4 right-4">
+                <Image className='text-white' width={35} height={35} src="icons/close-circle-icon.svg" alt="X" />
+              </button>
+              <h2 className="text-white text-xl mb-4">Navigation</h2>
+              <Linker href="/chat" onClick={toggleMenu} className="flex items-center text-white mb-2">
+                <Image src="icons/chat-icon.svg" alt="" width={40} height={40} />
+                <span className="ml-2 text-white">Chat</span>
+              </Linker>
+              <Linker href="/" onClick={toggleMenu} className="flex items-center text-white mb-2">
+                <Image src="icons/analysis-icon.svg" alt="" width={40} height={40} />
+                <span className="ml-2 text-white">Analysis</span>
+              </Linker>
+              <Linker href="/checkout" onClick={toggleMenu} className="flex items-center text-white mb-2">
+                <Image src="icons/members-icon.svg" alt="" width={40} height={40} />
+                <span className="ml-2 text-white">Upgrade</span>
+              </Linker>
+              <SignInComponent />
+              {/* ChatSearch and Button positioning */}
+              <div style={{ display: 'flex', flexDirection: 'column-reverse', width: '100%', marginTop: 'auto' }}>
+                <Button className='w-full h-10 rounded-md mt-4 justify-between bg-black text-white flex justify-center items-center bg-blue-700'>Save Chat</Button>
+                <Input placeholder="Enter Chat Name..." className='w-full mt-4' />
+                <ChatSearch popoveropen={isMenuOpen} chatNames={chatNames} onChatSelect={onChatSelect} />
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
         {/* Regular Navbar for Larger Screens */}
         <NavbarContent className="hidden sm:flex gap-4" justify="start">

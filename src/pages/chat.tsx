@@ -142,7 +142,7 @@ const checkCreditsAndSendMessage = async () => {
     try {
       // Corrected Axios call to send data as a JSON body
       await axios.post('https://upgrade.fineasapp.io:2096/savechat', {
-        chatname: chatName,
+        chatname: chatName.toLowerCase(),
         id_hash: profile?.id_hash,
         chat_history: chatHistory
       }, {
@@ -151,7 +151,7 @@ const checkCreditsAndSendMessage = async () => {
         }
       });
       
-      setChatNames([...chatNames, chatName]);
+      setChatNames([...chatNames, chatName.toLowerCase()]);
       setChatName(''); // Clear chat name input
       alert('Chat saved successfully.');
     } catch (error) {
@@ -163,8 +163,8 @@ const checkCreditsAndSendMessage = async () => {
   };
   
   const handleChatSelect = async (chatName: string) => {
-    setSelectedChatName(chatName);
-    await loadChat(chatName);
+    setSelectedChatName(chatName.toLowerCase());
+    await loadChat(chatName.toLowerCase());
   };
 
   const loadChat = async (name: string) => {
@@ -172,7 +172,7 @@ const checkCreditsAndSendMessage = async () => {
     try {
       // Example API call to load chat by name
       const response = await axios.post('https://upgrade.fineasapp.io:2096/loadchat', {
-        chatname: name,
+        chatname: name.toLowerCase(),
         id_hash: profile?.id_hash
       });
       setChatHistory(response.data.chat_history);

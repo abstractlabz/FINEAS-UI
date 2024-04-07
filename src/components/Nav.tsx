@@ -116,23 +116,22 @@ const Nav: React.FC<NavProps> = ({
                 <span className="ml-2 text-white">Upgrade</span>
               </Linker>
               <SignInComponent />
-              {/* ChatSearch and Button positioning */}
-              <div style={{ display: 'flex', flexDirection: 'column-reverse', width: '100%', marginTop: 'auto' }}>
-              <Input 
+              <div className="flex flex-col items-center w-full mt-auto">
+                <div className='max-h-64 min-h-64 mb-4 mt-[10px]'> {/* Adjust margin-bottom as needed */}
+                  <ChatSearch popoveropen={isMenuOpen} chatNames={chatNames} onChatSelect={onChatSelect} />
+                </div>
+                <Input 
                   value={chatName}
                   onChange={(e) => setChatName(e.target.value)}
                   placeholder="Enter Chat Name..."
-                  className='w-full mt-4'
+                  className='w-full mb-0 mt-[75px]' // Adjusted for closer spacing
                 />
-                {/* Button to save chat */}
                 <Button 
                   onClick={saveChat} 
-                  className='w-full h-8 rounded-md mt-4 justify-between bg-black text-white flex justify-center items-center bg-blue-700'>
-                    Save Chat
+                  className='w-full my-4 mb-4 h-8 rounded-md bg-black text-white flex justify-center items-center bg-blue-700'
+                >
+                  Save Chat
                 </Button>
-                <div className='max-h-84 min-h-96'>
-                  <ChatSearch popoveropen={isMenuOpen} chatNames={chatNames} onChatSelect={onChatSelect} />
-                </div>
               </div>
             </div>
           </div>

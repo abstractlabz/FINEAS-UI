@@ -130,6 +130,43 @@ const checkCreditsAndSendMessage = async () => {
   }
 };
 
+  const deleteChat = async (chatName: string) => {
+    setIsLoading(true);
+    try {
+      console.log(selectedChatName.toLowerCase().trim());
+      console.log(profile?.id_hash);
+      await axios.get('https://upgrade.fineasapp.io:2096/delete-chats', { params:{
+        chatname: selectedChatName.toLowerCase().trim(),
+        id_hash: profile?.id_hash
+      }});
+      setChatNames(chatNames.filter((name) => name.toLowerCase().trim() !== chatName.toLowerCase().trim()));
+      setChatHistory([]);
+      setSelectedChatName('');
+      alert('Chat deleted successfully.');
+      setIsLoading(false);
+      refreshPage();
+    } catch (error) {
+      console.error('Failed to delete chat', error);
+      setError('Failed to delete chat. Please try again.');
+      setIsLoading(false);
+    }
+  }
+  
+  const refreshPage = () => {
+    window.location.reload();
+  };
+
+  const newChat = async () => {
+    setIsLoading(true);
+    try {
+      refreshPage();
+    } catch (error) {
+      console.error('Failed to create chat', error);
+      setError('Failed to create chat. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const saveChat = async () => {
     if (chatName.trim() === '') {
@@ -142,7 +179,7 @@ const checkCreditsAndSendMessage = async () => {
     try {
       // Corrected Axios call to send data as a JSON body
       await axios.post('https://upgrade.fineasapp.io:2096/savechat', {
-        chatname: chatName.toLowerCase(),
+        chatname: chatName.toLowerCase().trim(),
         id_hash: profile?.id_hash,
         chat_history: chatHistory
       }, {
@@ -151,7 +188,7 @@ const checkCreditsAndSendMessage = async () => {
         }
       });
       
-      setChatNames([...chatNames, chatName.toLowerCase()]);
+      setChatNames([...chatNames, chatName.toLowerCase().trim()]);
       setChatName(''); // Clear chat name input
       alert('Chat saved successfully.');
     } catch (error) {
@@ -163,8 +200,8 @@ const checkCreditsAndSendMessage = async () => {
   };
   
   const handleChatSelect = async (chatName: string) => {
-    setSelectedChatName(chatName.toLowerCase());
-    await loadChat(chatName.toLowerCase());
+    setSelectedChatName(chatName.toLowerCase().trim());
+    await loadChat(chatName.toLowerCase().trim());
   };
 
   const loadChat = async (name: string) => {
@@ -172,7 +209,7 @@ const checkCreditsAndSendMessage = async () => {
     try {
       // Example API call to load chat by name
       const response = await axios.post('https://upgrade.fineasapp.io:2096/loadchat', {
-        chatname: name.toLowerCase(),
+        chatname: name.toLowerCase().trim(),
         id_hash: profile?.id_hash
       });
       setChatHistory(response.data.chat_history);
@@ -220,8 +257,23 @@ const checkCreditsAndSendMessage = async () => {
         </div>
         <div className="flex-1 md:pl-64 pl-0 flex flex-col items-center h-[85.25vh] pt-0">
         <Card className="glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden h-[78vh] mb-10 text-white flex flex-col">
-        <CardHeader>
-          <CardTitle>Discover Stock Market Alpha with Fineas.AI Chatbot!</CardTitle>
+        <CardHeader className='flex-row'>
+          <CardTitle className='flex flex-row'>
+            Generate Alpha! 🚀
+            <Button 
+            onClick={() => deleteChat(chatName)}
+            variant="default" 
+            className='w-[65px] h-8 rounded-md ml-[20px] justify-between bg-blue-700 text-white flex justify-center items-center'>
+              -
+          </Button>
+          <Button 
+            onClick={() => newChat()}
+            variant="default" 
+            className='w-[65px] h-8 rounded-md ml-[12px] justify-between bg-blue-700 text-white flex justify-center items-center'>
+              +
+          </Button>
+            </CardTitle>
+
         </CardHeader>
         <CardContent className="overflow-y-auto flex-1 px-4 py-2">
           {chatHistory?.map((msg, index, arr) => {

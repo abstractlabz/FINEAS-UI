@@ -257,7 +257,7 @@ const checkCreditsAndSendMessage = async () => {
         </div>
         <div className="flex-1 md:pl-64 pl-0 flex flex-col items-center h-[85.25vh] pt-0">
         <Card className="glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden h-[78vh] mb-10 text-white flex flex-col">
-        <CardHeader className='flex-row'>
+        <CardHeader className='flex-row '>
           <CardTitle className='flex flex-row'>
             Generate Alpha! 🚀
             <Button 
@@ -265,7 +265,7 @@ const checkCreditsAndSendMessage = async () => {
             variant="default" 
             className='w-[65px] h-8 rounded-md ml-[20px] justify-between bg-blue-700 text-white flex justify-center items-center'>
               -
-          </Button>
+          </Button> 
           <Button 
             onClick={() => newChat()}
             variant="default" 

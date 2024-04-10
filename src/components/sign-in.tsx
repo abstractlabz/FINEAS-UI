@@ -64,12 +64,13 @@ const SignInComponent = () => {
             const userProfile = {
                 picture: data.picture || '', // Use empty string as fallback
                 id_hash: id_hash,
-                stripe_customer_id: '', // You might need to update this accordingly
+                stripe_customer_id: data.user.stripe_customer_id || '', // You might need to update this accordingly
                 email: data.email,
                 credits: data.user.credits,
                 is_member: data.user.is_member,
             };
     
+            console.log(data.user.stripe_customer_id)
             console.log(userProfile);
             setProfile(userProfile);
             Cookies.set('userProfile', JSON.stringify(userProfile));

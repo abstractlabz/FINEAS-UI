@@ -91,15 +91,15 @@ export function Combobox({ setSelectedTicker }: ComboboxProps) {
         >
           {value
             ? displayedTickers.find((framework) => framework.value === value)?.label // Use displayedTickers here to display the selected label
-            : <p className="text-black">Select Ticker...</p>}
+            : <p className="text-black">Select Asset...</p>}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0 bg-accent-color overflow-auto max-h-[385px]">
         <Command className="bg-accent-color">
-          <CommandInput className="w-full bg-accent-color text-black" placeholder="Enter a ticker symbol..."  value={searchQuery}
+          <CommandInput className="w-full bg-accent-color text-black" placeholder="Enter an asset name..."  value={searchQuery}
         onInput={(e) => setSearchQuery(e.currentTarget.value)} />
-          <CommandEmpty>No companies found.</CommandEmpty>
+          <CommandEmpty>No assets found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
             {displayedTickers.map((framework) => (
               <div key={framework.value} className="w-full flex items-center justify-between">

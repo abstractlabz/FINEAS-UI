@@ -20,6 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { frameworks } from "../data/tickerslist"
+import {fullListData} from "../data/fullListData"
 
 interface ComboboxProps {
   setSelectedTicker: (ticker: string) => void;
@@ -30,6 +31,7 @@ interface ComboboxProps {
 export function Combobox({ setSelectedTicker }: ComboboxProps) {
   const [open, setOpen] = React.useState(true)
   const [value, setValue] = React.useState("")
+  const [searchQuery, setSearchQuery] = React.useState("")
   const [watchlist, setWatchlist] = React.useState<string[]>([]);
 
   React.useEffect(() => {
@@ -74,6 +76,10 @@ export function Combobox({ setSelectedTicker }: ComboboxProps) {
     setSelectedTicker(newValue);
   };
 
+  const displayedTickers = searchQuery.length > 0
+  ? fullListData.filter(framework => framework.label.toLowerCase().includes(searchQuery.toLowerCase()))
+  : frameworks; // Use `frameworks` for default suggestions without a search query
+
   return (
     <Popover open={open}>
       <PopoverTrigger asChild>
@@ -84,20 +90,21 @@ export function Combobox({ setSelectedTicker }: ComboboxProps) {
           className="w-[200px] justify-between bg-accent-color z-20"
         >
           {value
-            ? frameworks.find((framework) => framework.value === value)?.label
+            ? displayedTickers.find((framework) => framework.value === value)?.label // Use displayedTickers here to display the selected label
             : <p className="text-black">Select Ticker...</p>}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0 bg-accent-color overflow-auto max-h-[385px]">
         <Command className="bg-accent-color">
-          <CommandInput className="w-full bg-accent-color text-black" placeholder="Enter a ticker symbol..." />
+          <CommandInput className="w-full bg-accent-color text-black" placeholder="Enter a ticker symbol..."  value={searchQuery}
+        onInput={(e) => setSearchQuery(e.currentTarget.value)} />
           <CommandEmpty>No companies found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
-            {frameworks.map((framework) => (
+            {displayedTickers.map((framework) => (
               <div key={framework.value} className="w-full flex items-center justify-between">
                 <CommandItem
-                  value={framework.value}
+                  value={framework.label}
                   className="text-black flex-1"
                   onSelect={() => handleSelect(framework.value)}
                 >
@@ -113,26 +120,32 @@ export function Combobox({ setSelectedTicker }: ComboboxProps) {
               </div>
             ))}
           </CommandGroup>
+
           <CommandGroup heading="Watchlist">
-            {frameworks.filter(framework => watchlist.includes(framework.value)).map((framework) => (
-              <div key={framework.value} className="w-full flex items-center justify-between">
-                <CommandItem
-                  value={framework.value}
-                  className="text-black flex-1"
-                  onSelect={() => handleSelect(framework.value)}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === framework.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {framework.label}
-                </CommandItem>
-                <Image className="pr-2" src="/minus.png" width={30} height={30} alt="remove" onClick={() => removeFromWatchlist(framework.value)} />
-              </div>
-            ))}
+            {watchlist.map((tickerValue) => {
+              // Use fullListData to find the ticker details by value for watchlist items
+              const framework = fullListData.find(framework => framework.value === tickerValue);
+              return framework ? (
+                <div key={framework.value} className="w-full flex items-center justify-between">
+                  <CommandItem
+                    value={framework.value}
+                    className="text-black flex-1"
+                    onSelect={() => handleSelect(framework.value)}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === framework.value ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {framework.label}
+                  </CommandItem>
+                  <Image className="pr-2" src="/minus.png" width={30} height={30} alt="remove" onClick={() => removeFromWatchlist(framework.value)} />
+                </div>
+              ) : null;
+            })}
           </CommandGroup>
+
         </Command>
       </PopoverContent>
     </Popover>

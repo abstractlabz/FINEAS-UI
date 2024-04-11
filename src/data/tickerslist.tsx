@@ -1,26 +1,26 @@
 export const frameworks = [
-    {
-      value: "msft",
-      label: "Microsoft",
-    },
-    {
-      value: "aapl",
-      label: "Apple",
-    },
-    {
-      value: "googl",
-      label: "Google",
-    },
-    {
-      value: "amzn",
-      label: "Amazon",
-    },
-    {
-      value: "tsla",
-      label: "Tesla",
-    },
-    {
-      value: "nflx",
-      label: "Netflix",
-    },
+  {
+    "value": "msft",
+    "label": "Microsoft Corp"
+  },
+  {
+    "value": "aapl",
+    "label": "Apple Inc"
+  },
+  {
+    "value": "nvda",
+    "label": "NVIDIA Corp"
+  },
+  {
+    "value": "amzn",
+    "label": "Amazon.com Inc"
+  },
+  {
+    "value": "meta",
+    "label": "Meta Platforms Inc"
+  },
+  {
+    "value": "googl",
+    "label": "Alphabet Inc (Class A)"
+  }
   ]

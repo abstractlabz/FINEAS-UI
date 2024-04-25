@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import Nav from '../components/Nav';
 import router from 'next/router';
 
-const stripePromise = loadStripe('pk_test_51Ov5JFCajx6ndCSaytP6bepcFS61iiQtQ2LBSVGtamItSx53fra9lZXzc78DXnpxPVtjCqrpqW31f5ptOiqnwaQ800E3xbyWK2');
+const stripePromise = loadStripe('pk_live_51Ov5JFCajx6ndCSaXkiaueIlfLWC6kP0ZQkXFbqlSb8CmTJohClsY48rbmmmPHF3nTknsDsR4NiXJKfvX80I8yI300R87CdRTQ');
 // Define a type for the user profile
 interface UserProfile {
   picture: string;

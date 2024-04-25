@@ -69,7 +69,7 @@ const SignInComponent = () => {
                 credits: data.user.credits,
                 is_member: data.user.is_member,
             };
-    
+            
             console.log(data.user.stripe_customer_id)
             console.log(userProfile);
             setProfile(userProfile);

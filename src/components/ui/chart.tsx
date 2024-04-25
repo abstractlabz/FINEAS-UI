@@ -5,9 +5,18 @@ interface CandleChartProps {
   ticker: string;
 }
 
+function removePrefixSuffix(ticker: string): string {
+  // Remove prefix 'x:' if it exists
+  let cleanTicker = ticker.replace(/^x:/, "");
+
+  return cleanTicker;
+}
+
 const CandleChart: React.FC<CandleChartProps> = ({ ticker }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scriptId = 'tradingview-widget-script';
+
+  const cleanedTicker = removePrefixSuffix(ticker);
 
   useEffect(() => {
     // Cleanup previous chart instance if it exists
@@ -27,7 +36,7 @@ const CandleChart: React.FC<CandleChartProps> = ({ ticker }) => {
     script.innerHTML = JSON.stringify({
       "width": "100%",
       "height": "500",
-      "symbol": ticker, // Use the ticker prop
+      "symbol": cleanedTicker, // Use the ticker prop
       "interval": "1",
       "timezone": "Etc/UTC",
       "theme": "dark",

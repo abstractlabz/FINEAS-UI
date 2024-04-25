@@ -8,7 +8,7 @@ import router, { useRouter } from 'next/router';
 
 // Define a type for the user profile
 interface UserProfile {
-    picture: string;
+    picture?: string;
     id_hash: string;
     stripe_customer_id: string;
     email: string;
@@ -62,7 +62,7 @@ const SignInComponent = () => {
             const data = res.data;
     
             const userProfile = {
-                picture: data.picture || '', // Use empty string as fallback
+                picture: data.user.picture || '', // Use empty string as fallback
                 id_hash: id_hash,
                 stripe_customer_id: data.user.stripe_customer_id || '', // You might need to update this accordingly
                 email: data.email,
@@ -98,7 +98,7 @@ const SignInComponent = () => {
         <>
             {profile ? (
                 <div className="flex items-center">
-                    <img src={profile.picture} alt="" className="w-12 h-12 rounded-full mr-2 border-4 border-white"/>
+                    <img src={profile?.picture} alt="" className="w-12 h-12 rounded-full mr-2 border-4 border-white"/>
                     <button onClick={logOut} className="text-black bg-white py-2 px-4 rounded-full hover:bg-gray-100">Log out</button>
                 </div>
             ) : (

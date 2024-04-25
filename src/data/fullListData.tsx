@@ -4,8 +4,44 @@ export const fullListData  = [
     "label": "Microsoft Corp"
   },
   {
+    "value": "x:btcusd",
+    "label": "Bitcoin"
+  },
+  {
     "value": "aapl",
     "label": "Apple Inc"
+  },
+  {
+    "value": "voo",
+    "label": "Vanguard S&P 500 ETF"
+  },
+  {
+    "value": "spy",
+    "label": "SPDR S&P 500 ETF Trust"
+  },
+  {
+    "value": "ivv",
+    "label": "iShares Core S&P 500 ETF"
+  },
+  {
+    "value": "dia",
+    "label": "Dow Jones Industrial Average"
+  },
+  {
+    "value": "x:ethusd",
+    "label": "Ethereum"
+  },
+  {
+    "value": "x:1inchusd",
+    "label": "1 Inch"
+  },
+  {
+    "value": "x:aaveusd",
+    "label": "Aave"
+  },
+  {
+    "value": "x:adausd",
+    "label": "Cardano"
   },
   {
     "value": "nvda",
@@ -38,6 +74,22 @@ export const fullListData  = [
   {
     "value": "avgo",
     "label": "Broadcom Inc"
+  },
+  {
+    "value": "x:atomusd",
+    "label": "ATOM"
+  },
+  {
+    "value": "x:bchusd",
+    "label": "Bitcoin Cash"
+  },
+  {
+    "value": "x:crvusd",
+    "label": "Curve"
+  },
+  {
+    "value": "x:dotusd",
+    "label": "Polkadot"
   },
   {
     "value": "jpm",

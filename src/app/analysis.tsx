@@ -4,7 +4,7 @@ import Deck from '@/components/deck';
 
 const Analysis: React.FC = () => {
     return (
-        <>
+        <> 
         <Deck />
         </>  
     );

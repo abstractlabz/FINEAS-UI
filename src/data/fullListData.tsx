@@ -20,6 +20,18 @@ export const fullListData  = [
     "label": "SPDR S&P 500 ETF Trust"
   },
   {
+    "value": "x:dashusd",
+    "label": "Dash"
+  },
+  {
+    "value": "x:bttusd",
+    "label": "BitTorrent Token"
+  },
+  {
+    "value": "x:dogeusd",
+    "label": "Dogecoin"
+  },
+  {
     "value": "ivv",
     "label": "iShares Core S&P 500 ETF"
   },
@@ -28,12 +40,16 @@ export const fullListData  = [
     "label": "Dow Jones Industrial Average"
   },
   {
+    "value": "x:crousd",
+    "label": "Crypto.com Coin"
+  },
+  {
     "value": "x:ethusd",
     "label": "Ethereum"
   },
   {
     "value": "x:1inchusd",
-    "label": "1 Inch"
+    "label": "Bitcoin"
   },
   {
     "value": "x:aaveusd",
@@ -77,23 +93,139 @@ export const fullListData  = [
   },
   {
     "value": "x:atomusd",
-    "label": "ATOM"
+    "label": "ATOM Token"
   },
   {
     "value": "x:bchusd",
     "label": "Bitcoin Cash"
   },
   {
+    "value": "x:icpusd",
+    "label": "Internet Computer Token"
+  },
+  {
+    "value": "x:maticusd",
+    "label": "MATIC Token"
+  },
+  {
+    "value": "x:ltcusd",
+    "label": "Litecoin"
+  },
+  {
+    "value": "x:daiusd",
+    "label": "DAI Token"
+  },
+  {
+    "value": "x:uniusd",
+    "label": "Uniswap Token"
+  },
+  {
+    "value": "x:stxusd",
+    "label": "Stacks Token"
+  },
+  {
+    "value": "x:rndrusd",
+    "label": "Render Token"
+  },
+  {
+    "value": "x:xlmusd",
+    "label": "Stellar Token"
+  },
+  {
+    "value": "x:grtusd",
+    "label": "The Graph Token"
+  },
+  {
+    "value": "x:tiausd",
+    "label": "Celestia Token"
+  },
+  {
+    "value": "x:algousd",
+    "label": "Algorand Token"
+  },
+  {
+    "value": "x:xmrusd",
+    "label": "Monero Coin"
+  },
+  {
+    "value": "x:axsusd",
+    "label": "Axie Infinity Token"
+  },
+  {
     "value": "x:crvusd",
     "label": "Curve"
+  },
+  {
+    "value": "x:solusd",
+    "label": "Solana"
+  },
+  {
+    "value": "x:usdcusd",
+    "label": "USDC"
+  },
+  {
+    "value": "x:xrpusd",
+    "label": "Ripple Coin"
+  },
+  {
+    "value": "x:tonusd",
+    "label": "Toncoin"
+  },
+  {
+    "value": "x:shibusd",
+    "label": "Shiba Inu"
+  },
+  {
+    "value": "x:batusd",
+    "label": "Basic Attention Token"
   },
   {
     "value": "x:dotusd",
     "label": "Polkadot"
   },
   {
+    "value": "x:avaxusd",
+    "label": "Avalanche Token"
+  },
+  {
+    "value": "x:linkusd",
+    "label": "Chainlink Token"
+  },
+  {
     "value": "jpm",
     "label": "Jpmorgan Chase & Co"
+  },
+  {
+    "value": "x:dydxusd",
+    "label": "dYdX - United States Dollar"
+  },
+  {
+    "value": "x:eosusd",
+    "label": "EOS"
+  },
+  {
+    "value": "x:bsvusd",
+    "label": "Bitcoin SV"
+  },
+  {
+    "value": "x:etcusd",
+    "label": "Ethereum Classic"
+  },
+  {
+    "value": "x:fetusd",
+    "label": "Fetch.ai"
+  },
+  {
+    "value": "x:filusd",
+    "label": "Filecoin"
+  },
+  {
+    "value": "x:ftmusd",
+    "label": "Fantom"
+  },
+  {
+    "value": "x:nearusd",
+    "label": "NEAR Token"
   },
   {
     "value": "tsla",
@@ -142,6 +274,10 @@ export const fullListData  = [
   {
     "value": "crm",
     "label": "Salesforce Inc"
+  },
+  {
+    "value": "x:usdtusd",
+    "label": "Tether USD"
   },
   {
     "value": "cvx",

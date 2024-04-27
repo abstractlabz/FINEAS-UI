@@ -69,7 +69,7 @@ const Chat: React.FC = () => {
 
   const fetchChatNames = async (profile: UserProfile | null) => {
     try {
-      const response = await axios.get('https://upgrade.fineasapp.io:5600/get-chat-names', { params: { id_hash: profile?.id_hash } });
+      const response = await axios.get('https://upgrade.fineasapp.io:2096/get-chat-names', { params: { id_hash: profile?.id_hash } });
       // Adjust according to the actual structure of the response
       setChatNames(response.data); // Assuming response.data directly contains the array of chat names
     } catch (error) {
@@ -101,7 +101,7 @@ const checkCreditsAndSendMessage = async () => {
   setChatHistory([...chatHistory, userMessage]);
 
   try {
-    const creditCheckResponse = await axios.post('https://upgrade.fineasapp.io:5600/enforce-credits', { id_hash: profile?.id_hash });
+    const creditCheckResponse = await axios.post('https://upgrade.fineasapp.io:2096/enforce-credits', { id_hash: profile?.id_hash });
     if (creditCheckResponse.data.creditsLeft === 0) {
       alert('You have run out of credits.');
       setIsLoading(false);
@@ -135,7 +135,7 @@ const checkCreditsAndSendMessage = async () => {
     try {
       console.log(selectedChatName.toLowerCase().trim());
       console.log(profile?.id_hash);
-      await axios.get('https://upgrade.fineasapp.io:5600/delete-chats', { params:{
+      await axios.get('https://upgrade.fineasapp.io:2096/delete-chats', { params:{
         chatname: selectedChatName.toLowerCase().trim(),
         id_hash: profile?.id_hash
       }});
@@ -178,7 +178,7 @@ const checkCreditsAndSendMessage = async () => {
   
     try {
       // Corrected Axios call to send data as a JSON body
-      await axios.post('https://upgrade.fineasapp.io:5600/savechat', {
+      await axios.post('https://upgrade.fineasapp.io:2096/savechat', {
         chatname: chatName.toLowerCase().trim(),
         id_hash: profile?.id_hash,
         chat_history: chatHistory
@@ -208,7 +208,7 @@ const checkCreditsAndSendMessage = async () => {
     setIsLoading(true);
     try {
       // Example API call to load chat by name
-      const response = await axios.post('https://upgrade.fineasapp.io:5600/loadchat', {
+      const response = await axios.post('https://upgrade.fineasapp.io:2096/loadchat', {
         chatname: name.toLowerCase().trim(),
         id_hash: profile?.id_hash
       });

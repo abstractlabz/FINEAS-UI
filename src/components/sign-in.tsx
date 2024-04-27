@@ -58,7 +58,7 @@ const SignInComponent = () => {
     // Fetch user profile with retry logic
     const fetchUserProfile = async (id_hash: string, retryCount: number) => {
         try {
-            const res = await axios.get(`https://upgrade.fineasapp.io:2096/get-user-info?id_hash=${id_hash}`);
+            const res = await axios.get(`https://upgrade.fineasapp.io:2053/get-user-info?id_hash=${id_hash}`);
             const data = res.data;
     
             const userProfile = {

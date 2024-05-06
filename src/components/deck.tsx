@@ -89,7 +89,10 @@ const Deck: React.FC = () => {
     setIsLoading(true);
     try {
         await updateProfileCredits();
-        // Existing code...
+        const apiUrl = `https://data.fineasapp.io:8443/ret?ticker=${selectedTicker.toUpperCase()}`;
+        const response = await fetch(apiUrl);
+        const data: StockAnalysis = await response.json();
+        setAnalysis(data);
     } catch (error) {
         if (error instanceof Error && error.message === 'No more credits') {
             handleCreditsNeeded();

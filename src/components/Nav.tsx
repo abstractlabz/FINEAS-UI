@@ -74,7 +74,7 @@ const Nav: React.FC<NavProps> = ({
         {/* Mobile Menu */}
         {isMenuOpen && !isChat && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-auto">
-            <div className="relative flex flex-col items-start p-4 bg-alternate-color w-64 h-[100%]">
+            <div className="relative flex flex-col items-start p-4 bg-main-color w-64 h-[100%]">
               <button onClick={toggleMenu} className="absolute top-4 right-4">
                 <Image className='text-white' width={35} height={35} src="icons/close-circle-icon.svg" alt="X" />
               </button>
@@ -98,7 +98,7 @@ const Nav: React.FC<NavProps> = ({
 
         {isMenuOpen && isChat && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-auto">
-            <div className="relative flex flex-col items-start p-4 bg-alternate-color w-64 h-full">
+            <div className="relative flex flex-col items-start p-4 bg-main-color w-64 h-full">
               <button onClick={toggleMenu} className="absolute top-4 right-4">
                 <Image className='text-white' width={35} height={35} src="icons/close-circle-icon.svg" alt="X" />
               </button>

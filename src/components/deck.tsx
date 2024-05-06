@@ -6,6 +6,10 @@ import { Combobox } from "@/components/combobox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import TypewriterEffect from "@/components/ui/typewriter";
+import Modal from "@/components/ui/modal";
+import SignInComponent from "@/components/sign-in";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { useRouter } from 'next/navigation';
 
 interface UserProfile {
   picture: string;
@@ -31,6 +35,10 @@ const Deck: React.FC = () => {
   const [analysis, setAnalysis] = useState<StockAnalysis | null>(null);
   const [selectedTicker, setSelectedTicker] = useState<string>(''); // Placeholder for selected ticker value
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<React.ReactNode>(null);
+  const router = useRouter(); // Get the router object from the useRouter hook
+
 
   useEffect(() => {
     const savedProfile = Cookies.get('userProfile');
@@ -59,35 +67,32 @@ const Deck: React.FC = () => {
   
     const updatedProfile = await response.json();
     setProfile(updatedProfile); // Update profile state with new credits count
-    Cookies.set('userProfile', JSON.stringify(updatedProfile)); // Update userProfile cookie with new credits count
+    Cookies.set('userProfile', JSON.stringify(updatedProfile), { sameSite: 'None', secure: true }); // Update userProfile cookie with new credits count
   };
   
   const handleAnalysis = async () => {
-    // Check if user is not logged in
     if (!profile || !profile.id_hash) {
-        alert("Log in.");
-        setIsLoading(false); // Ensure loading state is reset
-        return; // Exit the function early
+        handleLoginNeeded();
+        return;
     }
 
-    // Check if no ticker is selected
     if (!selectedTicker) {
-        alert("Select a ticker before generating an analysis.");
-        setIsLoading(false); // Ensure loading state is reset
-        return; // Exit the function early
+      setModalContent(
+        <>
+        <div className='mb-4 items-center flex justify-center items-center'>Please select a ticker for analysis</div>
+        </>
+      );
+      setIsModalOpen(true);
+      return;
     }
 
     setIsLoading(true);
-
     try {
         await updateProfileCredits();
-        const apiUrl = `https://data.fineasapp.io:8443/ret?ticker=${selectedTicker.toUpperCase()}`;
-        const response = await fetch(apiUrl);
-        const data: StockAnalysis = await response.json();
-        setAnalysis(data);
+        // Existing code...
     } catch (error) {
         if (error instanceof Error && error.message === 'No more credits') {
-            alert('You have run out of credits.');
+            handleCreditsNeeded();
         } else {
             console.error('Error:', error);
         }
@@ -96,23 +101,51 @@ const Deck: React.FC = () => {
     }
 };
 
+const handleLoginNeeded = () => {
+  setModalContent(
+  <>
+  <div className='mb-4'>Please Log in.</div>
+  <SignInComponent />
+  </>)
+  ;
+  setIsModalOpen(true);
+};
+
+
+const handleEmptyCredits = () => {
+  router.push('/checkout');
+}
+
+const handleCreditsNeeded = () => {
+  setModalContent(
+    <>
+      <div className="text-center p-4">
+        <p className="mb-4">You have run out of credits. Please upgrade your account here!</p>
+        <Button onClick={handleEmptyCredits} className="bg-accent-color text-black px-4 py-2 rounded hover:bg-accent-dark">Upgrade</Button>
+      </div>
+    </>
+  );
+  setIsModalOpen(true);
+};
+
   
 
   
 
   return (
+    <GoogleOAuthProvider clientId="684619174291-3515q33o0vl2spdq5t0ur23f7sepgk26.apps.googleusercontent.com">
     <div className="flex justify-center items-center md:p-4 sm:p-1 pt-6">
-      <Card className="glowing-border p-1 border shadow-xl w-full max-w-[230vh] bg-main-color overflow-hidden relative" style={{ minHeight: '5vh' }}>
+      <Card className="mt-[32px] glowing-border p-1 border shadow-md w-full max-w-[195vh] max-h-[550px] bg-main-color overflow-auto relative" style={{ minHeight: '5vh' }}>
         <CardContent className="flex flex-col items-start space-y-8 2xl:space-y-0 lg:flex-row 2xl:items-start relative" style={{ gap: '25px' }}>
           <div className="w-full lg:w-1/4 flex justify-center items-center flex-col mb-6 relative">
             <Combobox setSelectedTicker={setSelectedTicker} /> {/* Adjust this to correctly set the selectedTicker */}
-            <Button className="w-full mt-[435px] self-start bg-blue-700" onClick={handleAnalysis} disabled={isLoading}>
+            <Button className="w-full mt-[400px] self-start bg-blue-700" onClick={handleAnalysis} disabled={isLoading}>
               {isLoading ? <div className="loader" style={{ display: 'inline-block', marginRight: '5px' }}></div> : null}
               Generate Analysis
             </Button>
           </div>
 
-          <div className="w-full md:flex-grow mb-6 flex justify-center">
+          <div className="w-full md:flex-grow mb-6 mt-0 flex justify-center">
           <Tabs defaultValue="price" className="w-full">
           <TabsList className='w-full flex justify-center'>
             <TabsTrigger className='text-xs md:text-lg' value="price">Price Info</TabsTrigger>
@@ -136,15 +169,19 @@ const Deck: React.FC = () => {
 
           </div>
 
-          <div className="w-full md:flex-grow mb-6 relative">
+          <div className="w-full md:flex-grow relative max-h-[200p]">
             <CandleChart ticker={selectedTicker} />
           </div>
-          <div className='absolute bottom-0 right-4 m-12 text-s text-white-400'>
+          <div className='sm:absolute bottom-6 right-6 md:absolute bottom-1 right-6  lg:absolute bottom-6 right-6  text-s text-white-400'>
             <p className='text-white'>Credits Available: {profile?.credits}</p>
           </div>
         </CardContent>
       </Card>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          {modalContent}
+      </Modal>
     </div>
+    </GoogleOAuthProvider>
   );
 };
 

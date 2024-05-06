@@ -5,7 +5,9 @@ import Deck from '@/components/deck';
 const Analysis: React.FC = () => {
     return (
         <> 
+        <div className='bg-main-color'>
         <Deck />
+        </div>
         </>  
     );
 };

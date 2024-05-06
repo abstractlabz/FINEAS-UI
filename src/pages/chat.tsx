@@ -228,7 +228,7 @@ const checkCreditsAndSendMessage = async () => {
 
 
   return (
-    <div className="bg-main-color w-full h-full">
+    <div className="bg-main-color w-full h-screen overflow-hidden">
       <Nav
         variant='chat'
         onChatSelect={handleChatSelect}
@@ -240,7 +240,7 @@ const checkCreditsAndSendMessage = async () => {
         setChatName={setChatName}
       />
       <div className="flex h-full pt-2">
-        <div className="hidden md:flex md:flex-col md:fixed md:left-0 p-1 border w-64 rounded-lg h-[100vh] bg-alternate-color overflow-auto md:z-10 lg:z-20">
+        <div className="hidden md:flex md:flex-col md:fixed md:left-0 p-1 border w-64 rounded-lg h-[80vh] bg-main-color overflow-auto md:z-10 lg:z-20">
           <div className='flex justify-center'>
           <ChatSearch popoveropen={popoverOpen} chatNames={chatNames} onChatSelect={handleChatSelect} />          </div>
           <Input 
@@ -251,12 +251,12 @@ const checkCreditsAndSendMessage = async () => {
           <Button 
             onClick={saveChat} 
             variant="default" 
-            className='w-full h-10 rounded-md mt-[8px] justify-between bg-black text-white flex justify-center items-center'>
+            className='w-full h-10 rounded-md mt-[8px] justify-between bg-blue-700 text-white flex justify-center items-center'>
               Save Chat
           </Button>
         </div>
         <div className="flex-1 md:pl-64 pl-0 flex flex-col items-center h-[85.25vh] pt-0">
-        <Card className="glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden h-[78vh] mb-10 text-white flex flex-col">
+        <Card className="mt-[35px] glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden h-[100%] mb-24 text-white flex flex-col bg-opacity-75 z-10">
         <CardHeader className='flex-row '>
           <CardTitle className='flex flex-row'>
             Generate Alpha! 🚀

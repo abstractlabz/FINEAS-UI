@@ -73,7 +73,7 @@ const SignInComponent = () => {
             console.log(data.user.stripe_customer_id)
             console.log(userProfile);
             setProfile(userProfile);
-            Cookies.set('userProfile', JSON.stringify(userProfile));
+            Cookies.set('userProfile', JSON.stringify(userProfile), { sameSite: 'None', secure: true});
             refreshPage();
         } catch (error: Error | any) {
             console.error('Failed to fetch user profile:', error);

@@ -42,7 +42,7 @@ export function Combobox({ setSelectedTicker }: ComboboxProps) {
   }, []);
 
   const saveWatchlistToCookies = (watchlist: string[]) => {
-    Cookies.set('watchlist', JSON.stringify(watchlist));
+    Cookies.set('watchlist', JSON.stringify(watchlist), { sameSite: 'None', secure: true });
   };
 
   const addToWatchlist = (newValue: string) => {
@@ -87,7 +87,7 @@ export function Combobox({ setSelectedTicker }: ComboboxProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between bg-accent-color z-20"
+          className="w-[200px] justify-between bg-accent-color z-60"
         >
           {value
             ? displayedTickers.find((framework) => framework.value === value)?.label // Use displayedTickers here to display the selected label

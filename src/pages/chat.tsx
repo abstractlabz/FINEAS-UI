@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import axios from 'axios';
 import TypewriterEffect from '@/components/ui/typewriter';
+import Modal from "@/components/ui/modal";
 import { set } from 'react-hook-form';
 
 interface IMessage {
@@ -47,6 +48,8 @@ const Chat: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [error, setError] = useState('');
   const [selectedChatName, setSelectedChatName] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<React.ReactNode>(null);
 
   useEffect(() => {
     // Function to check and set state based on screen width
@@ -74,7 +77,12 @@ const Chat: React.FC = () => {
       setChatNames(response.data); // Assuming response.data directly contains the array of chat names
     } catch (error) {
       console.error('Failed to fetch chat names', error);
-      setError('Failed to load chat names. Please try again.');
+      setModalContent(
+        <>
+        <div className='mb-4 items-center flex justify-center items-center'>Please select a ticker for analysis</div>
+        </>
+      );
+      setIsModalOpen(true);
     }
   };
   
@@ -90,7 +98,12 @@ const Chat: React.FC = () => {
 
 const checkCreditsAndSendMessage = async () => {
   if (message.trim() === '') {
-    alert('Please enter a message.');
+    setModalContent(
+      <>
+      <div className='mb-4 items-center flex justify-center items-center'>Please enter a message</div>
+      </>
+    );
+    setIsModalOpen(true);
     return;
   }
 
@@ -103,7 +116,12 @@ const checkCreditsAndSendMessage = async () => {
   try {
     const creditCheckResponse = await axios.post('https://upgrade.fineasapp.io:2096/enforce-credits', { id_hash: profile?.id_hash });
     if (creditCheckResponse.data.creditsLeft === 0) {
-      alert('You have run out of credits.');
+      setModalContent(
+        <>
+        <div className='mb-4 items-center flex justify-center items-center'>You have ran out of credits</div>
+        </>
+      );
+      setIsModalOpen(true);
       setIsLoading(false);
       return;
     }
@@ -124,7 +142,12 @@ const checkCreditsAndSendMessage = async () => {
     setMessage(''); // Clear the input after sending
   } catch (error) {
     console.error('Failed to send message or check credits', error);
-    setError('Failed to send message. Please try again.');
+    setModalContent(
+      <>
+      <div className='mb-4 items-center flex justify-center items-center'>Failed to send message or check credits</div>
+      </>
+    );
+    setIsModalOpen(true);
   } finally {
     setIsLoading(false);
   }
@@ -142,13 +165,23 @@ const checkCreditsAndSendMessage = async () => {
       setChatNames(chatNames.filter((name) => name.toLowerCase().trim() !== chatName.toLowerCase().trim()));
       setChatHistory([]);
       setSelectedChatName('');
-      alert('Chat deleted successfully.');
+      setModalContent(
+        <>
+        <div className='mb-4 items-center flex justify-center items-center'>Chat Deleted Successfully</div>
+        </>
+      );
+      setIsModalOpen(true);
       setIsLoading(false);
       refreshPage();
     } catch (error) {
       console.error('Failed to delete chat', error);
-      setError('Failed to delete chat. Please try again.');
+      setModalContent(
+        <>
+        <div className='mb-4 items-center flex justify-center items-center'>Failed to delete chat</div>
+        </>
+      );
       setIsLoading(false);
+      setIsModalOpen(true);
     }
   }
   
@@ -162,7 +195,12 @@ const checkCreditsAndSendMessage = async () => {
       refreshPage();
     } catch (error) {
       console.error('Failed to create chat', error);
-      setError('Failed to create chat. Please try again.');
+      setModalContent(
+        <>
+        <div className='mb-4 items-center flex justify-center items-center'>Failed to create chat</div>
+        </>
+      );
+      setIsModalOpen(true);
     } finally {
       setIsLoading(false);
     }
@@ -170,7 +208,12 @@ const checkCreditsAndSendMessage = async () => {
 
   const saveChat = async () => {
     if (chatName.trim() === '') {
-      alert('Please provide a name for the chat before saving.');
+      setModalContent(
+        <>
+        <div className='mb-4 items-center flex justify-center items-center'>Provide a name for chat before saving</div>
+        </>
+      );
+      setIsModalOpen(true);
       return;
     }
   
@@ -190,10 +233,20 @@ const checkCreditsAndSendMessage = async () => {
       
       setChatNames([...chatNames, chatName.toLowerCase().trim()]);
       setChatName(''); // Clear chat name input
-      alert('Chat saved successfully.');
+      setModalContent(
+        <>
+        <div className='mb-4 items-center flex justify-center items-center'>Chat saved Successfully</div>
+        </>
+      );
+      setIsModalOpen(true);
     } catch (error) {
       console.error('Failed to save chat', error);
-      setError('Failed to save chat. Please try again.');
+      setModalContent(
+        <>
+        <div className='mb-4 items-center flex justify-center items-center'>Failed to save chat</div>
+        </>
+      );
+      setIsModalOpen(true);
     } finally {
       setIsLoading(false);
     }
@@ -216,7 +269,12 @@ const checkCreditsAndSendMessage = async () => {
       console.log(chatHistory);
     } catch (error) {
       console.error('Failed to load chat', error);
-      setError('Failed to load chat. Please try again.');
+      setModalContent(
+        <>
+        <div className='mb-4 items-center flex justify-center items-center'>Failed to load chat</div>
+        </>
+      );
+      setIsModalOpen(true);
     } finally {
       setIsLoading(false);
     }
@@ -322,10 +380,11 @@ const checkCreditsAndSendMessage = async () => {
             </div>
         </CardFooter>
       </Card>
-
-
+          <p className='text-white absolute-0 bottom'>Credits Available: {profile?.credits}</p>
           {isLoading && <div>Loading...</div>}
-          {error && <div className="text-red-500">{error}</div>}
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+              {modalContent}
+          </Modal>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Button } from '@/components/ui/button';
 import Nav from '../components/Nav';
 import router from 'next/router';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const stripePromise = loadStripe('pk_live_51Ov5JFCajx6ndCSaXkiaueIlfLWC6kP0ZQkXFbqlSb8CmTJohClsY48rbmmmPHF3nTknsDsR4NiXJKfvX80I8yI300R87CdRTQ');
 // Define a type for the user profile
@@ -94,16 +95,34 @@ const CheckoutPage = () => {
         throw new Error('Function not implemented.');
       } } />
       <div className="flex flex-col items-center justify-center h-screen bg-main-color">
-        {/* Assuming you have defined custom colors in your tailwind.config.js */}
-        <Button 
-          onClick={handleCheckout} 
-          className="bg-alternate-color text-white py-5 text-3xl border-none cursor-pointer my-5 h-auto w-3/5 max-w-lg"
-        >
+        <Tabs defaultValue="account" className="w-2/5">
+          <TabsList className='w-full flex justify-center'>
+            <TabsTrigger className='text-xs md:text-lg' value="account">Account Info</TabsTrigger>
+            <TabsTrigger className='text-xs md:text-lg' value="billing">Billing Info</TabsTrigger>
+          </TabsList>
+          <TabsContent className='text-white' value="account">
+            {profile ? (
+              <div>
+                <p>Credits: {profile.credits}</p>
+                <p>Basic Membership Status: {profile.is_member ? 'Active' : 'Inactive'} $14.99/mo</p>
+              </div>
+            ) : "No user information available."}
+          </TabsContent>
+          <TabsContent className='text-white' value="billing">
+            {profile ? (
+              <div>
+                <p className='mb-6'>Stripe Customer ID: {profile.stripe_customer_id}</p>
+                <p onClick={handleCancellation} className="cursor-pointer text-xs text-right text-white">
+                  Cancel subscriptions
+                </p>
+              </div>
+            ) : "No billing information available."}
+          </TabsContent>
+        </Tabs>
+
+        <Button onClick={handleCheckout} className="bg-alternate-color text-white py-5 text-3xl border-none cursor-pointer my-5 h-auto w-3/5 max-w-lg">
           Go To Checkout!
         </Button>
-          <p onClick={handleCancellation} className="cursor-pointer text-xs text-left text-white">
-            Cancel subscriptions
-          </p>
       </div>
     </>
   );

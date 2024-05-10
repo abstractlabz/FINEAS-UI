@@ -49,7 +49,7 @@ export const fullListData  = [
   },
   {
     "value": "x:1inchusd",
-    "label": "Bitcoin"
+    "label": "1 Inch Token"
   },
   {
     "value": "x:aaveusd",

@@ -37,7 +37,7 @@ const CandleChart: React.FC<CandleChartProps> = ({ ticker }) => {
       "width": "100%",
       "height": "455",
       "symbol": cleanedTicker, // Use the ticker prop
-      "interval": "1",
+      "interval": "D",
       "timezone": "Etc/UTC",
       "theme": "dark",
       "style": "1",

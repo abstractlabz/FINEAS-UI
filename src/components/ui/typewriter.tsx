@@ -1,25 +1,62 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 interface TypewriterEffectProps {
-  text: string;
+  text: string;  // Using plain text that will be converted to HTML
   speed: number; // Speed in milliseconds
 }
 
 const TypewriterEffect: React.FC<TypewriterEffectProps> = ({ text, speed }) => {
-  const [displayedText, setDisplayedText] = useState('');
+  const [index, setIndex] = useState(0);
+  const spanRef = useRef<HTMLSpanElement>(null);
+
+  // Function to convert text with "-" into bullet points
+  const formatTextToHTML = (inputText: string) => {
+    const lines = inputText.split('\n');
+    let inList = false;
+    let htmlText = "";
+
+    lines.forEach(line => {
+      if (line.trim().startsWith('-')) {
+        if (!inList) {
+          htmlText += "<ul>";
+          inList = true;
+        }
+        // Remove the dash and trim the start of the line
+        htmlText += `<li>${line.trim().substring(1).trim()}</li>`;
+      } else {
+        if (inList) {
+          htmlText += "</ul>";
+          inList = false;
+        }
+        htmlText += `<p>${line}</p>`;
+      }
+    });
+
+    if (inList) {
+      htmlText += "</ul>"; // Close the list if the text ends in list items
+    }
+
+    return htmlText;
+  };
 
   useEffect(() => {
-    if (text.length === 0) return;
+    const htmlText = formatTextToHTML(text); // Format the text first
+
+    if (index > htmlText.length) return;
 
     const timer = setTimeout(() => {
-      setDisplayedText((prev) => text.substring(0, prev.length + 1));
+      setIndex(prevIndex => prevIndex + 1);
     }, speed);
 
-    // Cleanup timeout if the component unmounts or text changes
-    return () => clearTimeout(timer);
-  }, [displayedText, text, speed]);
+    // Update innerHTML up to the current index
+    if (spanRef.current) {
+      spanRef.current.innerHTML = htmlText.slice(0, index);
+    }
 
-  return <span>{displayedText}</span>;
+    return () => clearTimeout(timer);
+  }, [index, text, speed]);
+
+  return <span ref={spanRef}></span>;
 };
 
 export default TypewriterEffect;

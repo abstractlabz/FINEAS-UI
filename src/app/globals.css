@@ -71,3 +71,9 @@
   object-fit: cover; /* Ensures the image covers the area without stretching */
 }
 
+ul {
+  list-style-type: disc; /* Ensures that bullets are discs */
+  padding-left: 20px; /* Ensures there is space for bullets */
+}
+
+

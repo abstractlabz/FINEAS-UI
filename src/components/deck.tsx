@@ -131,9 +131,6 @@ const handleCreditsNeeded = () => {
   setIsModalOpen(true);
 };
 
-  
-
-  
 
   return (
     <GoogleOAuthProvider clientId="684619174291-3515q33o0vl2spdq5t0ur23f7sepgk26.apps.googleusercontent.com">
@@ -157,16 +154,16 @@ const handleCreditsNeeded = () => {
             <TabsTrigger className='text-xs md:text-lg' value="financials">Financials</TabsTrigger>
           </TabsList>
           <TabsContent className='text-white' value="price">
-          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.StockPerformance || 'Here you will find information about recent price information.'} speed={15} />}
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.StockPerformance.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
           </TabsContent>
           <TabsContent className='text-white' value="news">
-          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.NewsSummary || 'Here you will find current news, sentiment, and investor outlooks.'} speed={15} />}
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.NewsSummary.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
           </TabsContent>
           <TabsContent className='text-white' value="technical">
-          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.TechnicalAnalysis || 'Here you will receive accurate technical analysis using the most relevant chart indicators. '} speed={15} />}
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.TechnicalAnalysis.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
           </TabsContent>
           <TabsContent className='text-white' value="financials">
-          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.FinancialHealth || 'Here you will find evaluations of financial health.'} speed={15} />}
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.FinancialHealth.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
           </TabsContent>
         </Tabs>
 

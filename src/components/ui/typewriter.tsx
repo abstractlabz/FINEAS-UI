@@ -9,9 +9,17 @@ const TypewriterEffect: React.FC<TypewriterEffectProps> = ({ text, speed }) => {
   const [index, setIndex] = useState(0);
   const spanRef = useRef<HTMLSpanElement>(null);
 
+  // Function to convert https links in parentheses to clickable hyperlinks
+  const convertLinksToHyperlinks = (inputText: string) => {
+    const linkRegex = /\((https:\/\/[^\s)]+)\)/g;
+    return inputText.replace(linkRegex, (match, p1) => {
+      return `<a href="${p1}" target="_blank" style="color: #0000EE;">${p1}</a>`;
+    });
+  };
+
   // Function to convert text with "-" into bullet points
   const formatTextToHTML = (inputText: string) => {
-    const lines = inputText.split('\n');
+    const lines = convertLinksToHyperlinks(inputText).split('\n');
     let inList = false;
     let htmlText = "";
 

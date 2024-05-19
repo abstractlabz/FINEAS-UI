@@ -76,35 +76,3 @@ ul {
   padding-left: 20px; /* Ensures there is space for bullets */
 }
 
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.chat-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
-.chat-messages {
-  flex: 1;
-  overflow-y: auto;
-}
-
-@media (max-width: 767px) {
-  .chat-content {
-    max-width: 100vw;
-  }
-
-  .chat-messages {
-    max-height: calc(100vh - 120px); /* Adjust according to the height of the header and footer */
-  }
-}
-
-

@@ -286,7 +286,7 @@ const checkCreditsAndSendMessage = async () => {
 
 
   return (
-    <div className="chat-container bg-main-color w-full h-screen overflow-hidden">
+    <div className="bg-main-color w-full h-screen overflow-hidden flex flex-col">
       <Nav
         variant='chat'
         onChatSelect={handleChatSelect}
@@ -297,7 +297,7 @@ const checkCreditsAndSendMessage = async () => {
         chatName={chatName}
         setChatName={setChatName}
       />
-      <div className="flex h-full pt-2">
+      <div className="flex h-full pt-2 flex-col md:flex-row">
         <div className="hidden md:flex md:flex-col md:fixed md:left-0 p-1 border w-64 rounded-lg h-[80vh] bg-main-color overflow-auto md:z-10 lg:z-20">
           <div className='flex justify-center'>
           <ChatSearch popoveropen={popoverOpen} chatNames={chatNames} onChatSelect={handleChatSelect} />          </div>
@@ -313,8 +313,8 @@ const checkCreditsAndSendMessage = async () => {
               Save Chat
           </Button>
         </div>
-        <div className="chat-content flex-1 md:pl-64 pl-0 flex flex-col items-center h-[85.25vh] pt-0">
-        <Card className="mt-[35px] glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden h-[100%] mb-24 text-white flex flex-col bg-opacity-75 z-10">
+        <div className="flex-1 md:pl-64 pl-0 flex flex-col items-center h-full pt-0">
+        <Card className="mt-8 md:mt-[35px] glowing-border border shadow-xl w-full md:w-4/5 bg-main-color overflow-hidden h-full mb-24 text-white flex flex-col bg-opacity-75 z-10">
         <CardHeader className='flex-row '>
           <CardTitle className='flex flex-row'>
             Generate Alpha! 🚀
@@ -333,7 +333,7 @@ const checkCreditsAndSendMessage = async () => {
             </CardTitle>
 
         </CardHeader>
-        <CardContent className="chat-messages overflow-y-auto flex-1 px-4 py-2">
+        <CardContent className="overflow-y-auto flex-1 px-4 py-2 w-full max-w-full">
           {chatHistory?.map((msg, index, arr) => {
             const isPairStart = index === 0 || arr[index - 1]?.sender !== msg.sender;
             return (
@@ -362,7 +362,7 @@ const checkCreditsAndSendMessage = async () => {
           <Input 
             value={message} 
             onChange={(e) => setMessage(e.target.value)} 
-            className="max-w-[80%] sm:max-w-[85%] md:max-w-[87%] lg:max-w-[89%] mb-2 pl-2 text-black" 
+            className="w-full mb-2 pl-2 text-black" 
             placeholder="Type your question here..." />
             <div className="relative inline-flex items-center">
               <button 
@@ -380,7 +380,7 @@ const checkCreditsAndSendMessage = async () => {
             </div>
         </CardFooter>
       </Card>
-          <p className='text-white absolute-0 bottom'>Credits Available: {profile?.credits}</p>
+          <p className='text-white absolute bottom-4'>Credits Available: {profile?.credits}</p>
           {isLoading && <div>Loading...</div>}
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
               {modalContent}

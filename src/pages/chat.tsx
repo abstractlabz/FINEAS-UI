@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Nav from '../components/Nav';
-import "@/app/globals.css"
+import "@/app/globals.css";
 import { ChatSearch } from '@/components/chatsearch';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -286,7 +286,7 @@ const checkCreditsAndSendMessage = async () => {
 
 
   return (
-    <div className="bg-main-color w-full h-screen overflow-hidden">
+    <div className="chat-container bg-main-color w-full h-screen overflow-hidden">
       <Nav
         variant='chat'
         onChatSelect={handleChatSelect}
@@ -313,7 +313,7 @@ const checkCreditsAndSendMessage = async () => {
               Save Chat
           </Button>
         </div>
-        <div className="flex-1 md:pl-64 pl-0 flex flex-col items-center h-[85.25vh] pt-0">
+        <div className="chat-content flex-1 md:pl-64 pl-0 flex flex-col items-center h-[85.25vh] pt-0">
         <Card className="mt-[35px] glowing-border border shadow-xl w-4/5 bg-main-color overflow-hidden h-[100%] mb-24 text-white flex flex-col bg-opacity-75 z-10">
         <CardHeader className='flex-row '>
           <CardTitle className='flex flex-row'>
@@ -333,7 +333,7 @@ const checkCreditsAndSendMessage = async () => {
             </CardTitle>
 
         </CardHeader>
-        <CardContent className="overflow-y-auto flex-1 px-4 py-2">
+        <CardContent className="chat-messages overflow-y-auto flex-1 px-4 py-2">
           {chatHistory?.map((msg, index, arr) => {
             const isPairStart = index === 0 || arr[index - 1]?.sender !== msg.sender;
             return (

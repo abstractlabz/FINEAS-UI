@@ -17,9 +17,11 @@ const TypewriterEffect: React.FC<TypewriterEffectProps> = ({ text, speed }) => {
     });
   };
 
-  // Function to convert text with "-" into bullet points
+  // Function to format text with special rules
   const formatTextToHTML = (inputText: string) => {
-    const lines = convertLinksToHyperlinks(inputText).split('\n');
+    const boldText = inputText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    const headerText = boldText.replace(/###(.*?)(?=\n|$)/g, '<h1>$1</h1>');
+    const lines = convertLinksToHyperlinks(headerText).split('\n');
     let inList = false;
     let htmlText = "";
 

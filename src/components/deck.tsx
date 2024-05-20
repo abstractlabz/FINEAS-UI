@@ -164,10 +164,10 @@ const handleCreditsNeeded = () => {
           {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.TechnicalAnalysis.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
           </TabsContent>
           <TabsContent className='text-white' value="financials">
-          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.FinancialHealth.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.FinancialHealth.replace(/\n/g, '<br/>') || 'Here you will find information about recent financial information.'} speed={4} />}
           </TabsContent>
           <TabsContent className='text-white' value="description">
-          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.CompanyDesc.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.CompanyDesc.replace(/\n/g, '<br/>') || 'Here you will find a description about this financial asset.'} speed={4} />}
           </TabsContent>
         </Tabs>
 

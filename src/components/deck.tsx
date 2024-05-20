@@ -148,8 +148,8 @@ const handleCreditsNeeded = () => {
           <div className="w-full md:flex-grow mb-6 mt-0 flex justify-center">
           <Tabs defaultValue="price" className="w-full">
           <TabsList className='w-full flex justify-center'>
-            <TabsTrigger className='text-xs md:text-lg' value="price">Price Info</TabsTrigger>
-            <TabsTrigger className='text-xs md:text-lg' value="news">News Info</TabsTrigger>
+            <TabsTrigger className='text-xs md:text-lg' value="price">Price</TabsTrigger>
+            <TabsTrigger className='text-xs md:text-lg' value="news">News</TabsTrigger>
             <TabsTrigger className='text-xs md:text-lg' value="technical">Technicals</TabsTrigger>
             <TabsTrigger className='text-xs md:text-lg' value="financials">Financials</TabsTrigger>
             <TabsTrigger className='text-xs md:text-lg' value="description">Description</TabsTrigger>

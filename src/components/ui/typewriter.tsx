@@ -77,7 +77,7 @@ const TypewriterEffect: React.FC<TypewriterEffectProps> = ({ text, speed }) => {
     return () => clearTimeout(timer);
   }, [index, text, speed]);
 
-  return <span ref={spanRef}></span>;
+  return <span ref={spanRef} style={{ wordBreak: 'break-word', whiteSpace: 'normal' }}></span>;
 };
 
 export default TypewriterEffect;

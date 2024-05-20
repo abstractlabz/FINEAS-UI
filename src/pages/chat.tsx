@@ -314,7 +314,7 @@ const checkCreditsAndSendMessage = async () => {
           </Button>
         </div>
         <div className="flex-1 md:pl-64 pl-0 flex flex-col items-center h-[85.25vh] pt-0">
-        <Card className="mt-[35px] glowing-border border shadow-xl max-w-4/5 bg-main-color overflow-hidden h-[100%] mb-24 text-white flex flex-col bg-opacity-75 z-10">
+        <Card className="mt-[35px] glowing-border border shadow-xl max-w-3/5 bg-main-color overflow-hidden h-[100%] mb-24 text-white flex flex-col bg-opacity-75 z-10">
         <CardHeader className='flex-row '>
           <CardTitle className='flex flex-row'>
             Generate Alpha! 🚀

@@ -381,6 +381,9 @@ const checkCreditsAndSendMessage = async () => {
         </CardFooter>
       </Card>
           <p className='text-white absolute-0 bottom'>Credits Available: {profile?.credits}</p>
+          <br />
+          <p className='text-white absolute-0 bottom'>*Not financial advice</p>
+
           {isLoading && <div>Loading...</div>}
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
               {modalContent}

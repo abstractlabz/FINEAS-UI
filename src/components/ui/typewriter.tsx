@@ -19,9 +19,20 @@ const TypewriterEffect: React.FC<TypewriterEffectProps> = ({ text, speed }) => {
 
   // Function to format text with special rules
   const formatTextToHTML = (inputText: string) => {
-    const boldText = inputText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    const headerText = boldText.replace(/###(.*?)(?=\n|$)/g, '<h1>$1</h1>');
-    const lines = convertLinksToHyperlinks(headerText).split('\n');
+    // Remove all hashtags
+    const textWithoutHashtags = inputText.replace(/#/g, '');
+
+    // Color words "bullish," "bearish," and "neutral"
+    const coloredText = textWithoutHashtags
+      .replace(/\bbullish\b/g, '<span style="color: #64f8ad;">bullish</span>')
+      .replace(/\bbearish\b/g, '<span style="color: #ff5757;">bearish</span>')
+      .replace(/\bneutral\b/g, '<span style="color: #ccd188;">neutral</span>')
+      .replace(/\bBullish\b/g, '<span style="color: #64f8ad;">Bullish</span>')
+      .replace(/\bBearish\b/g, '<span style="color: #ff5757;">Bearish</span>')
+      .replace(/\bNeutral\b/g, '<span style="color: #ccd188;">Neutral</span>');
+
+    const boldText = coloredText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    const lines = convertLinksToHyperlinks(boldText).split('\n');
     let inList = false;
     let htmlText = "";
 

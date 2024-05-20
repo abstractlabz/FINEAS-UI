@@ -7,6 +7,7 @@ const Analysis: React.FC = () => {
         <> 
         <div className='bg-main-color'>
         <Deck />
+        <p>*Not financial advice</p>
         </div>
         </>  
     );

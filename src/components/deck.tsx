@@ -152,6 +152,7 @@ const handleCreditsNeeded = () => {
             <TabsTrigger className='text-xs md:text-lg' value="news">News Info</TabsTrigger>
             <TabsTrigger className='text-xs md:text-lg' value="technical">Technicals</TabsTrigger>
             <TabsTrigger className='text-xs md:text-lg' value="financials">Financials</TabsTrigger>
+            <TabsTrigger className='text-xs md:text-lg' value="description">Description</TabsTrigger>
           </TabsList>
           <TabsContent className='text-white' value="price">
           {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.StockPerformance.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
@@ -165,6 +166,9 @@ const handleCreditsNeeded = () => {
           <TabsContent className='text-white' value="financials">
           {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.FinancialHealth.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
           </TabsContent>
+          <TabsContent className='text-white' value="description">
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.CompanyDesc.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
+          </TabsContent>
         </Tabs>
 
           </div>
@@ -174,6 +178,7 @@ const handleCreditsNeeded = () => {
           </div>
           <div className='sm:absolute bottom-6 right-6 md:absolute bottom-1 right-6  lg:absolute bottom-6 right-6  text-s text-white-400'>
             <p className='text-white'>Credits Available: {profile?.credits}</p>
+            <p className='text-white absolute-0 center'>*Not financial advice</p>
           </div>
         </CardContent>
       </Card>

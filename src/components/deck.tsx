@@ -145,14 +145,14 @@ const handleCreditsNeeded = () => {
             </Button>
           </div>
 
-          <div className="w-full md:flex-grow mb-6 mt-0 flex justify-center">
+          <div className="w-[100%] md:flex-grow mb-6 mt-0 flex justify-center">
           <Tabs defaultValue="price" className="w-full">
-          <TabsList className='w-full flex justify-center'>
-            <TabsTrigger className='text-xs md:text-lg mx-0' value="price">Price</TabsTrigger>
-            <TabsTrigger className='text-xs md:text-lg mx-0' value="news">News</TabsTrigger>
-            <TabsTrigger className='text-xs md:text-lg mx-0' value="technical">Technicals</TabsTrigger>
-            <TabsTrigger className='text-xs md:text-lg mx-0' value="financials">Financials</TabsTrigger>
-            <TabsTrigger className='text-xs md:text-lg mx-0' value="description">Description</TabsTrigger>
+          <TabsList className='w-[100%] flex justify-center'>
+            <TabsTrigger className='text-[0.65rem] md:text-lg mx-0' value="price">Price</TabsTrigger>
+            <TabsTrigger className='text-[0.65rem] md:text-lg mx-0' value="news">News</TabsTrigger>
+            <TabsTrigger className='text-[0.65rem] md:text-lg mx-0' value="technical">Technicals</TabsTrigger>
+            <TabsTrigger className='text-[0.65rem] md:text-lg mx-0' value="financials">Financials</TabsTrigger>
+            <TabsTrigger className='text-[0.65rem] md:text-lg mx-0' value="description">Description</TabsTrigger>
           </TabsList>
           <TabsContent className='text-white' value="price">
           {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.StockPerformance.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}

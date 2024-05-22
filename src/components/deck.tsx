@@ -176,9 +176,8 @@ const handleCreditsNeeded = () => {
           <div className="w-full md:flex-grow relative max-h-[200p]">
             <CandleChart ticker={selectedTicker} />
           </div>
-          <div className='sm:absolute bottom-6 right-6 md:absolute bottom-1 right-6  lg:absolute bottom-6 right-6  text-s text-white-400'>
+          <div className='sm:absolute bottom-6 right-6 md:absolute bottom-0 right-6 lg:absolute bottom-6 right-6  text-s text-white-400'>
             <p className='text-white'>Credits Available: {profile?.credits}</p>
-            <p className='text-white absolute-0 center'>*Not financial advice</p>
           </div>
         </CardContent>
       </Card>

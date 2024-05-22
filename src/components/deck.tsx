@@ -178,8 +178,8 @@ const handleCreditsNeeded = () => {
           </div>
           <br />
           <br />
-          <div className='sm:absolute bottom-0 right-6 md:absolute bottom-0 right-6 lg:absolute bottom-20 right-6 text-s text-white-400'>
-            <p className='text-white'>Credits Available: {profile?.credits}</p>
+          <div className='sm:absolute bottom-0 right-6 md:absolute bottom-12 right-6 lg:absolute bottom-20 right-6 text-s text-white-400'>
+            <p className='text-white bottom-'>Credits Available: {profile?.credits}</p>
           </div>
         </CardContent>
       </Card>

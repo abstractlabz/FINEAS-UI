@@ -300,12 +300,13 @@ const checkCreditsAndSendMessage = async () => {
       <div className="flex h-full pt-2">
         <div className="hidden md:flex md:flex-col md:fixed md:left-0 p-1 border w-64 rounded-lg h-[80vh] bg-main-color overflow-auto md:z-10 lg:z-20">
           <div className='flex justify-center'>
-          <ChatSearch popoveropen={popoverOpen} chatNames={chatNames} onChatSelect={handleChatSelect} />          </div>
+          <ChatSearch popoveropen={popoverOpen} chatNames={chatNames} onChatSelect={handleChatSelect} />
+          </div>
           <Input 
             value={chatName} 
             onChange={(e) => setChatName(e.target.value)} 
             placeholder="Enter Chat Name..." 
-            className='w-full mt-[325px]' />
+            className='w-full mt-[60vh]' />
           <Button 
             onClick={saveChat} 
             variant="default" 
@@ -314,7 +315,7 @@ const checkCreditsAndSendMessage = async () => {
           </Button>
         </div>
         <div className="flex-1 md:pl-64 pl-0 flex flex-col items-center h-[85.25vh] pt-0">
-        <Card className="mt-[35px] glowing-border border shadow-xl w-[85%] max-w-[86%] bg-main-color overflow-hidden h-[100%] mb-24 text-white flex flex-col bg-opacity-75 z-10">
+        <Card className="mt-[35px] glowing-border border shadow-xl w-[85%] max-w-[86%] bg-main-color overflow-hidden h-[100%] text-white flex flex-col bg-opacity-75 z-10">
         <CardHeader className='flex-row '>
           <CardTitle className='flex flex-row'>
             Generate Alpha! 🚀
@@ -380,7 +381,7 @@ const checkCreditsAndSendMessage = async () => {
             </div>
         </CardFooter>
       </Card>
-          <p className='text-white absolute-0 bottom'>Credits Available: {profile?.credits}</p>
+          <p className='text-white absolute-0 mt-8'>Credits Available: {profile?.credits}</p>
           {isLoading && <div>Loading...</div>}
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
               {modalContent}

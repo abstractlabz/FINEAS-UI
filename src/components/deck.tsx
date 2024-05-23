@@ -137,12 +137,15 @@ const handleCreditsNeeded = () => {
     <div className="flex justify-center items-center md:p-4 sm:p-1 pt-6">
       <Card className="mt-[32px] glowing-border p-1 border shadow-md w-full max-w-[195vh] max-h-[550px] bg-main-color overflow-auto relative" style={{ minHeight: '5vh' }}>
         <CardContent className="flex flex-col items-start space-y-8 2xl:space-y-0 lg:flex-row 2xl:items-start relative" style={{ gap: '25px' }}>
-          <div className="w-full lg:w-1/4 flex justify-center items-center flex-col mb-6 relative">
+          <div className="w-full h-full lg:w-1/4 flex justify-center items-center flex-col mb-6 relative">
             <Combobox setSelectedTicker={setSelectedTicker} /> {/* Adjust this to correctly set the selectedTicker */}
-            <Button className="w-full mt-[400px] self-start bg-blue-700" onClick={handleAnalysis} disabled={isLoading}>
+            <Button className="mb-6 w-full mt-[400px] self-start bg-blue-700" onClick={handleAnalysis} disabled={isLoading}>
               {isLoading ? <div className="loader" style={{ display: 'inline-block', marginRight: '5px' }}></div> : null}
               Generate Analysis
             </Button>
+            <div className='absolute bottom-0 text-s text-white-400'>
+            <p className='text-white md:mt-7 lg:mt-[5px]'>Credits Available: {profile?.credits}</p>
+          </div>
           </div>
 
           <div className="w-[100%] md:flex-grow mb-6 mt-0 flex justify-center">
@@ -170,16 +173,9 @@ const handleCreditsNeeded = () => {
           {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.CompanyDesc.replace(/\n/g, '<br/>') || 'Here you will find a description about this financial asset.'} speed={4} />}
           </TabsContent>
         </Tabs>
-
           </div>
-
           <div className="w-full md:flex-grow relative max-h-[200p]">
             <CandleChart ticker={selectedTicker} />
-          </div>
-          <br />
-          <br />
-          <div className='sm:absolute bottom-0 right-6 md:absolute bottom-12 right-6 lg:absolute bottom-20 right-6 text-s text-white-400'>
-            <p className='text-white bottom-'>Credits Available: {profile?.credits}</p>
           </div>
         </CardContent>
       </Card>

@@ -67,7 +67,7 @@ const Deck: React.FC = () => {
   
     const updatedProfile = await response.json();
     setProfile(updatedProfile); // Update profile state with new credits count
-    Cookies.set('userProfile', JSON.stringify(updatedProfile), { sameSite: 'None', secure: true }); // Update userProfile cookie with new credits count
+    Cookies.set('userProfile', JSON.stringify(updatedProfile), { sameSite: 'None', secure: true, expires: 365 }); // Update userProfile cookie with new credits count
   };
   
   const handleAnalysis = async () => {

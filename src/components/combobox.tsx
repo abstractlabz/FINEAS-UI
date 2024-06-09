@@ -42,7 +42,7 @@ export function Combobox({ setSelectedTicker }: ComboboxProps) {
   }, []);
 
   const saveWatchlistToCookies = (watchlist: string[]) => {
-    Cookies.set('watchlist', JSON.stringify(watchlist), { sameSite: 'None', secure: true });
+    Cookies.set('watchlist', JSON.stringify(watchlist), { sameSite: 'None', secure: true, expires: 365});
   };
 
   const addToWatchlist = (newValue: string) => {

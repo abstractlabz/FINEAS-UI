@@ -44,9 +44,10 @@ const SignInComponent = () => {
                     },
                 });
     
-                if (userInfoResponse.data && userInfoResponse.data.email) {
+                if (userInfoResponse.data && userInfoResponse.data.email && userInfoResponse.data.picture) {
                     const id_hash_val = crypto.createHash('sha256').update(userInfoResponse.data.email).digest('hex');
-                    await fetchUserProfile(id_hash_val, 2); // Passing 2 as the retry count
+                    const profile_picture = userInfoResponse.data.picture;
+                    await fetchUserProfile(id_hash_val,profile_picture, 2); // Passing 2 as the retry count
                 }
             } catch (error) {
                 console.log('Login Failed:', error);
@@ -56,13 +57,13 @@ const SignInComponent = () => {
     });
     
     // Fetch user profile with retry logic
-    const fetchUserProfile = async (id_hash: string, retryCount: number) => {
+    const fetchUserProfile = async (id_hash: string, profile_picture: string, retryCount: number) => {
         try {
             const res = await axios.get(`https://upgrade.fineasapp.io:2096/get-user-info?id_hash=${id_hash}`);
             const data = res.data;
     
             const userProfile = {
-                picture: data.user.picture || '', // Use empty string as fallback
+                picture: profile_picture || '', // Use empty string as fallback
                 id_hash: id_hash,
                 stripe_customer_id: data.user.stripe_customer_id || '', // You might need to update this accordingly
                 email: data.email,
@@ -73,13 +74,13 @@ const SignInComponent = () => {
             console.log(data.user.stripe_customer_id)
             console.log(userProfile);
             setProfile(userProfile);
-            Cookies.set('userProfile', JSON.stringify(userProfile), { sameSite: 'None', secure: true});
+            Cookies.set('userProfile', JSON.stringify(userProfile), { sameSite: 'None', secure: true, expires: 365});
             refreshPage();
         } catch (error: Error | any) {
             console.error('Failed to fetch user profile:', error);
             if (retryCount > 0 && error.response && error.response.status === 500) {
                 console.log(`Retrying... attempts left: ${retryCount}`);
-                await fetchUserProfile(id_hash, retryCount - 1);
+                await fetchUserProfile(id_hash,profile_picture, retryCount - 1);
             }
         }
     };

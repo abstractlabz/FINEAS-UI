@@ -158,19 +158,19 @@ const handleCreditsNeeded = () => {
             <TabsTrigger className='text-[0.65rem] md:text-lg mx-0' value="description">Description</TabsTrigger>
           </TabsList>
           <TabsContent className='text-white' value="price">
-          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.StockPerformance.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.StockPerformance.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information. **Only for research purposes, not financial advice**'} speed={4} />}
           </TabsContent>
           <TabsContent className='text-white' value="news">
-          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.NewsSummary.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.NewsSummary.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information. **Only for research purposes, not financial advice**'} speed={4} />}
           </TabsContent>
           <TabsContent className='text-white' value="technical">
-          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.TechnicalAnalysis.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information.'} speed={4} />}
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.TechnicalAnalysis.replace(/\n/g, '<br/>') || 'Here you will find information about recent price information. **Only for research purposes, not financial advice**'} speed={4} />}
           </TabsContent>
           <TabsContent className='text-white' value="financials">
-          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.FinancialHealth.replace(/\n/g, '<br/>') || 'Here you will find information about recent financial information.'} speed={4} />}
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.FinancialHealth.replace(/\n/g, '<br/>') || 'Here you will find information about recent financial information. **Only for research purposes, not financial advice**'} speed={4} />}
           </TabsContent>
           <TabsContent className='text-white' value="description">
-          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.CompanyDesc.replace(/\n/g, '<br/>') || 'Here you will find a description about this financial asset.'} speed={4} />}
+          {isLoading ? <div className="loader"></div> : <TypewriterEffect text={analysis?.CompanyDesc.replace(/\n/g, '<br/>') || 'Here you will find a description about this financial asset. **Only for research purposes, not financial advice**'} speed={4} />}
           </TabsContent>
         </Tabs>
           </div>

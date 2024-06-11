@@ -87,10 +87,12 @@ const Nav: React.FC<NavProps> = ({
                 <Image src="icons/analysis-icon.svg" alt="" width={40} height={40} />
                 <span className="ml-2 text-white">Analysis</span>
               </Linker>
+              {/*  
               <Linker href="/checkout" onClick={toggleMenu} className="flex items-center text-white mb-2">
                 <Image src="icons/members-icon.svg" alt="" width={40} height={40} />
                 <span className="ml-2">Upgrade</span>
               </Linker>
+              */}
               <SignInComponent />
             </div>
           </div>
@@ -111,10 +113,12 @@ const Nav: React.FC<NavProps> = ({
                 <Image src="icons/analysis-icon.svg" alt="" width={40} height={40} />
                 <span className="ml-2 text-white">Analysis</span>
               </Linker>
+              {/*
               <Linker href="/checkout" onClick={toggleMenu} className="flex items-center text-white mb-2">
                 <Image src="icons/members-icon.svg" alt="" width={40} height={40} />
                 <span className="ml-2 text-white">Upgrade</span>
               </Linker>
+                */}
               <SignInComponent />
               <div className="flex flex-col items-center w-full mt-auto">
                 <div className='max-h-48 min-h-64 mb-4 mt-[10px]'> {/* Adjust margin-bottom as needed */}
@@ -141,8 +145,9 @@ const Nav: React.FC<NavProps> = ({
         <NavbarContent className="hidden sm:flex gap-4" justify="start">
           <Link href="/" className='text-white'>Analysis</Link>
           <Link href="/chat" className='text-white' aria-current="page">Chat</Link>
+          {/* 
           <Link href="/checkout" className='text-white' aria-current="page">Upgrade</Link>
-          {/* Add other NavbarItems here */}
+          */}
           <SignInComponent />
         </NavbarContent>
       </Navbar>

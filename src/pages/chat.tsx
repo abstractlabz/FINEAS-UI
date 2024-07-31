@@ -126,12 +126,13 @@ const checkCreditsAndSendMessage = async () => {
       return;
     }
 
+    const bearerToken = process.env.NEXT_PUBLIC_BEARER_TOKEN?.toString() || '';
     const response = await axios.post('https://query.fineasapp.io:443/chat', null, {
       params: {
-        prompt: message
+        prompt: encodeURIComponent(message)
       },
       headers: {
-        Authorization: 'Bearer 671b31a4e4d59e1f4e344e91fb343c6988462a0afcf828bcd3f55404058819f2'
+        Authorization: 'Bearer ' + bearerToken,
       }
     });
 

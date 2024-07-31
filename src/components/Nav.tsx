@@ -59,8 +59,9 @@ const Nav: React.FC<NavProps> = ({
   // set varianle to true if variant is equal to chat
   let isChat = variant === "chat";
 
+  const googleToken: string = process.env.NEXT_PUBLIC_GOOGLE_AUTH?.toString() || '';
   return (
-    <GoogleOAuthProvider clientId="684619174291-3515q33o0vl2spdq5t0ur23f7sepgk26.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={googleToken}>
       <Navbar className='relative bg-main-color pr-4 overflow-auto' style={{ zIndex: 50 }}>
         <NavbarBrand>
           <LogoMain />

@@ -131,9 +131,9 @@ const handleCreditsNeeded = () => {
   setIsModalOpen(true);
 };
 
-
+  const googleToken: string = process.env.NEXT_PUBLIC_GOOGLE_AUTH?.toString() || '';
   return (
-    <GoogleOAuthProvider clientId="684619174291-3515q33o0vl2spdq5t0ur23f7sepgk26.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={googleToken}>
     <div className="flex justify-center items-center md:p-4 sm:p-1 pt-6">
       <Card className="mt-[32px] glowing-border p-1 border shadow-md w-full max-w-[195vh] max-h-[550px] bg-main-color overflow-auto relative" style={{ minHeight: '5vh' }}>
         <CardContent className="flex flex-col items-start space-y-8 2xl:space-y-0 lg:flex-row 2xl:items-start relative" style={{ gap: '25px' }}>

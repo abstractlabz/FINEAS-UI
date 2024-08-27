@@ -18,6 +18,7 @@ import axios from 'axios';
 import TypewriterEffect from '@/components/ui/typewriter';
 import Modal from "@/components/ui/modal";
 import { set } from 'react-hook-form';
+import SignInComponent from '../components/sign-in';
 
 interface IMessage {
   id: string; // or number based on your ID system
@@ -50,6 +51,7 @@ const Chat: React.FC = () => {
   const [selectedChatName, setSelectedChatName] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     // Function to check and set state based on screen width
@@ -85,13 +87,28 @@ const Chat: React.FC = () => {
       setIsModalOpen(true);
     }
   };
+
   
   useEffect(() => {
     const savedProfile = Cookies.get('userProfile');
     if (savedProfile) {
       const profileData = JSON.parse(savedProfile) as UserProfile;
       setProfile(profileData);
-      fetchChatNames(profileData); // Pass the directly obtained profileData
+      setIsLoggedIn(true);
+      fetchChatNames(profileData);
+    } else {
+      setIsLoggedIn(false);
+      setIsModalOpen(true);
+      setModalContent(
+        <>
+          <div className='mb-4 items-center flex justify-center items-center'>Please sign in to use the chat feature</div>
+          <SignInComponent onSignIn={() => {
+            setIsLoggedIn(true);
+            setIsModalOpen(false);
+            fetchChatNames(JSON.parse(Cookies.get('userProfile') || '{}'));
+          }} />
+        </>
+      );
     }
   }, []);
 
@@ -370,7 +387,7 @@ const checkCreditsAndSendMessage = async () => {
               <button 
                 onClick={!isLoading ? checkCreditsAndSendMessage : undefined} 
                 className={`ml-2 bg-blue-700 text-white rounded-lg px-4 py-3 ${isLoading ? 'bg-blue-300' : ''}`}
-                disabled={isLoading}
+                disabled={isLoading || !isLoggedIn}
               >
                 {!isLoading ? 'Chat' : 'Sending...'}
               </button>

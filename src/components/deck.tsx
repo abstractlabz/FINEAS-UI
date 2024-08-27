@@ -45,7 +45,15 @@ const Deck: React.FC = () => {
     if (savedProfile) {
         setProfile(JSON.parse(savedProfile) as UserProfile);
     }
+
 }, []);
+
+  useEffect(() => {
+    const userProfile = Cookies.get('userProfile');
+    if (!userProfile) {
+      handleLoginNeeded();
+    }
+  }, []);
 
   const updateProfileCredits = async () => {
     console.log("Current profile credits: ", profile?.credits);

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { googleLogout, useGoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import axios from 'axios';
 import crypto from 'crypto';
 import router, { useRouter } from 'next/router';
@@ -18,7 +18,7 @@ interface UserProfile {
     // Add other user profile fields as needed
 }
 
-const SignInComponent = () => {
+const SignInComponent = ({ onSignIn }: { onSignIn?: () => void }) => {
     const [profile, setProfile] = useState<UserProfile | null>(null);
 
     useEffect(() => {
@@ -75,6 +75,7 @@ const SignInComponent = () => {
             console.log(userProfile);
             setProfile(userProfile);
             Cookies.set('userProfile', JSON.stringify(userProfile), { sameSite: 'None', secure: true, expires: 365});
+            onSignIn && onSignIn();
             refreshPage();
         } catch (error: Error | any) {
             console.error('Failed to fetch user profile:', error);
@@ -109,4 +110,15 @@ const SignInComponent = () => {
     );
 };
 
-export default SignInComponent;
+// Wrap the SignInComponent with GoogleOAuthProvider
+const WrappedSignInComponent = ({ onSignIn }: { onSignIn?: () => void }) => {
+    const googleToken: string = process.env.NEXT_PUBLIC_GOOGLE_AUTH?.toString() || '';
+    
+    return (
+        <GoogleOAuthProvider clientId={googleToken}>
+            <SignInComponent onSignIn={onSignIn} />
+        </GoogleOAuthProvider>
+    );
+};
+
+export default WrappedSignInComponent;

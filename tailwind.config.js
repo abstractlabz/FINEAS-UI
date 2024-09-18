@@ -35,6 +35,9 @@ module.exports = {
         "14xl-5": "33.5px",
         "31xl-5": "50.5px",
         "21xl": "40px"
+      },
+      "boxShadow": {
+        "white-glow": "0 0 10px rgba(255, 255, 255, 0.5)",
       }
     },
     "fontSize": {
@@ -71,7 +74,11 @@ module.exports = {
       },
       "mq450": {
         "raw": "screen and (max-width: 450px)"
-      }
+      },
+      "sm": "640px",
+      "md": "768px",
+      "lg": "1024px",
+      "xl": "1280px"
     }
   },
   "corePlugins": {

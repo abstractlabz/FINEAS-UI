@@ -70,7 +70,7 @@ const Main: NextPage<MainType> = ({ className = "" }) => {
             <header className="self-stretch flex flex-row items-start justify-start mt-[-44px]">
               <Discord
                 propFlex="unset"
-                propWidth="221px"
+                propWidth="180px"
                 icbaselineDiscord="/icbaselinediscord.svg"
               />
             </header>

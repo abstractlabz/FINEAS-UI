@@ -33,7 +33,7 @@ const Content: NextPage<ContentType> = ({ className = "" }) => {
           </div>
         </div>
         <div className="self-stretch flex flex-row items-start justify-start py-0 pl-[13px] pr-[19px] box-border max-w-full text-xl font-quicksand relative z-1000">
-          <GroupComponent1 />
+          <GroupComponent1/>
         </div>
         <Component1 />
       </div>

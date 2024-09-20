@@ -17,7 +17,7 @@ const GroupComponent1: NextPage<GroupComponent1Type> = ({ className = "" }) => {
           <img
             src="/loogggg-1@2x.png"
             alt="Fineas Logo"
-            className="mb-8 m-8 h-16 w-16 object-cover drop-shadow-[0_0_5px_white]"
+            className="mb-8 m-8 h-16 w-16 drop-shadow-[0_0_5px_white]"
             loading="lazy"
           />
         </div>

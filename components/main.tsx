@@ -15,7 +15,7 @@ const Main: NextPage<MainType> = ({ className = "" }) => {
       className={`w-[629px] flex flex-row items-start justify-start relative max-w-full text-left text-base text-white font-public-sans ${className}`}
     >
       <img
-        className="h-[436px] w-[681px] absolute !m-[0] bottom-[-35px] left-[-557px] object-cover z-[4]"
+        className="h-[436px] w-[681px] absolute !m-[0] bottom-[-35px] left-[-800px] object-cover z-[4]"
         alt=""
         src="/component-1@2x.png"
       />

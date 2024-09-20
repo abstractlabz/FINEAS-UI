@@ -23,7 +23,7 @@ const VERSION3HOME: NextPage = () => {
       <PortfolioDescription />
       <div className="self-stretch flex flex-row items-start justify-center py-0 pl-5 pr-[22px]">
         <img
-          className="h-[132px] w-[132px] relative rounded-[29px] object-cover z-[2]"
+          className="h-[132px] w-[132px] relative rounded-[29px] object-cover z-[2] drop-shadow-[0_0_5px_white]"
           loading="lazy"
           alt=""
           src="/iphone-1@2x.png"

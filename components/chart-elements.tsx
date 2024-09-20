@@ -81,12 +81,12 @@ const ChartElements: NextPage<ChartElementsType> = ({
     >
       <div className="self-stretch h-[5px] relative border-mediumblue border-t-[5px] border-solid box-border z-[2]" />
       <div
-        className="w-[953px] flex flex-row items-start justify-start py-0 px-7 box-border max-w-full"
+        className="w-full flex flex-row items-start justify-start py-0 px-7 box-border max-w-full"
         style={frameDivStyle}
       >
-        <div className="flex-1 flex flex-row items-end justify-between max-w-full gap-5 mq1050:flex-wrap">
+        <div className="flex-1 flex flex-row items-end justify-between max-w-full gap-5 px-[100px] mq1050:flex-wrap">
           <div
-            className="w-[692px] flex flex-row items-start justify-start gap-[30px] max-w-full mq750:flex-wrap"
+            className="w-[79%] flex flex-row items-start justify-start gap-[30px] max-w-full mq750:flex-wrap"
             style={descriptionItemsStyle}
           >
             <div
@@ -106,7 +106,7 @@ const ChartElements: NextPage<ChartElementsType> = ({
                 style={rectangleDivStyle}
               />
               <img
-                className="h-[49px] w-[49px] relative overflow-hidden shrink-0 z-[4]"
+                className="h-[49px] w-full relative overflow-hidden shrink-0 z-[4]"
                 alt=""
                 src="/materialsymbolscheck.svg"
               />

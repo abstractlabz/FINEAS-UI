@@ -14,8 +14,8 @@ const Main: NextPage<MainType> = ({ className = "" }) => {
       className={`relative max-w-full text-left text-base text-white font-public-sans ${className}`}
     >
       {/* Header */}
-      <header className="w-full px-4 md:px-6 lg:px-8 py-4">
-        <div className="max-w-screen-xl mx-auto flex flex-wrap items-center justify-between">
+      <header className="w-full px-4 md:px-6 lg:px-6 py-4">
+        <div className="max-w-screen-lg mx-auto flex flex-wrap items-center justify-between">
           {/* Logo */}
           <img
             className="w-28 md:w-32 lg:w-40 h-auto"
@@ -79,25 +79,28 @@ const Main: NextPage<MainType> = ({ className = "" }) => {
       {/* Main Content */}
       <main className="relative flex flex-col md:flex-row items-center justify-between">
         {/* Left Section */}
-        <div className="w-full md:w-[87%] relative">
+        <div className="w-full md:w-[87%] relative flex items-center justify-center">
           <img
             src="/component-1@2x.png"
             alt=""
-            className="w-full h-auto"
+            className="w-11/12 h-auto"
           />
           {/* Overlay Explore App Button */}
-          <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 1 }}>
+          <div
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ zIndex: 1 }}
+          >
             <button className="bg-fuchsia text-white px-6 py-3 md:px-12 md:py-6 rounded-lg text-sm md:text-base">
               Explore App
             </button>
           </div>
         </div>
         {/* Right Section */}
-        <div className="w-full md:w-1/3 mt-4 md:mt-0">
+        <div className="w-full md:w-1/3 mt-4 md:mt-0 flex items-center justify-center">
           <img
             src="/fineaschat-2@2x.png"
             alt=""
-            className="w-full h-auto"
+            className="w-11/12 h-auto"
           />
         </div>
       </main>

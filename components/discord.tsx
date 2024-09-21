@@ -25,18 +25,21 @@ const Discord: NextPage<DiscordType> = ({
 
   return (
     <div
-      className={`flex-1 flex flex-row items-end justify-start py-2 px-[22px] relative gap-3.5 text-center text-base text-white font-sarabun ${className}`}
+      className={`flex-1 flex flex-row items-center justify-start py-2 px-[22px] relative md:gap-3.5 text-center text-base text-white font-sarabun ${className}`}
       style={discordStyle}
     >
-      <div className="h-full w-full absolute !m-[0] top-[0px] right-[0px] bottom-[0px] left-[0px] rounded-31xl-5 bg-mediumslateblue" />
+      <div className="h-full w-full absolute top-0 right-0 bottom-0 left-0 rounded-31xl-5 bg-mediumslateblue" />
       <img
         className="h-7 w-7 relative overflow-hidden shrink-0 z-[1]"
         loading="lazy"
-        alt=""
+        alt="Discord Icon"
         src={icbaselineDiscord}
       />
-      <div className="flex flex-col items-start justify-end pt-0 px-0 pb-[3px]">
-        <a className="[text-decoration:none] self-stretch relative font-bold text-[inherit] z-[1]">
+      <div className="hidden md:flex flex-col items-start justify-end pt-0 px-0 pb-[3px]">
+        <a
+          href="#"
+          className="[text-decoration:none] self-stretch relative font-bold text-[inherit] z-[1]"
+        >
           Join with Discord
         </a>
       </div>

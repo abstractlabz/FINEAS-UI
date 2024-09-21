@@ -7,15 +7,15 @@ import MarketResearchContainer from "../components/market-research-container";
 
 const VERSION3HOME: NextPage = () => {
   return (
-    <div className="w-full relative bg-midnightblue-200 overflow-hidden flex flex-col items-end justify-start gap-[152px] leading-[normal] tracking-[normal] mq450:gap-[38px] mq750:gap-[76px]">
+    <div className="w-full relative bg-midnightblue-200 overflow-hidden flex flex-col items-end justify-start gap-[100px] leading-[normal] tracking-[normal] mq450:gap-[30px] mq750:gap-[60px]">
       <div className="self-stretch h-[792px] relative hidden z-[2]" />
       <Main />
       <Content />
-      <section className="w-[923px] h-[923px] absolute !m-[0] top-[2254px] left-[-334px] rounded-[50%] [background:radial-gradient(50%_50%_at_50%_50%,_rgba(217,_31,_255,_0.15),_rgba(217,_31,_255,_0))] z-[3]" />
-      <div className="w-[654px] h-[654px] absolute !m-[0] top-[2204px] right-[-215px] rounded-[50%] [background:radial-gradient(50%_50%_at_50%_50%,_rgba(31,_85,_255,_0.25),_rgba(31,_85,_255,_0))] z-[3]" />
+      <section className="w-[923px] h-[923px] absolute !m-[0] top-[2254px] left-[-334px] rounded-full bg-gradient-to-b from-purple-500 via-transparent to-transparent opacity-15 z-[3]" />
+      <div className="w-[654px] h-[654px] absolute !m-[0] top-[2204px] right-[-215px] rounded-full bg-gradient-to-b from-blue-500 via-transparent to-transparent opacity-25 z-[3]" />
       <InsightsContainer />
       <img
-        className="w-[368px] h-[366px] absolute !m-[0] right-[152px] bottom-[2236px] z-[1]"
+        className="w-[368px] h-[366px] absolute !m-[0] right-[152px] bottom-[2100px] z-[1]"
         loading="lazy"
         alt=""
         src="/group-35.svg"

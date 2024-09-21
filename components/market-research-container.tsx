@@ -40,6 +40,7 @@ const MarketResearchContainer: NextPage<MarketResearchContainerType> = ({
                   loading="lazy"
                   alt=""
                   src="/primetwitter@2x.png"
+                  onClick={() => window.location.href = "https://x.com/fineas_ai"}
                 />
               </div>
               <img
@@ -47,6 +48,7 @@ const MarketResearchContainer: NextPage<MarketResearchContainerType> = ({
                 loading="lazy"
                 alt=""
                 src="/mdiinstagram.svg"
+                onClick={() => window.location.href = "https://www.instagram.com/fineas.ai/"}
               />
             </div>
           </div>

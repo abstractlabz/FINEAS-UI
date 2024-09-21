@@ -26,11 +26,8 @@ const Main: NextPage<MainType> = ({ className = "" }) => {
           {/* Navigation */}
           <nav className="flex flex-row flex-wrap items-center space-x-2 md:space-x-4 mt-2 md:mt-0">
             {/* Navigation items */}
-            <div>
+            <div onClick={() => window.location.href = "https://fineas.ai"}>
               <Home1 />
-            </div>
-            <div>
-              <About1 />
             </div>
             <div>
               {/* FAQs link */}
@@ -90,7 +87,7 @@ const Main: NextPage<MainType> = ({ className = "" }) => {
             className="absolute inset-0 flex items-center justify-center"
             style={{ zIndex: 1 }}
           >
-            <button className="bg-fuchsia text-white px-6 py-3 md:px-12 md:py-6 rounded-lg text-sm md:text-base">
+            <button onClick={() => window.location.href = "https://app.fineas.ai"} className="bg-fuchsia text-white px-6 py-3 md:px-12 md:py-6 rounded-lg text-sm md:text-base">
               Explore App
             </button>
           </div>

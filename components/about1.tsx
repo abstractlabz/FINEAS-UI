@@ -10,7 +10,7 @@ const About1: NextPage<About1Type> = ({ className = "" }) => {
   const router = useRouter();
 
   const onAboutContainerClick = useCallback(() => {
-    router.push("/about");
+    router.push("/");
   }, [router]);
 
   return (

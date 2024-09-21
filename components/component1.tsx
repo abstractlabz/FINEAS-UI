@@ -13,11 +13,6 @@ const Component1: NextPage<Component1Type> = ({ className = "" }) => {
       <div className="w-[206px] flex flex-col items-start justify-start pt-[395.6px] px-0 pb-0 box-border">
         <GroupComponent propFlex="unset" propAlignSelf="stretch" />
       </div>
-      <img
-        src="/fineaschat-2@2x.png"
-        alt="Background"
-        className="w-full h-full object-cover"
-      />
     </div>
   );
 };

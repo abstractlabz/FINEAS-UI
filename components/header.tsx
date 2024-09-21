@@ -25,7 +25,6 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
           <div className="w-[586px] flex flex-row items-start justify-start gap-7 max-w-full mq750:w-[391px]">
             <nav className="m-0 w-[195px] flex flex-col items-start justify-start pt-[11px] px-0 pb-0 box-border mq750:hidden">
               <nav className="m-0 self-stretch h-[21px] relative text-left text-base text-silver font-public-sans">
-                <FAQs />
                 <About />
                 <Home />
               </nav>

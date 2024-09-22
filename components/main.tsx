@@ -35,7 +35,7 @@ const Main: NextPage<MainType> = ({ className = "" }) => {
                 FAQs
               </a>
             </div>
-            <div>
+            <div onClick={() => window.location.href = "https://discord.com/oauth2/authorize?client_id=1263743636424884285"}>
               <Discord
                 propFlex="unset"
                 propWidth="auto"

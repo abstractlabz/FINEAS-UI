@@ -9,7 +9,6 @@ import Cookies from 'js-cookie';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -17,15 +16,13 @@ import {
 import axios from 'axios';
 import TypewriterEffect from '@/components/ui/typewriter';
 import Modal from "@/components/ui/modal";
-import { set } from 'react-hook-form';
 import SignInComponent from '../components/sign-in';
 
 interface IMessage {
-  id: string; // or number based on your ID system
+  id: string; 
   text: string;
   sender: 'user' | 'bot';
   animate?: boolean;
-  animatedText?: string;
 }
 
 interface UserProfile {
@@ -35,8 +32,6 @@ interface UserProfile {
   email: string;
   credits: number;
   is_member: boolean;
-  
-  // Add other user profile fields as needed
 }
 
 const Chat: React.FC = () => {
@@ -44,7 +39,7 @@ const Chat: React.FC = () => {
   const [popoverOpen, setPopoverOpen] = useState(true);
   const [chatHistory, setChatHistory] = useState<IMessage[]>([]);
   const [chatName, setChatName] = useState('');
-  const [chatNames, setChatNames] = useState<string[]>([]); // For sidebar combobox
+  const [chatNames, setChatNames] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [error, setError] = useState('');
@@ -54,41 +49,27 @@ const Chat: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Function to check and set state based on screen width
     const checkScreenSize = () => {
-      // This matches screen sizes larger than 767px
       const match = window.matchMedia('(min-width: 768px)').matches;
-
       setPopoverOpen(match);
     };
 
-    // Call once to set initial state
     checkScreenSize();
-
-    // Listen for screen resize events
     window.addEventListener('resize', checkScreenSize);
-
-    // Cleanup function to remove event listener
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   const fetchChatNames = async (profile: UserProfile | null) => {
     try {
       const response = await axios.get('https://upgrade.fineasapp.io:2096/get-chat-names', { params: { id_hash: profile?.id_hash } });
-      // Adjust according to the actual structure of the response
-      setChatNames(response.data); // Assuming response.data directly contains the array of chat names
+      setChatNames(response.data);
     } catch (error) {
       console.error('Failed to fetch chat names', error);
-      setModalContent(
-        <>
-        <div className='mb-4 items-center flex justify-center items-center'>Please select a ticker for analysis</div>
-        </>
-      );
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Please select a ticker for analysis</div>);
       setIsModalOpen(true);
     }
   };
 
-  
   useEffect(() => {
     const savedProfile = Cookies.get('userProfile');
     if (savedProfile) {
@@ -112,97 +93,71 @@ const Chat: React.FC = () => {
     }
   }, []);
 
-
-const checkCreditsAndSendMessage = async () => {
-  if (message.trim() === '') {
-    setModalContent(
-      <>
-      <div className='mb-4 items-center flex justify-center items-center'>Please enter a message</div>
-      </>
-    );
-    setIsModalOpen(true);
-    return;
-  }
-
-  setIsLoading(true);
-
-  // Add the user's message immediately to the chat history
-  const userMessage: IMessage = { id: Date.now().toString(), text: message, sender: 'user' };
-  setChatHistory([...chatHistory, userMessage]);
-
-  try {
-    const creditCheckResponse = await axios.post('https://upgrade.fineasapp.io:2096/enforce-credits', { id_hash: profile?.id_hash });
-    if (creditCheckResponse.data.creditsLeft === 0) {
-      setModalContent(
-        <>
-        <div className='mb-4 items-center flex justify-center items-center'>You have ran out of credits</div>
-        </>
-      );
+  const checkCreditsAndSendMessage = async () => {
+    if (message.trim() === '') {
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Please enter a message</div>);
       setIsModalOpen(true);
-      setIsLoading(false);
       return;
     }
 
-    const bearerToken = process.env.NEXT_PUBLIC_BEARER_TOKEN?.toString() || '';
-    const response = await axios.post('https://query.fineasapp.io:443/chat', null, {
-      params: {
-        prompt: encodeURIComponent(message)
-      },
-      headers: {
-        Authorization: 'Bearer ' + bearerToken,
+    setIsLoading(true);
+    const userMessage: IMessage = { id: Date.now().toString(), text: message, sender: 'user' };
+    setChatHistory([...chatHistory, userMessage]);
+
+    try {
+      const creditCheckResponse = await axios.post('https://upgrade.fineasapp.io:2096/enforce-credits', { id_hash: profile?.id_hash });
+      if (creditCheckResponse.data.creditsLeft === 0) {
+        setModalContent(<div className='mb-4 items-center flex justify-center items-center'>You have run out of credits</div>);
+        setIsModalOpen(true);
+        setIsLoading(false);
+        return;
       }
-    });
 
-    // Once the bot's response is received, add it to the chat history with animate property
-    const botMessage: IMessage = { id: (Date.now() + 1).toString(), text: response.data, sender: 'bot', animate: true };
-    setChatHistory((prevChatHistory) => [...prevChatHistory, botMessage]);
+      const bearerToken = process.env.NEXT_PUBLIC_BEARER_TOKEN?.toString() || '';
+      const response = await axios.post('https://query.fineasapp.io:443/chat', {
+        prompt: message  // Send the prompt in the request body
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + bearerToken,
+          'Content-Type': 'application/json'  // Set content type to JSON
+        }
+      });
 
-    setMessage(''); // Clear the input after sending
-  } catch (error) {
-    console.error('Failed to send message or check credits', error);
-    setModalContent(
-      <>
-      <div className='mb-4 items-center flex justify-center items-center'>Failed to send message or check credits</div>
-      </>
-    );
-    setIsModalOpen(true);
-  } finally {
-    setIsLoading(false);
-  }
-};
+      const botMessage: IMessage = { id: (Date.now() + 1).toString(), text: response.data, sender: 'bot', animate: true };
+      setChatHistory((prevChatHistory) => [...prevChatHistory, botMessage]);
+      setMessage('');
+    } catch (error) {
+      console.error('Failed to send message or check credits', error);
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to send message or check credits</div>);
+      setIsModalOpen(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const deleteChat = async (chatName: string) => {
     setIsLoading(true);
     try {
-      console.log(selectedChatName.toLowerCase().trim());
-      console.log(profile?.id_hash);
-      await axios.get('https://upgrade.fineasapp.io:2096/delete-chats', { params:{
-        chatname: selectedChatName.toLowerCase().trim(),
-        id_hash: profile?.id_hash
-      }});
+      await axios.get('https://upgrade.fineasapp.io:2096/delete-chats', {
+        params: {
+          chatname: selectedChatName.toLowerCase().trim(),
+          id_hash: profile?.id_hash
+        }
+      });
       setChatNames(chatNames.filter((name) => name.toLowerCase().trim() !== chatName.toLowerCase().trim()));
       setChatHistory([]);
       setSelectedChatName('');
-      setModalContent(
-        <>
-        <div className='mb-4 items-center flex justify-center items-center'>Chat Deleted Successfully</div>
-        </>
-      );
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Chat Deleted Successfully</div>);
       setIsModalOpen(true);
       setIsLoading(false);
-      refreshPage();
     } catch (error) {
       console.error('Failed to delete chat', error);
-      setModalContent(
-        <>
-        <div className='mb-4 items-center flex justify-center items-center'>Failed to delete chat</div>
-        </>
-      );
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to delete chat</div>);
       setIsLoading(false);
       setIsModalOpen(true);
     }
-  }
-  
+  };
+
   const refreshPage = () => {
     window.location.reload();
   };
@@ -213,32 +168,23 @@ const checkCreditsAndSendMessage = async () => {
       refreshPage();
     } catch (error) {
       console.error('Failed to create chat', error);
-      setModalContent(
-        <>
-        <div className='mb-4 items-center flex justify-center items-center'>Failed to create chat</div>
-        </>
-      );
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to create chat</div>);
       setIsModalOpen(true);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const saveChat = async () => {
     if (chatName.trim() === '') {
-      setModalContent(
-        <>
-        <div className='mb-4 items-center flex justify-center items-center'>Provide a name for chat before saving</div>
-        </>
-      );
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Provide a name for chat before saving</div>);
       setIsModalOpen(true);
       return;
     }
-  
+
     setIsLoading(true);
-  
+
     try {
-      // Corrected Axios call to send data as a JSON body
       await axios.post('https://upgrade.fineasapp.io:2096/savechat', {
         chatname: chatName.toLowerCase().trim(),
         id_hash: profile?.id_hash,
@@ -250,26 +196,18 @@ const checkCreditsAndSendMessage = async () => {
       });
       
       setChatNames([...chatNames, chatName.toLowerCase().trim()]);
-      setChatName(''); // Clear chat name input
-      setModalContent(
-        <>
-        <div className='mb-4 items-center flex justify-center items-center'>Chat saved Successfully</div>
-        </>
-      );
+      setChatName('');
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Chat saved Successfully</div>);
       setIsModalOpen(true);
     } catch (error) {
       console.error('Failed to save chat', error);
-      setModalContent(
-        <>
-        <div className='mb-4 items-center flex justify-center items-center'>Failed to save chat</div>
-        </>
-      );
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to save chat</div>);
       setIsModalOpen(true);
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   const handleChatSelect = async (chatName: string) => {
     setSelectedChatName(chatName.toLowerCase().trim());
     await loadChat(chatName.toLowerCase().trim());
@@ -278,30 +216,19 @@ const checkCreditsAndSendMessage = async () => {
   const loadChat = async (name: string) => {
     setIsLoading(true);
     try {
-      // Example API call to load chat by name
       const response = await axios.post('https://upgrade.fineasapp.io:2096/loadchat', {
         chatname: name.toLowerCase().trim(),
         id_hash: profile?.id_hash
       });
       setChatHistory(response.data.chat_history);
-      console.log(chatHistory);
     } catch (error) {
       console.error('Failed to load chat', error);
-      setModalContent(
-        <>
-        <div className='mb-4 items-center flex justify-center items-center'>Failed to load chat</div>
-        </>
-      );
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to load chat</div>);
       setIsModalOpen(true);
     } finally {
       setIsLoading(false);
     }
   };
-
-
-  // UI rendering and logic to handle chat name selection, input changes, etc., goes here...
-  // Note: This is a foundational implementation. You'll need to adjust it based on your backend API structure and frontend components.
-
 
   return (
     <div className="bg-main-color w-full h-screen overflow-hidden">
@@ -318,7 +245,7 @@ const checkCreditsAndSendMessage = async () => {
       <div className="flex h-full pt-2">
         <div className="hidden md:flex md:flex-col md:fixed md:left-0 p-1 border w-64 rounded-lg h-[80vh] bg-main-color overflow-auto md:z-10 lg:z-20">
           <div className='flex justify-center'>
-          <ChatSearch popoveropen={popoverOpen} chatNames={chatNames} onChatSelect={handleChatSelect} />
+            <ChatSearch popoveropen={popoverOpen} chatNames={chatNames} onChatSelect={handleChatSelect} />
           </div>
           <Input 
             value={chatName} 
@@ -350,14 +277,12 @@ const checkCreditsAndSendMessage = async () => {
               +
           </Button>
             </CardTitle>
-
         </CardHeader>
         <CardContent className="overflow-y-auto overflow-x-auto flex-1 px-4 py-2">
           {chatHistory?.map((msg, index, arr) => {
             const isPairStart = index === 0 || arr[index - 1]?.sender !== msg.sender;
             return (
               <div key={msg.id} className={`messagePair ${isPairStart ? 'start' : ''}`}>
-                {/* Example icon for messages; replace src with your desired path */}
                 {msg.sender === 'user' && (
                   <img
                     src={profile?.picture}
@@ -378,8 +303,8 @@ const checkCreditsAndSendMessage = async () => {
         </CardContent>
 
         <CardFooter className="w-full flex justify-between items-center p-4">
-          <Input 
-            value={message} 
+          <Input
+            value={message}
             onChange={(e) => setMessage(e.target.value)} 
             className="max-w-[80%] sm:max-w-[85%] md:max-w-[87%] lg:max-w-[89%] mb-2 pl-2 text-black" 
             placeholder="Type your question here..." />
@@ -393,7 +318,7 @@ const checkCreditsAndSendMessage = async () => {
               </button>
               {isLoading && (
                 <div className="absolute right-0 top-0 mr-3 mt-3">
-                  <div className="loader"></div> {/* Make sure your CSS for .loader is correctly set up */}
+                  <div className="loader"></div> 
                 </div>
               )}
             </div>
@@ -408,8 +333,6 @@ const checkCreditsAndSendMessage = async () => {
       </div>
     </div>
   );
-  
-  
 };
 
 export default Chat;

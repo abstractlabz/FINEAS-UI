@@ -12,14 +12,16 @@ const VERSION3HOME: NextPage = () => {
       <Main />
       <Content />
       <section className="w-[923px] h-[923px] absolute !m-[0] top-[2254px] left-[-334px] rounded-full bg-gradient-to-b from-purple-500 via-transparent to-transparent opacity-15 z-[3]" />
-      <div className="w-[654px] h-[654px] absolute !m-[0] top-[2204px] right-[-215px] rounded-full bg-gradient-to-b from-blue-500 via-transparent to-transparent opacity-25 z-[3]" />
+      <div className="w-[654px] h-[654px] absolute !m-[0] top-[2200px] right-[-215px] rounded-full bg-gradient-to-b from-blue-500 via-transparent to-transparent opacity-25 z-[3]" />
       <InsightsContainer />
+      <div className="absolute !m-[0] right-[70px] bottom-[-125px] z-[1]">
       <img
-        className="w-[368px] h-[366px] absolute !m-[0] right-[152px] bottom-[2100px] z-[1]"
+        className="w-[340px] h-[345px] absolute !m-[0] right-[70px] bottom-[2160px] z-[1]"
         loading="lazy"
         alt=""
         src="/group-35.svg"
       />
+      </div>
       <PortfolioDescription />
       <div className="self-stretch flex flex-row items-start justify-center py-0 pl-5 pr-[22px]">
         <img

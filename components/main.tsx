@@ -31,7 +31,7 @@ const Main: NextPage<MainType> = ({ className = "" }) => {
             </div>
             <div>
               {/* FAQs link */}
-              <a href="#faqs" className="text-white hover:text-gray-300">
+              <a href="#" className="text-white hover:text-gray-300">
                 FAQs
               </a>
             </div>

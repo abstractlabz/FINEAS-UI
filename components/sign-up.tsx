@@ -129,7 +129,7 @@ const SignUp: NextPage<SignUpType> = ({
         className="h-full w-full absolute !m-[0] top-[0px] right-[0px] bottom-[0px] left-[0px] rounded-31xl-5 bg-fuchsia"
         style={cTASignUpBackgroundStyle}
       />
-      <b className="flex-1 relative z-[1]" style={signUp1Style}>
+      <b className="flex-1 justify-center items-center relative z-[1]" style={signUp1Style}>
         Sign up
       </b>
     </div>

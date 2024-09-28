@@ -44,7 +44,7 @@ const Header: NextPage<HeaderType> = ({ className = "" }) => {
               signUpFlexDirection="row"
               signUpPadding="12px 26px"
               rectangleDivTop="0px"
-              rectangleDivRight="0px"
+              rectangleDivRight="10px"
               rectangleDivBottom="0px"
               rectangleDivLeft="0px"
               rectangleDivMargin="0 !important"

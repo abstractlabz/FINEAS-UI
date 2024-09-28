@@ -14,17 +14,17 @@ const Main: NextPage<MainType> = ({ className = "" }) => {
       className={`relative max-w-full text-left text-base text-white font-public-sans ${className}`}
     >
       {/* Header */}
-      <header className="w-full px-4 md:px-6 lg:px-6 py-4">
+      <header className="w-full px-4 md:px-6 lg:px-6 py-4 mb-20 left-[0px]">
         <div className="max-w-screen-lg mx-auto flex flex-wrap items-center justify-between">
           {/* Logo */}
           <img
-            className="w-28 md:w-32 lg:w-40 h-auto"
+            className="w-30 md:w-30 lg:w-42 h-12"
             loading="lazy"
             alt="Logo"
             src="/white-logo--no-background-1@2x.png"
           />
           {/* Navigation */}
-          <nav className="flex flex-row flex-wrap items-center space-x-2 md:space-x-4 mt-2 md:mt-0">
+          <nav className="flex flex-row items-center space-x-2 md:space-x-4 mt-2 md:mt-0">
             {/* Navigation items */}
             <div onClick={() => window.location.href = "https://fineas.ai"}>
               <Home1 />
@@ -52,7 +52,7 @@ const Main: NextPage<MainType> = ({ className = "" }) => {
                 signUpPosition="relative"
                 signUpTop="unset"
                 signUpLeft="unset"
-                signUpHeight="unset"
+                signUpHeight="45px"
                 signUpDisplay="flex"
                 signUpFlexDirection="row"
                 signUpPadding="8px 20px"
@@ -64,7 +64,7 @@ const Main: NextPage<MainType> = ({ className = "" }) => {
                 signUpPosition1="relative"
                 signUpHeight1="unset"
                 signUpWidth="unset"
-                signUpTop1="unset"
+                signUpTop1="5px"
                 signUpLeft1="unset"
                 signUpFlex="1"
               />

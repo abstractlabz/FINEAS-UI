@@ -9,6 +9,12 @@ First, fork and clone the repo
 git clone https://github.com/abstractlabz/FINEAS-UI.git
 ```
 
+Cd into root directory and run npm i
+```sh
+cd FINEAS-UI
+npm i
+```
+
 In the root directory, run the development server:
 
 ```bash

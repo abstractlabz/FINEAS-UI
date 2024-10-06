@@ -10,6 +10,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import {ChatSearch} from './chatsearch';
 import { Input } from "@/components/ui/input"
 
+
 // Import Icons (replace these imports with your actual icons)
 
 {/* <Nav 
@@ -30,6 +31,14 @@ interface NavProps {
   setChatName: React.Dispatch<React.SetStateAction<string>>;
 }
 
+interface UserProfile {
+  picture: string;
+  id_hash: string;
+  stripe_customer_id: string;
+  email: string;
+  credits: number;
+  is_member: boolean;
+}
 
 const Nav: React.FC<NavProps> = ({
   variant,
@@ -40,11 +49,19 @@ const Nav: React.FC<NavProps> = ({
   loadChat,
   chatName,
   setChatName
-}) => {  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+}) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('userProfile');
+    if (savedProfile) {
+      setProfile(JSON.parse(savedProfile) as UserProfile);
+    }
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {

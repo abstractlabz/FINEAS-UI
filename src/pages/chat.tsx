@@ -17,6 +17,7 @@ import axios from 'axios';
 import TypewriterEffect from '@/components/ui/typewriter';
 import Modal from "@/components/ui/modal";
 import SignInComponent from '../components/sign-in';
+import { useRouter } from 'next/router';
 
 interface IMessage {
   id: string; 
@@ -35,6 +36,8 @@ interface UserProfile {
 }
 
 const Chat: React.FC = () => {
+  const router = useRouter();
+  const { redirect } = router.query;
   const [message, setMessage] = useState('');
   const [popoverOpen, setPopoverOpen] = useState(true);
   const [chatHistory, setChatHistory] = useState<IMessage[]>([]);
@@ -77,21 +80,43 @@ const Chat: React.FC = () => {
       setProfile(profileData);
       setIsLoggedIn(true);
       fetchChatNames(profileData);
+  
+      if (redirect) {
+        const allowedRedirects = ['/'];
+        if (allowedRedirects.includes(redirect as string)) {
+          router.push(redirect as string);
+        } else {
+          router.push('/');
+        }
+      }
     } else {
       setIsLoggedIn(false);
       setIsModalOpen(true);
       setModalContent(
         <>
-          <div className='mb-4 items-center flex justify-center items-center'>Please sign in to use the chat feature</div>
-          <SignInComponent onSignIn={() => {
-            setIsLoggedIn(true);
-            setIsModalOpen(false);
-            fetchChatNames(JSON.parse(Cookies.get('userProfile') || '{}'));
-          }} />
+          <div className='mb-4 items-center flex justify-center items-center'>
+            Please sign in to use our features
+          </div>
+          <SignInComponent
+            onSignIn={() => {
+              setIsLoggedIn(true);
+              setIsModalOpen(false);
+              fetchChatNames(JSON.parse(Cookies.get('userProfile') || '{}'));
+  
+              if (redirect) {
+                const allowedRedirects = ['/'];
+                if (allowedRedirects.includes(redirect as string)) {
+                  router.push(redirect as string);
+                } else {
+                  router.push('/');
+                }
+              }
+            }}
+          />
         </>
       );
     }
-  }, []);
+  }, [redirect]);
 
   const checkCreditsAndSendMessage = async () => {
     if (message.trim() === '') {

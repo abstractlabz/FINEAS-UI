@@ -39,19 +39,29 @@ const Deck: React.FC = () => {
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
   const router = useRouter(); // Get the router object from the useRouter hook
 
-
-  useEffect(() => {
-    const savedProfile = Cookies.get('userProfile');
-    if (savedProfile) {
-        setProfile(JSON.parse(savedProfile) as UserProfile);
-    }
-
-}, []);
-
   useEffect(() => {
     const userProfile = Cookies.get('userProfile');
     if (!userProfile) {
       handleLoginNeeded();
+    }
+  }, []);
+
+  useEffect(() => {
+    const savedProfile = Cookies.get('userProfile');
+    if (savedProfile) {
+      setProfile(JSON.parse(savedProfile) as UserProfile);
+    } else {
+      setModalContent(
+        <>
+          <div className='mb-4'>Please Log in.</div>
+          <SignInComponent
+            onSignIn={() => {
+              setIsModalOpen(false);
+            }}
+          />
+        </>
+      );
+      setIsModalOpen(true);
     }
   }, []);
 
@@ -120,6 +130,8 @@ const handleLoginNeeded = () => {
   </>)
   ;
   setIsModalOpen(true);
+  router.push('/chat?redirect=/');
+
 };
 
 

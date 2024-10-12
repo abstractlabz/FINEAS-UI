@@ -117,7 +117,7 @@ const Chat: React.FC = () => {
       );
     }
   }, [redirect]);
-
+  
   const checkCreditsAndSendMessage = async () => {
     if (message.trim() === '') {
       setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Please enter a message</div>);

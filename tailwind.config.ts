@@ -23,7 +23,7 @@ const config = {
     },
     extend: {
       colors: {
-        'main-color': '#150c23',
+        'main-color': '#080733',
         'alternate-color': '#341e58',
         'accent-color': '#c2bccd',
       },

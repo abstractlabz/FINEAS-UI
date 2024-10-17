@@ -269,7 +269,7 @@ const Chat: React.FC = () => {
   return (
     <div className="bg-main-color w-full h-screen flex flex-col justify-between overflow-hidden">
       {/* Chat Header */}
-      <ChatHeader profileImageUrl={profile?.picture || '/default-profile.png'} chatName={chatName} />
+      <ChatHeader profileImageUrl={'/default-profile.png'} chatName={chatName} />
       {/* Chat Bubbles Container */}
       <div className="flex-grow flex items-end justify-center p-4 mb-[100px] relative">
         {/* Logo Image positioned above the chat bubbles */}

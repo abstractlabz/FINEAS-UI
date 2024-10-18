@@ -8,13 +8,18 @@ interface ChatBubbleProps {
 const ChatBubble: React.FC<ChatBubbleProps> = ({ text, isUser = false }) => {
   return (
     <div
-      className={`max-w-md p-4 rounded-lg cursor-pointer w-[350px] h-[80px] flex items-center justify-center border-2 transition-colors duration-300 ${
+      className={`p-4 rounded-lg cursor-pointer flex items-center justify-center border-2 transition-colors duration-300 ${
         isUser
           ? 'ml-auto text-right text-white border-blue-500 bg-main-color hover:bg-blue-500'
           : 'mr-auto text-left text-white border-blue-500 bg-main-color hover:bg-blue-500'
       }`}
+      style={{
+        width: '100%', // Use full width of the grid cell
+        maxWidth: '350px', // Set a max width for larger screens
+        height: 'auto', // Allow height to adjust based on content
+      }}
     >
-      {text}
+      <span className="text-sm md:text-base lg:text-lg">{text}</span> {/* Responsive font sizes */}
     </div>
   );
 };

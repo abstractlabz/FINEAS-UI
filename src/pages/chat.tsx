@@ -273,16 +273,17 @@ const Chat: React.FC = () => {
       {/* Chat Bubbles Container */}
       <div className="flex-grow flex items-end justify-center p-4 mb-[100px] relative">
         {/* Logo Image positioned above the chat bubbles */}
-        <div className="absolute top-[250px] left-1/2 transform -translate-x-1/2">
+        <div className="absolute top-[30%] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <Image
             src="/logo-secondary.png"
             alt="Logo"
             width={100} // Adjust width as needed
             height={100} // Adjust height as needed
+            className="relative z-10" // Ensure the image is above other elements
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 mt-0">
           {/* Render 4 static chat bubbles */}
           <ChatBubble text="What are Nvidia's main revenue drivers?" onClick={() => handleChatBubbleClick("What are NVIDIA's main revenue drivers?")} />
           <ChatBubble text="When will there be a recession?" onClick={() => handleChatBubbleClick("What are NVIDIA's main revenue drivers?")} />

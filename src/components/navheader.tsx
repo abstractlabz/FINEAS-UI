@@ -5,15 +5,19 @@ import SignInComponent from './sign-in';
 interface ChatHeaderProps {
   profileImageUrl?: string;
   chatName: string;
+  sidebarVisible: boolean; // Add sidebarVisible prop
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ profileImageUrl, chatName }) => {
+const ChatHeader: React.FC<ChatHeaderProps> = ({ profileImageUrl, chatName, sidebarVisible }) => {
   return (
-    <div className="flex items-center p-2">
-      <img src="sidebar.png" alt="Sidebar" className="pr-2" />
-      <span className="ml-2 text-lg font-semibold text-[#B294FF] font-quicksand text-[20px]">
-        {chatName || 'New Chat'}
-      </span>
+    <div className="relative w-full h-16 flex items-center justify-between p-4 bg-header-color transition-all duration-300">
+      <div
+        className={`text-xl ml-[10%] font-semibold text-[#B294FF] transition-transform transform ${
+          sidebarVisible ? 'translate-x-64' : 'translate-x-0'
+        }`}
+      >
+        {chatName}
+      </div>
       <div className="flex-grow top-[10px]"></div>
       {profileImageUrl ? (
         <SignInComponent />

@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useState } from 'react';
+import { Bold } from 'lucide-react';
 
 // Define Props
 interface SidebarProps {
@@ -46,7 +47,7 @@ const SidebarPop: React.FC<SidebarProps> = ({ credits = 0, chats = [] }) => {
       {/* Footer Divider */}
       <div style={styles.footer}>
         <Image src="/delete.png" alt="Delete Icon" width={20} height={20} />
-        <span style={styles.deleteText}>Delete chats</span>
+        <span style={styles.deleteText}>Delete chat</span>
       </div>
     </div>
   );
@@ -120,7 +121,8 @@ const styles = {
   deleteText: {
     marginLeft: '8px',
     fontSize: '14px',
-    color: '#FF0000',
+    color: '#D91FFF',
+    fontWeight: 'bold',
   },
 };
 

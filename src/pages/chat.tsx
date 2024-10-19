@@ -8,6 +8,7 @@ import ChatBubble from '@/components/chatbubble';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import SignInComponent from '../components/sign-in';
 
 interface IMessage {
   id: string;
@@ -34,6 +35,9 @@ const Chat: React.FC = () => {
   const [chatName, setChatName] = useState('New Chat'); // Default chat name
   const [chatNames, setChatNames] = useState<string[]>([]);
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [modalContent, setModalContent] = useState<React.ReactNode>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Sidebar toggle handler
   const toggleSidebar = () => {
@@ -41,11 +45,49 @@ const Chat: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      setChatNames(['Chat 1', 'Chat 2', 'Chat 3', 'Chat 4', 'Chat 5', 'Chat 6', 'Chat 7', 'Chat 8', 'Chat 9', 'Chat 10']);
-    };
-    fetchProfile();
-  }, []);
+    const savedProfile = Cookies.get('userProfile');
+    if (savedProfile) {
+      const profileData = JSON.parse(savedProfile) as UserProfile;
+      setProfile(profileData);
+      setIsLoggedIn(true);
+      fetchChatNames(profileData);
+  
+      if (redirect) {
+        const allowedRedirects = ['/'];
+        if (allowedRedirects.includes(redirect as string)) {
+          router.push(redirect as string);
+        } else {
+          router.push('/');
+        }
+      }
+    } else {
+      setIsLoggedIn(false);
+      setIsModalOpen(true);
+      setModalContent(
+        <>
+          <div className='mb-4 items-center flex justify-center items-center'>
+            Please sign in to use our features
+          </div>
+          <SignInComponent
+            onSignIn={() => {
+              setIsLoggedIn(true);
+              setIsModalOpen(false);
+              fetchChatNames(JSON.parse(Cookies.get('userProfile') || '{}'));
+  
+              if (redirect) {
+                const allowedRedirects = ['/'];
+                if (allowedRedirects.includes(redirect as string)) {
+                  router.push(redirect as string);
+                } else {
+                  router.push('/');
+                }
+              }
+            }}
+          />
+        </>
+      );
+    }
+  }, [redirect]);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -57,6 +99,31 @@ const Chat: React.FC = () => {
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  const fetchChatNames = async (profile: UserProfile | null) => {
+    try {
+      const response = await axios.get('https://upgrade.fineasapp.io:2096/get-chat-names', { params: { id_hash: profile?.id_hash } });
+      setChatNames(response.data);
+    } catch (error) {
+      console.error('Failed to fetch chat names', error);
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>No chats found</div>);
+      setIsModalOpen(true);
+    }
+  };
+
+  const fetchProfileImage = async (url: string, retries = 5, delay = 1000) => {
+    try {
+      const response = await axios.get(url, { responseType: 'blob' });
+      return response.data;
+    } catch (error) {
+      if (retries === 0 || (error as any).response?.status !== 429) {
+        throw error;
+      }
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      return fetchProfileImage(url, retries - 1, delay * 2); // Exponential backoff
+    }
+  };
+  
 
   return (
     <div className="bg-main-color w-full h-screen flex flex-col justify-between overflow-hidden relative">

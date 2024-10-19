@@ -79,7 +79,7 @@ const styles = {
     fontSize: '15px',
     color: '#7092FF',
     fontWeight: 'bold',
-    marginLeft: '85%',
+    marginLeft: '75%',
   },
   newChatContainer: {
     display: 'flex',

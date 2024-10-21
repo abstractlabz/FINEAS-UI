@@ -165,7 +165,7 @@ const Chat: React.FC = () => {
     }
   };
 
-  const fetchProfileImage = async (url: string, retries = 5, delay = 1000) => {
+  const fetchProfileImage = async (url: string, retries = 5, delay = 1000): Promise<UserProfile> => {
     try {
       const response = await axios.get(url, { responseType: 'blob' });
       return response.data;

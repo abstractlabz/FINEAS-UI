@@ -15,6 +15,7 @@ interface IMessage {
   id: string;
   text: string;
   sender: 'user' | 'bot';
+  isLoading?: boolean; // Added isLoading property
   animate?: boolean;
 }
 
@@ -31,17 +32,19 @@ const Chat: React.FC = () => {
   const router = useRouter();
   const { redirect } = router.query;
   const [message, setMessage] = useState('');
-  const [sidebarVisible, setSidebarVisible] = useState(false); // Sidebar visibility state
+  const [sidebarVisible, setSidebarVisible] = useState(false);
   const [chatHistory, setChatHistory] = useState<IMessage[]>([]);
-  const [chatName, setChatName] = useState('New Chat'); // Default chat name
+  const [chatName, setChatName] = useState('New Chat');
   const [chatNames, setChatNames] = useState<string[]>([]);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSearchActivated, setIsSearchActivated] = useState(false); // State for search activation
-  const [showRedBorderDiv, setShowRedBorderDiv] = useState(false); // New state for red border div visibility
-  const [isChatBubbleClicked, setIsChatBubbleClicked] = useState(false); // New state to track if a chat bubble is clicked
+  const [isSearchActivated, setIsSearchActivated] = useState(false);
+  const [showRedBorderDiv, setShowRedBorderDiv] = useState(false);
+  const [isChatBubbleClicked, setIsChatBubbleClicked] = useState(false);
+  const [logoIndex, setLogoIndex] = useState(0);
+  const logos = ["/logo-chat.png", "/logo-chat2.png", "/logo-chat3.png"];
 
   // Sidebar toggle handler
   const toggleSidebar = () => {
@@ -104,6 +107,20 @@ const Chat: React.FC = () => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
+  // Update logo animation based on messages that are loading
+  useEffect(() => {
+    const hasLoadingMessage = chatHistory.some((msg) => msg.sender === 'user' && msg.isLoading);
+    if (hasLoadingMessage) {
+      const interval = setInterval(() => {
+        setLogoIndex((prevIndex) => (prevIndex + 1) % logos.length);
+      }, 250); // Change image every 250ms
+
+      return () => clearInterval(interval);
+    } else {
+      setLogoIndex(0);
+    }
+  }, [chatHistory]);
+
   const fetchChatNames = async (profile: UserProfile | null) => {
     try {
       const response = await axios.get('https://upgrade.fineasapp.io:2096/get-chat-names', { params: { id_hash: profile?.id_hash } });
@@ -152,27 +169,32 @@ const Chat: React.FC = () => {
 
   // Handler for chat bubble click
   const handleChatBubbleClick = async (selectedText: string) => {
-    // Avoid adding duplicate messages
     if (chatHistory.find((msg) => msg.text === selectedText && msg.sender === 'user')) {
       return;
     }
 
-    // Set the state to show the red div box and hide the initial chat bubbles
     setIsChatBubbleClicked(true);
     setShowRedBorderDiv(true);
 
-    // Add the selected message to chatHistory only once
-    setChatHistory((prevHistory) => [
-      ...prevHistory,
-      {
-        id: Date.now().toString(),
-        text: selectedText,
-        sender: 'user',
-      },
-    ]);
+    const newMessageId = Date.now().toString();
+    const newMessage: IMessage = {
+      id: newMessageId,
+      text: selectedText,
+      sender: 'user',
+      isLoading: true, // Set isLoading to true
+    };
+    setChatHistory((prevHistory) => [...prevHistory, newMessage]);
 
-    // Fetch bot response and update the white div box
+    // Fetch bot response
     const botMessage = await fetchBotResponse(selectedText);
+
+    // Update the loading state of the message
+    setChatHistory((prevHistory) =>
+      prevHistory.map((msg) =>
+        msg.id === newMessageId ? { ...msg, isLoading: false } : msg
+      )
+    );
+
     setChatHistory((prevHistory) => [
       ...prevHistory,
       {
@@ -184,7 +206,13 @@ const Chat: React.FC = () => {
   };
 
   const handleSearchActivation = async (message: string) => {
-    const newMessage: IMessage = { id: `${chatHistory.length}`, text: message, sender: 'user', animate: true };
+    const newMessageId = Date.now().toString();
+    const newMessage: IMessage = {
+      id: newMessageId,
+      text: message,
+      sender: 'user',
+      isLoading: true, // Set isLoading to true
+    };
     setChatHistory((prevHistory) => [...prevHistory, newMessage]);
 
     setIsSearchActivated(true);
@@ -192,6 +220,14 @@ const Chat: React.FC = () => {
 
     // Fetch bot response and update the white div box
     const botMessage = await fetchBotResponse(message);
+
+    // Update the loading state of the message
+    setChatHistory((prevHistory) =>
+      prevHistory.map((msg) =>
+        msg.id === newMessageId ? { ...msg, isLoading: false } : msg
+      )
+    );
+
     setChatHistory((prevHistory) => [
       ...prevHistory,
       {
@@ -242,28 +278,28 @@ const Chat: React.FC = () => {
                 key={index}
                 className="w-full flex justify-between items-start mb-4"
               >
-                <div className="flex-shrink-0 transform translate-y-[4.5rem]">
+                <div className={`flex-shrink-0 transform translate-y-[4.5rem]`}>
                   {message.sender === 'user' && (
-                  <Image
-                    src="/logo-chat.png"
-                    alt="Fineas Logo"
-                    width={32}
-                    height={75}
-                  />
+                    <Image
+                      src={message.isLoading ? logos[logoIndex] : '/logo-chat.png'}
+                      alt="Fineas Logo"
+                      width={32}
+                      height={75}
+                    />
                   )}
                 </div>
                 <div className="flex justify-end w-full">
                   {message.sender === 'user' && (
-                    <div className="bg-gradient-to-r from-[#3C3A8D] to-[#672BFF] text-white p-3 rounded-full max-w-xs shadow-lg break-words">
+                    <div className="bg-gradient-to-r from-[#3C3A8D] to-[#672BFF] text-white p-3 rounded-full max-w-full shadow-lg break-words flex justify-center items-center">
                       {message.text}
                     </div>
                   )}
                 </div>
 
                 {message.sender === 'bot' && (
-                <div className='border-2 border-white text-white p-4 rounded-lg shadow-lg w-full max-w-full mb-[7rem]'>
-                  <TypewriterEffect text={message.text} speed={1} />
-                </div>
+                  <div className='w-[500%] border-2 border-white text-white p-4 rounded-lg shadow-lg max-w-none mb-[7rem]'>
+                    <TypewriterEffect text={message.text} speed={1} />
+                  </div>
                 )}
               </div>
             ))}

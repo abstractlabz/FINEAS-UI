@@ -38,6 +38,9 @@ const Chat: React.FC = () => {
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSearchActivated, setIsSearchActivated] = useState(false); // State for search activation
+  const [showRedBorderDiv, setShowRedBorderDiv] = useState(false); // New state for red border div visibility
+  const [isChatBubbleClicked, setIsChatBubbleClicked] = useState(false); // New state to track if a chat bubble is clicked
 
   // Sidebar toggle handler
   const toggleSidebar = () => {
@@ -123,10 +126,39 @@ const Chat: React.FC = () => {
       return fetchProfileImage(url, retries - 1, delay * 2); // Exponential backoff
     }
   };
-  
+
+  // Handler for chat bubble click
+  const handleChatBubbleClick = (selectedText: string) => {
+    // Avoid adding duplicate messages
+    if (chatHistory.find((msg) => msg.text === selectedText && msg.sender === 'user')) {
+      return;
+    }
+
+    // Set the state to show the red div box and hide the initial chat bubbles
+    setIsChatBubbleClicked(true);
+    setShowRedBorderDiv(true);
+
+    // Add the selected message to chatHistory only once
+    setChatHistory((prevHistory) => [
+      ...prevHistory,
+      {
+        id: Date.now().toString(),
+        text: selectedText,
+        sender: 'user',
+      },
+    ]);
+  };
+
+  const handleSearchActivation = (message: string) => {
+    const newMessage: IMessage = { id: `${chatHistory.length}`, text: message, sender: 'user', animate: true };
+    setChatHistory((prevHistory) => [...prevHistory, newMessage]);
+
+    setIsSearchActivated(true);
+    setShowRedBorderDiv(true);
+  };
 
   return (
-    <div className="bg-main-color w-full h-screen flex flex-col justify-between overflow-hidden relative">
+    <div className="bg-main-color w-full h-screen flex flex-col justify-between relative">
       {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 z-40 w-64 h-full bg-sidebar-color transition-transform transform ${
@@ -136,39 +168,92 @@ const Chat: React.FC = () => {
         <SidebarPop credits={profile?.credits} chats={chatNames} />
       </div>
 
-      {/* Sidebar toggle button (image icon) */}
+      {/* Sidebar toggle button */}
       <div className="fixed top-4 left-4 z-50 cursor-pointer" onClick={toggleSidebar}>
         <Image src="/sidebar.png" alt="Toggle Sidebar" width={40} height={40} />
       </div>
 
       {/* Chat Header */}
-      <ChatHeader profileImageUrl={'/default-profile.png'} chatName={chatName} sidebarVisible={sidebarVisible} /> {/* Pass sidebarVisible state */}
+      <ChatHeader
+        profileImageUrl={'/default-profile.png'}
+        chatName={chatName}
+        sidebarVisible={sidebarVisible}
+      />
+
+      {/* Red Border Div */}
+      {showRedBorderDiv && (
+        <div
+          className="left-1/2 transform -translate-x-1/2 w-full max-w-[50%] border-2 border-red-500 custom-scrollbar relative"
+          style={{
+            top: '4rem',
+            bottom: '5rem',
+            overflowY: 'auto',
+            maxHeight: 'calc(100% - 9rem)',
+          }}
+        >
+          <div className="flex flex-col space-y-6 p-4">
+            {chatHistory.map((message, index) => (
+              <div
+                key={index}
+                className="w-full flex justify-between items-start mb-4"
+              >
+                <div className="flex-shrink-0 transform translate-y-[4.5rem]">
+                  <Image
+                    src="/logo-chat.png"
+                    alt="Fineas Logo"
+                    width={32}
+                    height={75}
+                  />
+                </div>
+                <div className="ml-auto bg-gradient-to-r from-[#3C3A8D] via-[#672BFF] to-[#B294FF] text-white p-3 rounded-full max-w-xs shadow-lg">
+                  {message.text}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Chat Bubbles Container */}
       <div className="flex-grow flex items-end justify-center p-4 mb-[100px] relative">
-        {/* Logo Image positioned above the chat bubbles */}
-        <div className="absolute top-[30%] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <Image
-            src="/logo-secondary.png"
-            alt="Logo"
-            width={100} // Adjust width as needed
-            height={100} // Adjust height as needed
-            className="relative z-10" // Ensure the image is above other elements
-          />
-        </div>
+        {!isSearchActivated && !isChatBubbleClicked && (
+          <>
+            {/* Logo Image */}
+            <div className="absolute top-[30%] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <Image
+                src="/logo-secondary.png"
+                alt="Logo"
+                width={100}
+                height={100}
+                className="relative z-10"
+              />
+            </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-0">
-          {/* Render static chat bubbles */}
-          <ChatBubble text="What are Nvidia's main revenue drivers?" onClick={() => setMessage("What are Nvidia's main revenue drivers?")} />
-          <ChatBubble text="When will there be a recession?" onClick={() => setMessage("When will there be a recession?")} />
-          <ChatBubble text="What is the news sentiment around Apple?" onClick={() => setMessage("What is the news sentiment around Apple?")} />
-          <ChatBubble text="What are some booming tech stocks?" onClick={() => setMessage("What are some booming tech stocks?")} />
-        </div>
+            <div className="grid grid-cols-2 gap-4 mt-0">
+              <ChatBubble
+                text="What are Nvidia's main revenue drivers?"
+                onClick={() => handleChatBubbleClick("What are Nvidia's main revenue drivers?")}
+              />
+              <ChatBubble
+                text="When will there be a recession?"
+                onClick={() => handleChatBubbleClick("When will there be a recession?")}
+              />
+              <ChatBubble
+                text="What is the news sentiment around Apple?"
+                onClick={() => handleChatBubbleClick("What is the news sentiment around Apple?")}
+              />
+              <ChatBubble
+                text="What are some booming tech stocks?"
+                onClick={() => handleChatBubbleClick("What are some booming tech stocks?")}
+              />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Search Component at the bottom */}
       <div className="p-4">
-        <Search />
+        <Search onRocketClick={handleSearchActivation} />
       </div>
     </div>
   );

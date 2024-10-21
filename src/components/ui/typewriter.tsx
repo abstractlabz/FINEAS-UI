@@ -3,9 +3,10 @@ import React, { useEffect, useState, useRef } from 'react';
 interface TypewriterEffectProps {
   text: string;  // Using plain text that will be converted to HTML
   speed: number; // Speed in milliseconds
+  animate: boolean; // New prop to control animation
 }
 
-const TypewriterEffect: React.FC<TypewriterEffectProps> = ({ text, speed }) => {
+const TypewriterEffect: React.FC<TypewriterEffectProps> = ({ text, speed, animate }) => {
   const [index, setIndex] = useState(0);
   const spanRef = useRef<HTMLSpanElement>(null);
 
@@ -61,7 +62,15 @@ const TypewriterEffect: React.FC<TypewriterEffectProps> = ({ text, speed }) => {
   };
 
   useEffect(() => {
-    const htmlText = formatTextToHTML(text); // Format the text first
+    const htmlText = formatTextToHTML(text);
+
+    if (!animate) {
+      // If not animating, set the full text immediately
+      if (spanRef.current) {
+        spanRef.current.innerHTML = htmlText;
+      }
+      return;
+    }
 
     if (index > htmlText.length) return;
 
@@ -69,13 +78,12 @@ const TypewriterEffect: React.FC<TypewriterEffectProps> = ({ text, speed }) => {
       setIndex(prevIndex => prevIndex + 1);
     }, speed);
 
-    // Update innerHTML up to the current index
     if (spanRef.current) {
       spanRef.current.innerHTML = htmlText.slice(0, index);
     }
 
     return () => clearTimeout(timer);
-  }, [index, text, speed]);
+  }, [index, text, speed, animate]);
 
   return <span ref={spanRef} style={{ wordBreak: 'break-word', whiteSpace: 'normal' }}></span>;
 };

@@ -8,9 +8,10 @@ import { useRouter } from 'next/router';
 interface SidebarProps {
   credits?: number;
   chats?: string[];
+  handleChatSelect: (chatName: string) => void;
 }
 
-const SidebarPop: React.FC<SidebarProps> = ({ credits = 0, chats = [] }) => {
+const SidebarPop: React.FC<SidebarProps> = ({ credits = 0, chats = [], handleChatSelect }) => {
     const router = useRouter(); // Initialize router
     const [selectedChat, setSelectedChat] = useState<string | null>(null);
 
@@ -44,7 +45,7 @@ const SidebarPop: React.FC<SidebarProps> = ({ credits = 0, chats = [] }) => {
                 backgroundColor: selectedChat === chat ? '#080733' : '#2E1D85',
                 color: '#FFFFFF',
               }}
-              onClick={() => setSelectedChat(chat)}
+              onClick={() => handleChatSelect(chat)}
             >
               {chat}
             </div>

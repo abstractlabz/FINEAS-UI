@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import "@/app/globals.css";
 import Image from 'next/image';
 import ChatHeader from '@/components/navheader';
@@ -44,12 +44,16 @@ const Chat: React.FC = () => {
   const [showRedBorderDiv, setShowRedBorderDiv] = useState(false);
   const [isChatBubbleClicked, setIsChatBubbleClicked] = useState(false);
   const [logoIndex, setLogoIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const logos = ["/logo-chat.png", "/logo-chat2.png", "/logo-chat3.png"];
 
   // Sidebar toggle handler
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
   };
+
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     const savedProfile = Cookies.get('userProfile');
@@ -95,6 +99,13 @@ const Chat: React.FC = () => {
       );
     }
   }, [redirect]);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatHistory]);
+  
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -205,6 +216,34 @@ const Chat: React.FC = () => {
     ]);
   };
 
+  const loadChat = async (name: string) => {
+    setShowRedBorderDiv(false);
+    setIsChatBubbleClicked(true);
+    setIsLoading(true);
+    try {
+        const response = await axios.post('https://upgrade.fineasapp.io:2096/loadchat', {
+            chatname: name.toLowerCase().trim(),
+            id_hash: profile?.id_hash
+        });
+        setChatHistory(response.data.chat_history.map((msg: IMessage) => ({ ...msg, animate: false }))); // Set animate to false
+    } catch (error) {
+        console.error('Failed to load chat', error);
+        setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to load chat</div>);
+        setIsModalOpen(true);
+    } finally {
+        setIsLoading(false);
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight; // Scroll to bottom
+        }
+    }
+  };
+
+  const handleChatSelect = async (chatName: string) => {
+    setChatName(chatName.toLowerCase().trim());
+    await loadChat(chatName.toLowerCase().trim());
+    setShowRedBorderDiv(true); // Ensure the red div is shown
+  };
+
   const handleSearchActivation = async (message: string) => {
     const newMessageId = Date.now().toString();
     const newMessage: IMessage = {
@@ -246,7 +285,7 @@ const Chat: React.FC = () => {
           sidebarVisible ? 'translate-x-0' : '-translate-x-[300px]'
         }`}
       >
-        <SidebarPop credits={profile?.credits} chats={chatNames} />
+        <SidebarPop credits={profile?.credits} chats={chatNames} handleChatSelect={handleChatSelect} />
       </div>
 
       {/* Sidebar toggle button */}
@@ -256,7 +295,7 @@ const Chat: React.FC = () => {
 
       {/* Chat Header */}
       <ChatHeader
-        profileImageUrl={'/default-profile.png'}
+        profileImageUrl={'/logo-chat.png'}
         chatName={chatName}
         sidebarVisible={sidebarVisible}
       />
@@ -264,14 +303,15 @@ const Chat: React.FC = () => {
       {/* Red Border Div */}
       {showRedBorderDiv && (
         <div
-          className=" mt-6 mb-6 left-1/2 transform -translate-x-1/2 w-full h-full max-w-[50%] custom-scrollbar relative"
-          style={{
-            top: '4rem',
-            bottom: '5rem',
-            maxHeight: 'calc(100% - 9rem)',
-            overflowY: 'auto',
-          }}
-        >
+        ref={chatContainerRef} // Attached ref here
+        className=" mt-6 mb-6 left-1/2 transform -translate-x-1/2 w-full h-full max-w-[50%] custom-scrollbar relative"
+        style={{
+          top: '4rem',
+          bottom: '5rem',
+          maxHeight: 'calc(100% - 9rem)',
+          overflowY: 'auto',
+        }}
+      >
           <div className="flex flex-col space-y-6 p-4">
             {chatHistory.map((message, index) => (
               <div
@@ -298,7 +338,7 @@ const Chat: React.FC = () => {
 
                 {message.sender === 'bot' && (
                   <div className='w-[500%] border-2 border-white text-white p-4 rounded-lg shadow-lg max-w-none mb-[7rem]'>
-                    <TypewriterEffect text={message.text} speed={1} />
+                    <TypewriterEffect text={message.text} speed={1} animate={message.animate ?? true} />
                   </div>
                 )}
               </div>

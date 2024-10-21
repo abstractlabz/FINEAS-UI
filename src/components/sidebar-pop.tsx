@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Bold } from 'lucide-react';
+import { useRouter } from 'next/router';
 
 // Define Props
 interface SidebarProps {
@@ -10,8 +11,14 @@ interface SidebarProps {
 }
 
 const SidebarPop: React.FC<SidebarProps> = ({ credits = 0, chats = [] }) => {
-  const [selectedChat, setSelectedChat] = useState<string | null>(null);
-  return (
+    const router = useRouter(); // Initialize router
+    const [selectedChat, setSelectedChat] = useState<string | null>(null);
+
+    const handleCreateNewChat = () => {
+        router.reload(); // Reload the current page
+      };
+
+    return (
     <div style={styles.sidebarContainer}>
       {/* Header Divider */}
       <div style={styles.header}>
@@ -19,7 +26,8 @@ const SidebarPop: React.FC<SidebarProps> = ({ credits = 0, chats = [] }) => {
           <span className='ml-[65%] mt-[5%]' style={styles.textWithIcon}>{credits}</span>
           <Image src="/credit.png" alt="Credits Icon" width={10} height={10} />
         </div>
-        <div style={styles.newChatContainer}>
+        <div style={styles.newChatContainer}
+         onClick={handleCreateNewChat}>
           <Image src="/new.png" alt="New Chat Icon" width={40} height={45} />
           <span className='mt-[15%] ml-[10%]' style={styles.createNewChatText}>Create a new chat</span>
         </div>

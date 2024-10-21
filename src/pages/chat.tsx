@@ -9,6 +9,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import SignInComponent from '../components/sign-in';
+import TypewriterEffect from '@/components/ui/typewriter';
 
 interface IMessage {
   id: string;
@@ -242,22 +243,28 @@ const Chat: React.FC = () => {
                 className="w-full flex justify-between items-start mb-4"
               >
                 <div className="flex-shrink-0 transform translate-y-[4.5rem]">
+                  {message.sender === 'user' && (
                   <Image
                     src="/logo-chat.png"
                     alt="Fineas Logo"
                     width={32}
                     height={75}
                   />
+                  )}
                 </div>
-                <div className="flex justify-end">
-                  <div className="bg-gradient-to-r from-[#3C3A8D] to-[#672BFF] translate-x-[24rem] text-white p-3 rounded-full max-w-xs shadow-lg break-words">
-                    {message.text}
-                  </div>
+                <div className="flex justify-end w-full">
+                  {message.sender === 'user' && (
+                    <div className="bg-gradient-to-r from-[#3C3A8D] to-[#672BFF] text-white p-3 rounded-full max-w-xs shadow-lg break-words">
+                      {message.text}
+                    </div>
+                  )}
                 </div>
 
-                <div className='border-2 border-white text-white p-4 translate-y-[8rem] translate-x-[-32rem] rounded-lg shadow-lg ml-auto w-auto max-w-full mb-[7rem]'>
-                  {"Hello I am a bot"}
+                {message.sender === 'bot' && (
+                <div className='border-2 border-white text-white p-4 rounded-lg shadow-lg w-full max-w-full mb-[7rem]'>
+                  <TypewriterEffect text={message.text} speed={1} />
                 </div>
+                )}
               </div>
             ))}
           </div>

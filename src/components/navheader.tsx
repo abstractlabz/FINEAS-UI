@@ -11,13 +11,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ profileImageUrl, chatName, side
   return (
     <div className="relative w-full h-16 flex items-center justify-between p-4 bg-header-color transition-all duration-300">
       <div
-        className={`text-xl ml-[10%] font-semibold text-[#B294FF] transition-transform transform ${
+        className={`text-xl ml-[15%] font-semibold text-[#B294FF] transition-transform transform z-50 ${
           sidebarVisible 
-            ? 'translate-x-72 sm:translate-y-0 translate-y-12' // Down shift on small screens only
+            ? 'translate-x-0 translate-y-0' // Reset on all screens
             : 'translate-x-0 translate-y-0' // Reset on all screens
         }`}
       >
-        {chatName}
+        {chatName.length > 10 ? `${chatName.substring(0, 7)}...` : chatName}
       </div>
       <div className="flex-grow top-[10px]"></div>
       {profileImageUrl ? (

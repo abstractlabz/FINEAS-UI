@@ -362,7 +362,7 @@ const Chat: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-0 mb-8">
+            <div className="grid grid-cols-2 gap-4 mt-0 mb-12">
               <ChatBubble
                 text="What are Nvidia's main revenue drivers?"
                 onClick={() => handleChatBubbleClick("What are Nvidia's main revenue drivers?")}

@@ -120,7 +120,7 @@ const styles = {
     cursor: 'pointer',
   },
   footer: {
-    height: '15%',
+    height: '30%',
     padding: '10px',
     borderTop: '0px solid #E0E0E0',
     display: 'flex',

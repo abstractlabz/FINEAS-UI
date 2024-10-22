@@ -304,7 +304,7 @@ const Chat: React.FC = () => {
       {showRedBorderDiv && (
         <div
         ref={chatContainerRef} // Attached ref here
-        className=" mt-6 mb-6 left-1/2 transform -translate-x-1/2 w-full h-full max-w-[90%] custom-scrollbar relative"
+        className="mt-6 mb-6 left-1/2 transform -translate-x-1/2 w-full h-full custom-scrollbar relative max-w-[90%] sm:max-w-[50%]"
         style={{
           top: '4rem',
           bottom: '5rem',
@@ -362,7 +362,7 @@ const Chat: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-0">
+            <div className="grid grid-cols-2 gap-4 mt-0 mb-8">
               <ChatBubble
                 text="What are Nvidia's main revenue drivers?"
                 onClick={() => handleChatBubbleClick("What are Nvidia's main revenue drivers?")}

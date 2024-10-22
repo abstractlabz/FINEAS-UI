@@ -54,6 +54,62 @@ const Chat: React.FC = () => {
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+  const saveChat = async () => {
+    if (chatName.trim() === '') {
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Provide a name for chat before saving</div>);
+      setIsModalOpen(true);
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post('https://upgrade.fineasapp.io:2096/savechat', {
+        chatname: chatName.toLowerCase().trim(),
+        id_hash: profile?.id_hash,
+        chat_history: chatHistory
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Chat saved successfully:', response.data); // Log the response
+
+      // Instead of updating chatNames locally, fetch from server
+      await fetchChatNames(profile);
+
+      // Optionally, reset chatName if needed
+      // setChatName('');
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Chat saved Successfully</div>);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Failed to save chat', error);
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to save chat</div>);
+      setIsModalOpen(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchChatNames = async (profile: UserProfile | null) => {
+    try {
+      const response = await axios.get('https://upgrade.fineasapp.io:2096/get-chat-names', { params: { id_hash: profile?.id_hash } });
+      console.log('Fetched chat names:', response.data); // Log the fetched chat names
+      setChatNames(response.data);
+    } catch (error) {
+      console.error('Failed to fetch chat names', error);
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>No chats found</div>);
+      setIsModalOpen(true);
+    }
+  };
+
+  // Modify useEffect to fetch chat names whenever profile changes
+  useEffect(() => {
+    if (profile) {
+      fetchChatNames(profile);
+    }
+  }, [profile]);
 
   useEffect(() => {
     const savedProfile = Cookies.get('userProfile');
@@ -132,17 +188,6 @@ const Chat: React.FC = () => {
     }
   }, [chatHistory]);
 
-  const fetchChatNames = async (profile: UserProfile | null) => {
-    try {
-      const response = await axios.get('https://upgrade.fineasapp.io:2096/get-chat-names', { params: { id_hash: profile?.id_hash } });
-      setChatNames(response.data);
-    } catch (error) {
-      console.error('Failed to fetch chat names', error);
-      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>No chats found</div>);
-      setIsModalOpen(true);
-    }
-  };
-
   const fetchBotResponse = async (prompt: string): Promise<string> => {
     try {
       const bearerToken = process.env.NEXT_PUBLIC_BEARER_TOKEN?.toString() || '';
@@ -178,6 +223,29 @@ const Chat: React.FC = () => {
     }
   };
 
+  const deleteChat = async (chatName: string) => {
+    setIsLoading(true);
+    try {
+      await axios.get('https://upgrade.fineasapp.io:2096/delete-chats', {
+        params: {
+          chatname: chatHistory[0].text.toLowerCase().trim(),
+          id_hash: profile?.id_hash
+        }
+      });
+      setChatNames(chatNames.filter((name) => name.toLowerCase().trim() !== chatName.toLowerCase().trim()));
+      setChatHistory([]);
+      setChatName(chatHistory[0].text);
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Chat Deleted Successfully</div>);
+      setIsModalOpen(true);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Failed to delete chat', error);
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to delete chat</div>);
+      setIsLoading(false);
+      setIsModalOpen(true);
+    }
+  };
+
   // Handler for chat bubble click
   const handleChatBubbleClick = async (selectedText: string) => {
     if (chatHistory.find((msg) => msg.text === selectedText && msg.sender === 'user')) {
@@ -195,6 +263,11 @@ const Chat: React.FC = () => {
       isLoading: true, // Set isLoading to true
     };
     setChatHistory((prevHistory) => [...prevHistory, newMessage]);
+
+    // Automatically set the chat name to the first question
+    if (chatHistory.length === 0) {
+      setChatName(selectedText);
+    }
 
     // Fetch bot response
     const botMessage = await fetchBotResponse(selectedText);
@@ -214,6 +287,11 @@ const Chat: React.FC = () => {
         sender: 'bot',
       },
     ]);
+
+    // Save the chat after the first message
+    if (chatHistory.length > 0) {
+      await saveChat();
+    }
   };
 
   const loadChat = async (name: string) => {
@@ -257,6 +335,11 @@ const Chat: React.FC = () => {
     setIsSearchActivated(true);
     setShowRedBorderDiv(true);
 
+    // Automatically set the chat name to the first question
+    if (chatHistory.length === 0) {
+      setChatName(message);
+    }
+
     // Fetch bot response and update the white div box
     const botMessage = await fetchBotResponse(message);
 
@@ -275,6 +358,11 @@ const Chat: React.FC = () => {
         sender: 'bot',
       },
     ]);
+
+    // Save the chat after the first message
+    if (chatHistory.length === 1) {
+      await saveChat();
+    }
   };
 
   return (
@@ -285,7 +373,7 @@ const Chat: React.FC = () => {
           sidebarVisible ? 'translate-x-0' : '-translate-x-[300px]'
         }`}
       >
-        <SidebarPop credits={profile?.credits} chats={chatNames} handleChatSelect={handleChatSelect} />
+        <SidebarPop credits={profile?.credits} chats={chatNames} handleChatSelect={handleChatSelect} deleteChat={deleteChat} />
       </div>
 
       {/* Sidebar toggle button */}

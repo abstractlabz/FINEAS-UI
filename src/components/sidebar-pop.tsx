@@ -9,15 +9,20 @@ interface SidebarProps {
   credits?: number;
   chats?: string[];
   handleChatSelect: (chatName: string) => void;
+  deleteChat: (chatName: string) => void;
 }
 
-const SidebarPop: React.FC<SidebarProps> = ({ credits = 0, chats = [], handleChatSelect }) => {
+const SidebarPop: React.FC<SidebarProps> = ({ credits = 0, chats = [], handleChatSelect, deleteChat }) => {
     const router = useRouter(); // Initialize router
     const [selectedChat, setSelectedChat] = useState<string | null>(null);
 
     const handleCreateNewChat = () => {
         router.reload(); // Reload the current page
       };
+
+    const handleDeleteChat = (chatName: string) => {
+        deleteChat(chatName);
+    };
 
     return (
     <div style={styles.sidebarContainer}>
@@ -55,7 +60,7 @@ const SidebarPop: React.FC<SidebarProps> = ({ credits = 0, chats = [], handleCha
 
       {/* Footer Divider */}
       <div style={styles.footer}>
-        <Image src="/delete.png" alt="Delete Icon" width={20} height={20} />
+        <Image src="/delete.png" alt="Delete Icon" width={20} height={20} onClick={() => selectedChat && handleDeleteChat(selectedChat)} />
         <span style={styles.deleteText}>Delete chat</span>
       </div>
     </div>

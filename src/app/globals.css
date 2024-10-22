@@ -82,7 +82,7 @@ body {
   }
 
   .red-div {
-    max-width: 70%; /* Even wider box */
+    max-width: 90%; /* Increase width for very small screens */
   }
 }
 .userMessage:before, .botMessage:before {
@@ -133,8 +133,6 @@ ul {
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #7092FF;
-  border-radius: 10px;
-  border: 2px solid #2E1D85;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {

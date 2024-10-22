@@ -304,7 +304,7 @@ const Chat: React.FC = () => {
       {showRedBorderDiv && (
         <div
         ref={chatContainerRef} // Attached ref here
-        className=" mt-6 mb-6 left-1/2 transform -translate-x-1/2 w-full h-full max-w-[50%] custom-scrollbar relative"
+        className=" mt-6 mb-6 left-1/2 transform -translate-x-1/2 w-full h-full max-w-[90%] custom-scrollbar relative"
         style={{
           top: '4rem',
           bottom: '5rem',

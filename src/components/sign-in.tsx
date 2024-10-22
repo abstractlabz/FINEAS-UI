@@ -96,7 +96,7 @@ const SignInComponent = ({ onSignIn }: { onSignIn?: () => void }) => {
         <>
             {profile ? (
                 <div className="flex items-center">
-                    <img src={profile.picture} alt="Profile" className="w-12 h-12 rounded-full mr-2 border-4 border-white" />
+                    <img src={profile?.picture} alt="./logo-secondary.png" className="w-12 h-12 rounded-full mr-2 border-4 border-white" />
                     <button onClick={logOut} className="text-black bg-white py-2 px-4 rounded-full hover:bg-gray-100">Log out</button>
                 </div>
             ) : (

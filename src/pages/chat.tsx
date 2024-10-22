@@ -115,6 +115,7 @@ const Chat: React.FC = () => {
     const savedProfile = Cookies.get('userProfile');
     if (savedProfile) {
       const profileData = JSON.parse(savedProfile) as UserProfile;
+      console.log('Profile Picture URL:', profileData.picture); // Debugging line
       setProfile(profileData);
       setIsLoggedIn(true);
       fetchChatNames(profileData);
@@ -383,7 +384,7 @@ const Chat: React.FC = () => {
 
       {/* Chat Header */}
       <ChatHeader
-        profileImageUrl={'/logo-chat.png'}
+        profileImageUrl={profile?.picture}
         chatName={chatName}
         sidebarVisible={sidebarVisible}
       />

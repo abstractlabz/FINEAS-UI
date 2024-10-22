@@ -20,11 +20,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ profileImageUrl, chatName, side
         {chatName.length > 10 ? `${chatName.substring(0, 7)}...` : chatName}
       </div>
       <div className="flex-grow top-[10px]"></div>
-      {profileImageUrl ? (
-        <SignInComponent />
-      ) : (
-        <div className="w-10 h-10 rounded-full bg-black pl-2"></div>
-      )}
+      {
+        profileImageUrl ? (
+          <SignInComponent />
+        ) : (
+          <SignInComponent />
+        )
+      }
     </div>
   );
 };

@@ -78,6 +78,7 @@ const styles = {
     justifyContent: 'space-between',
     borderRight: '0px solid #E0E0E0',
     boxSizing: 'border-box' as const,
+
   },
   header: {
     height: '16.66%',

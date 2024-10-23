@@ -54,39 +54,101 @@ const Chat: React.FC = () => {
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  const saveChat = async () => {
+  const saveChat = async (chatHistoryToSave: IMessage[]) => {
     if (chatName.trim() === '') {
-      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Provide a name for chat before saving</div>);
+      setModalContent(
+        <div className='mb-4 items-center flex justify-center items-center'>
+          Provide a name for chat before saving
+        </div>
+      );
+      setIsModalOpen(true);
+      return;
+    }
+
+    if (!profile?.id_hash) {
+      console.error('ID hash is missing');
+      setModalContent(
+        <div className='mb-4 items-center flex justify-center items-center'>
+          User ID is missing
+        </div>
+      );
+      setIsModalOpen(true);
+      return;
+    }
+
+    if (chatHistoryToSave.length === 0) {
+      console.error('Chat history is empty, nothing to save');
+      setModalContent(
+        <div className='mb-4 items-center flex justify-center items-center'>
+          Chat history is empty
+        </div>
+      );
       setIsModalOpen(true);
       return;
     }
 
     setIsLoading(true);
 
-    try {
-      const response = await axios.post('https://upgrade.fineasapp.io:2096/savechat', {
-        chatname: chatName.toLowerCase().trim(),
-        id_hash: profile?.id_hash,
-        chat_history: chatHistory
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+    // Sanitize chatHistory to only include serializable data
+    const sanitizedChatHistory = chatHistoryToSave.map(({ id, text, sender }) => ({
+      id,
+      text,
+      sender,
+    }));
 
-      console.log('Chat saved successfully:', response.data); // Log the response
+    console.log('Saving chat with data:', {
+      chatname: chatName.toLowerCase().trim(),
+      id_hash: profile.id_hash,
+      chat_history: sanitizedChatHistory,
+    });
+
+    try {
+      const response = await axios.post(
+        'https://upgrade.fineasapp.io:2096/savechat',
+        {
+          chatname: chatName.toLowerCase().trim(),
+          id_hash: profile.id_hash,
+          chat_history: sanitizedChatHistory,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log('Chat saved successfully:', response.data);
+      console.log('id hash:', profile.id_hash);
 
       // Instead of updating chatNames locally, fetch from server
       await fetchChatNames(profile);
 
-      // Optionally, reset chatName if needed
-      // setChatName('');
-      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Chat saved Successfully</div>);
+      setModalContent(
+        <div className='mb-4 items-center flex justify-center items-center'>
+          Chat saved Successfully
+        </div>
+      );
       setIsModalOpen(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to save chat', error);
-      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to save chat</div>);
-      setIsModalOpen(false);
+      console.log('id hash:', profile.id_hash);
+
+      if (error.response) {
+        console.error('Server responded with:', error.response.data);
+        setModalContent(
+          <div className='mb-4 items-center flex justify-center items-center'>
+            {error.response.data.error || 'Failed to save chat'}
+          </div>
+        );
+      } else {
+        setModalContent(
+          <div className='mb-4 items-center flex justify-center items-center'>
+            Failed to save chat
+          </div>
+        );
+      }
+
+      setIsModalOpen(true);
     } finally {
       setIsLoading(false);
     }
@@ -162,7 +224,6 @@ const Chat: React.FC = () => {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [chatHistory]);
-  
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -211,39 +272,45 @@ const Chat: React.FC = () => {
     }
   };
 
-  const fetchProfileImage = async (url: string, retries = 5, delay = 1000): Promise<UserProfile> => {
-    try {
-      const response = await axios.get(url, { responseType: 'blob' });
-      return response.data;
-    } catch (error) {
-      if (retries === 0 || (error as any).response?.status !== 429) {
-        throw error;
-      }
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      return fetchProfileImage(url, retries - 1, delay * 2); // Exponential backoff
-    }
-  };
-
-  const deleteChat = async (chatName: string) => {
+  const deleteChat = async (deletedChatName: string) => {
     setIsLoading(true);
     try {
       await axios.get('https://upgrade.fineasapp.io:2096/delete-chats', {
         params: {
-          chatname: chatHistory[0].text.toLowerCase().trim(),
-          id_hash: profile?.id_hash
-        }
+          chatname: deletedChatName.toLowerCase().trim(),
+          id_hash: profile?.id_hash,
+        },
       });
-      setChatNames(chatNames.filter((name) => name.toLowerCase().trim() !== chatName.toLowerCase().trim()));
-      setChatHistory([]);
-      setChatName(chatHistory[0].text);
-      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Chat Deleted Successfully</div>);
+      // Update chatNames state by removing the deleted chat
+      setChatNames((prevChatNames) =>
+        prevChatNames.filter(
+          (name) => name.toLowerCase().trim() !== deletedChatName.toLowerCase().trim()
+        )
+      );
+      // If the deleted chat is currently open, reset chatHistory and chatName
+      if (deletedChatName.toLowerCase().trim() === chatName.toLowerCase().trim()) {
+        setChatHistory([]);
+        setChatName('New Chat');
+        setShowRedBorderDiv(false);
+        setIsChatBubbleClicked(false); // Reset to show chat bubbles and logo
+        setIsSearchActivated(false);
+      }
+      setModalContent(
+        <div className='mb-4 items-center flex justify-center items-center'>
+          Chat Deleted Successfully
+        </div>
+      );
       setIsModalOpen(true);
-      setIsLoading(false);
     } catch (error) {
       console.error('Failed to delete chat', error);
-      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to delete chat</div>);
-      setIsLoading(false);
+      setModalContent(
+        <div className='mb-4 items-center flex justify-center items-center'>
+          Failed to delete chat
+        </div>
+      );
       setIsModalOpen(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -261,66 +328,42 @@ const Chat: React.FC = () => {
       id: newMessageId,
       text: selectedText,
       sender: 'user',
-      isLoading: true, // Set isLoading to true
+      isLoading: true,
     };
-    setChatHistory((prevHistory) => [...prevHistory, newMessage]);
+
+    // Use local variable to keep track of updated chat history
+    let updatedChatHistory = [...chatHistory, newMessage];
 
     // Automatically set the chat name to the first question
     if (chatHistory.length === 0) {
       setChatName(selectedText);
     }
 
+    // Update the chat history state
+    setChatHistory(updatedChatHistory);
+
     // Fetch bot response
     const botMessage = await fetchBotResponse(selectedText);
 
     // Update the loading state of the message
-    setChatHistory((prevHistory) =>
-      prevHistory.map((msg) =>
-        msg.id === newMessageId ? { ...msg, isLoading: false } : msg
-      )
+    updatedChatHistory = updatedChatHistory.map((msg) =>
+      msg.id === newMessageId ? { ...msg, isLoading: false } : msg
     );
 
-    setChatHistory((prevHistory) => [
-      ...prevHistory,
-      {
-        id: Date.now().toString(),
-        text: botMessage,
-        sender: 'bot',
-      },
-    ]);
+    // Add bot's message
+    const botMessageObj = {
+      id: Date.now().toString(),
+      text: botMessage,
+      sender: 'bot',
+    };
 
-    // Save the chat after the first message
-    if (chatHistory.length > 0) {
-      await saveChat();
-    }
-  };
+    updatedChatHistory = [...updatedChatHistory, botMessageObj];
 
-  const loadChat = async (name: string) => {
-    setShowRedBorderDiv(false);
-    setIsChatBubbleClicked(true);
-    setIsLoading(true);
-    try {
-        const response = await axios.post('https://upgrade.fineasapp.io:2096/loadchat', {
-            chatname: name.toLowerCase().trim(),
-            id_hash: profile?.id_hash
-        });
-        setChatHistory(response.data.chat_history.map((msg: IMessage) => ({ ...msg, animate: false }))); // Set animate to false
-    } catch (error) {
-        console.error('Failed to load chat', error);
-        setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to load chat</div>);
-        setIsModalOpen(true);
-    } finally {
-        setIsLoading(false);
-        if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight; // Scroll to bottom
-        }
-    }
-  };
+    // Update the chat history state
+    setChatHistory(updatedChatHistory);
 
-  const handleChatSelect = async (chatName: string) => {
-    setChatName(chatName.toLowerCase().trim());
-    await loadChat(chatName.toLowerCase().trim());
-    setShowRedBorderDiv(true); // Ensure the red div is shown
+    // Save the chat with the updated chat history
+    await saveChat(updatedChatHistory);
   };
 
   const handleSearchActivation = async (message: string) => {
@@ -329,9 +372,10 @@ const Chat: React.FC = () => {
       id: newMessageId,
       text: message,
       sender: 'user',
-      isLoading: true, // Set isLoading to true
+      isLoading: true,
     };
-    setChatHistory((prevHistory) => [...prevHistory, newMessage]);
+
+    let updatedChatHistory = [...chatHistory, newMessage];
 
     setIsSearchActivated(true);
     setShowRedBorderDiv(true);
@@ -341,29 +385,58 @@ const Chat: React.FC = () => {
       setChatName(message);
     }
 
+    // Update the chat history state
+    setChatHistory(updatedChatHistory);
+
     // Fetch bot response and update the white div box
     const botMessage = await fetchBotResponse(message);
 
     // Update the loading state of the message
-    setChatHistory((prevHistory) =>
-      prevHistory.map((msg) =>
-        msg.id === newMessageId ? { ...msg, isLoading: false } : msg
-      )
+    updatedChatHistory = updatedChatHistory.map((msg) =>
+      msg.id === newMessageId ? { ...msg, isLoading: false } : msg
     );
 
-    setChatHistory((prevHistory) => [
-      ...prevHistory,
-      {
-        id: Date.now().toString(),
-        text: botMessage,
-        sender: 'bot',
-      },
-    ]);
+    const botMessageObj = {
+      id: Date.now().toString(),
+      text: botMessage,
+      sender: 'bot',
+    };
 
-    // Save the chat after the first message
-    if (chatHistory.length === 1) {
-      await saveChat();
+    updatedChatHistory = [...updatedChatHistory, botMessageObj];
+
+    // Update the chat history state
+    setChatHistory(updatedChatHistory);
+
+    // Save the chat with the updated chat history
+    await saveChat(updatedChatHistory);
+  };
+
+  const loadChat = async (name: string) => {
+    setShowRedBorderDiv(false);
+    setIsChatBubbleClicked(true);
+    setIsLoading(true);
+    try {
+      const response = await axios.post('https://upgrade.fineasapp.io:2096/loadchat', {
+        chatname: name.toLowerCase().trim(),
+        id_hash: profile?.id_hash
+      });
+      setChatHistory(response.data.chat_history.map((msg: IMessage) => ({ ...msg, animate: false }))); // Set animate to false
+    } catch (error) {
+      console.error('Failed to load chat', error);
+      setModalContent(<div className='mb-4 items-center flex justify-center items-center'>Failed to load chat</div>);
+      setIsModalOpen(true);
+    } finally {
+      setIsLoading(false);
+      if (chatContainerRef.current) {
+        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight; // Scroll to bottom
+      }
     }
+  };
+
+  const handleChatSelect = async (chatName: string) => {
+    setChatName(chatName.toLowerCase().trim());
+    await loadChat(chatName.toLowerCase().trim());
+    setShowRedBorderDiv(true); // Ensure the red div is shown
   };
 
   return (
@@ -392,15 +465,15 @@ const Chat: React.FC = () => {
       {/* Red Border Div */}
       {showRedBorderDiv && (
         <div
-        ref={chatContainerRef} // Attached ref here
-        className="mt-6 mb-6 left-1/2 transform -translate-x-1/2 w-full h-full custom-scrollbar relative max-w-[90%] sm:max-w-[50%]"
-        style={{
-          top: '4rem',
-          bottom: '5rem',
-          maxHeight: 'calc(100% - 9rem)',
-          overflowY: 'auto',
-        }}
-      >
+          ref={chatContainerRef} // Attached ref here
+          className="mt-6 mb-6 left-1/2 transform -translate-x-1/2 w-full h-full custom-scrollbar relative max-w-[90%] sm:max-w-[50%]"
+          style={{
+            top: '4rem',
+            bottom: '5rem',
+            maxHeight: 'calc(100% - 9rem)',
+            overflowY: 'auto',
+          }}
+        >
           <div className="flex flex-col space-y-6 p-4">
             {chatHistory.map((message, index) => (
               <div

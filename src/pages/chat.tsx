@@ -357,7 +357,7 @@ const Chat: React.FC = () => {
       sender: 'bot',
     };
 
-    updatedChatHistory = [...updatedChatHistory, botMessageObj];
+    updatedChatHistory = [...updatedChatHistory, botMessageObj as IMessage];
 
     // Update the chat history state
     setChatHistory(updatedChatHistory);
@@ -402,7 +402,7 @@ const Chat: React.FC = () => {
       sender: 'bot',
     };
 
-    updatedChatHistory = [...updatedChatHistory, botMessageObj];
+    updatedChatHistory = [...updatedChatHistory, botMessageObj as IMessage];
 
     // Update the chat history state
     setChatHistory(updatedChatHistory);

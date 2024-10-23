@@ -21,7 +21,7 @@ const Search: FC<TextFieldProps & { onRocketClick: (message: string) => void }> 
   };
 
   return (
-    <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 w-full max-w-[90%]">
+    <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 w-full max-w-[90%] md:max-w-[50%]">
       {/* Input Field */}
       <input
         {...props}

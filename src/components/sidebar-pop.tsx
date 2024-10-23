@@ -12,45 +12,60 @@ interface SidebarProps {
   deleteChat: (chatName: string) => void;
 }
 
-const SidebarPop: React.FC<SidebarProps> = ({ credits = 0, chats = [], handleChatSelect, deleteChat }) => {
-    const router = useRouter(); // Initialize router
-    const [selectedChat, setSelectedChat] = useState<string | null>(null);
+const SidebarPop: React.FC<SidebarProps> = ({
+  credits = 0,
+  chats = [],
+  handleChatSelect,
+  deleteChat,
+}) => {
+  const router = useRouter();
+  const [selectedChat, setSelectedChat] = useState<string | null>(null);
 
-    const handleCreateNewChat = () => {
-        router.reload(); // Reload the current page
-      };
+  const handleCreateNewChat = () => {
+    router.reload();
+  };
 
-    const handleDeleteChat = (chatName: string) => {
-        deleteChat(chatName);
-    };
+  const handleDeleteChat = () => {
+    if (selectedChat) {
+      deleteChat(selectedChat);
+      setSelectedChat(null); // Reset selected chat after deletion
+    }
+  };
 
-    return (
+  return (
     <div style={styles.sidebarContainer}>
       {/* Header Divider */}
       <div style={styles.header}>
         <div style={styles.iconContainer} className='flex justify-between'>
-          <span className='ml-[65%] mt-[5%]' style={styles.textWithIcon}>{credits}</span>
-          <Image src="/credit.png" alt="Credits Icon" width={10} height={10} />
+          <span className='ml-[65%] mt-[5%]' style={styles.textWithIcon}>
+            {credits}
+          </span>
+          <Image src='/credit.png' alt='Credits Icon' width={10} height={10} />
         </div>
-        <div style={styles.newChatContainer}
-         onClick={handleCreateNewChat}>
-          <Image src="/new.png" alt="New Chat Icon" width={40} height={45} />
-          <span className='mt-[15%] ml-[10%]' style={styles.createNewChatText}>Create a new chat</span>
+        <div style={styles.newChatContainer} onClick={handleCreateNewChat}>
+          <Image src='/new.png' alt='New Chat Icon' width={40} height={45} />
+          <span className='mt-[15%] ml-[10%]' style={styles.createNewChatText}>
+            Create a new chat
+          </span>
         </div>
       </div>
 
       {/* Chat List Divider (Scrollable) */}
-      <div className="custom-scrollbar" style={styles.chatListContainer}>
+      <div className='custom-scrollbar' style={styles.chatListContainer}>
         <div style={styles.chatList}>
           {chats.map((chat, index) => (
             <div
               key={index}
               style={{
                 ...styles.chatItem,
-                backgroundColor: selectedChat === chat ? '#080733' : '#2E1D85',
+                backgroundColor:
+                  selectedChat === chat ? '#080733' : '#2E1D85',
                 color: '#FFFFFF',
               }}
-              onClick={() => handleChatSelect(chat)}
+              onClick={() => {
+                handleChatSelect(chat);
+                setSelectedChat(chat);
+              }}
             >
               {chat}
             </div>
@@ -60,7 +75,14 @@ const SidebarPop: React.FC<SidebarProps> = ({ credits = 0, chats = [], handleCha
 
       {/* Footer Divider */}
       <div style={styles.footer}>
-        <Image src="/delete.png" alt="Delete Icon" width={20} height={20} onClick={() => selectedChat && handleDeleteChat(selectedChat)} />
+        <Image
+          src='/delete.png'
+          alt='Delete Icon'
+          width={20}
+          height={20}
+          onClick={handleDeleteChat}
+          style={{ cursor: selectedChat ? 'pointer' : 'not-allowed' }}
+        />
         <span style={styles.deleteText}>Delete chat</span>
       </div>
     </div>

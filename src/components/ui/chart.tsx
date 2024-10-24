@@ -43,11 +43,20 @@ const CandleChart: React.FC<CandleChartProps> = ({ ticker }) => {
       "style": "1",
       "locale": "en",
       "enable_publishing": false,
-      "backgroundColor": "rgba(0, 0, 0, 1)",
+      "backgroundColor": "rgba(8, 7, 51, 1)",
       "save_image": false,
-      "calendar": false,
+      "calendar": true,
       "support_host": "https://www.tradingview.com",
-      "withdateranges": true
+      "withdateranges": true,
+      "hide_side_toolbar": true,
+      "hide_bottom_toolbar": true,
+      "barStyleOptions": {
+        "barWidth": 2,
+        "barType": 1,
+        "openVisible": true,
+        "closeVisible": true,
+        "color": "rgba(255, 255, 255, 1)"
+      }
     });
 
     // Append the script to the container

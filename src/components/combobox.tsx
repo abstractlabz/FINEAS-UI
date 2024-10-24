@@ -86,18 +86,19 @@ export function Combobox({ setSelectedTicker }: ComboboxProps) {
         <Button
           variant="outline"
           role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between bg-accent-color z-0"
+          aria-expanded={!open}
+          className="w-[615px] justify-between bg-main-color z-0 border-[#3C3A8D] border-2 text-white font-bold"
+          onClick={() => setOpen(!open)}
         >
           {value
             ? displayedTickers.find((framework) => framework.value === value)?.label // Use displayedTickers here to display the selected label
-            : <p className="text-black">Select Asset...</p>}
+            : <p className="text-white font-bold">Select Asset...</p>}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0 bg-accent-color overflow-auto max-h-[385px]">
-        <Command className="bg-accent-color">
-          <CommandInput className="w-full bg-accent-color text-black" placeholder="Enter an asset name..."  value={searchQuery}
+      <PopoverContent className="w-[615px] p-0 bg-main-color overflow-auto max-h-[385px] border-[#3C3A8D] border-2">
+        <Command className="bg-main-color">
+          <CommandInput className="w-full bg-main-color text-white font-bold" placeholder="Enter an asset name..."  value={searchQuery}
         onInput={(e) => setSearchQuery(e.currentTarget.value)} />
           <CommandEmpty>No assets found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
@@ -105,7 +106,7 @@ export function Combobox({ setSelectedTicker }: ComboboxProps) {
               <div key={framework.value} className="w-full flex items-center justify-between">
                 <CommandItem
                   value={framework.label}
-                  className="text-black flex-1"
+                  className="text-white font-bold flex-1"
                   onSelect={() => handleSelect(framework.value)}
                 >
                   <Check
@@ -129,7 +130,7 @@ export function Combobox({ setSelectedTicker }: ComboboxProps) {
                 <div key={framework.value} className="w-full flex items-center justify-between">
                   <CommandItem
                     value={framework.value}
-                    className="text-black flex-1"
+                    className="text-white flex-1"
                     onSelect={() => handleSelect(framework.value)}
                   >
                     <Check
